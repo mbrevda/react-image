@@ -7,6 +7,6 @@ it('say hi!', () => {
     <Img />
   )
   let tree = component.toJSON()
-  console.log(tree)
+  // console.log(tree)
   expect(tree).toMatchSnapshot()
 })
