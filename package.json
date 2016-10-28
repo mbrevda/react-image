@@ -4,7 +4,7 @@
   "description": "<img> tagg rendering for React with multiple fallback & loader support",
   "main": "src/index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --config jest.json",
     "lint": "eslint src/ -f 'node_modules/eslint-friendly-formatter'"
   },
   "repository": {

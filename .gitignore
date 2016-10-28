@@ -5,3 +5,4 @@ build/
 .wercker/
 npm-debug.log
 disc/
+coverage/

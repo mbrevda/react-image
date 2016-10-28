@@ -17,7 +17,8 @@
         "react"
     ],
     "globals": {
-        "test": true
+        "it": true,
+        "expect": true
     },
     "rules": {
         "linebreak-style": [
