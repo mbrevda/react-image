@@ -17,26 +17,12 @@
         "react"
     ],
     "globals": {
-        "Firebase": true,
-        "analytics": true
+        "test": true
     },
     "rules": {
-        "indent": [
-            "error",
-            4
-        ],
         "linebreak-style": [
             "error",
             "unix"
-        ],
-        "quotes": [
-            "error",
-            "single"
-        ],
-        "semi": [
-            "error",
-            "never"
-        ],
-        "camelcase": "error"
+        ]
     }
 }
