@@ -11,34 +11,38 @@ class Img extends Component {
 
   static defaultProps = {
     loader: false,
+    unloader: false,
     src: []
   }
 
-  state = {currentImageIndex: 0, isLoading: true, isLoaded: false}
-
+  state = {currentIndex: 0, isLoading: true, isLoaded: false}
+  sourceList = []
   onLoad = () => this.setState({isLoaded: true})
 
   onError = () => {
-    // overshoot by one. If no image is found, this will prevent a "broken"
-    // placeholder from showing
-    if (this.state.currentImageIndex + 1 < this.state.imageList.length) {
-      this.setState({currentImageIndex: ++this.state.currentImageIndex})
+    // currentIndex is zero bases, length is 1 based. If no image is found, this
+    // will prevent a "broken" placeholder from showing by setting src=""
+    // or removing the src prop completely
+    if (this.state.currentIndex < this.sourceList.length) {
+      this.setState({currentIndex: ++this.state.currentIndex})
+    } else {
+      this.setState({isLoading: false})
     }
   }
 
   placeholder = () => {
     if (!this.state.isLoaded) {
-      this.state.isLoading ? this.props.loader : this.props.unloader
+      return this.state.isLoading ? this.props.loader : this.props.unloader
     }
   }
 
   componentWillMount () {
-    this.setState({imageList: typeof this.props.src === 'string' ? [this.props.src] : this.props.src})
+    this.sourceList = typeof this.props.src === 'string' ? [this.props.src] : this.props.src
   }
 
   render () {
     let {src, loader, unloader, ...rest} = this.props //eslint-disable-line
-    src = this.state.imageList[this.state.currentImageIndex] || ''
+    src = this.sourceList[this.state.currentIndex]
 
     return (
       <span>

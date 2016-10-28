@@ -1,8 +1,0 @@
-exports[`test say hi! 1`] = `
-<span>
-  <img
-    onError={[Function]}
-    onLoad={[Function]}
-    src="" />
-</span>
-`;
