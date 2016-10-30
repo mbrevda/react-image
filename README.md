@@ -1,15 +1,19 @@
-React Img
+React Image Multi
 ===
 
-React img is an `<img>` tag replacement for react with support for a preloader and multiple fallback images.
+**React Image Multi** is an `<img>` tag replacement for [React.js](https://facebook.github.io/react/) with preloader and multiple image fallback support.
+
+With **React Image Multi** you can specify multiple images to be used as fallbacks in the event the browser couldn't load the previous image. Additionally, you can specify any React element to be used as before an image is loaded (i.e. a spinner) and in the event than the specified image(s) could not be loaded.
+
+**React Image Multi** will cleverly hide "broken" images to prevent showing a the browser default "broken image"  placeholder.
 
 Getting started
 ---
 
-1. To include the code locally in ES6, CommonJS, or UMD format, install `react-img` using npm:
+1. To include the code locally in ES6, CommonJS, or UMD format, install `react-img-multi` using npm:
 
   ```
-  npm install react-img --save
+  npm install react-img-multi --save
   ```
 
 2. To include the code globally from a cdn:
@@ -19,19 +23,19 @@ Getting started
 
 Dependencies
 ---
-React-Img has no external dependencies, aside for React and React-dom
+`react-img-multi` has no external dependencies, aside for the usual React and React-dom
 
 
 Documentation
 ---
-Include `react-img` in your component:
+Include `react-img-multi` in your component:
 
 ```js
 // using an ES6 transpiler, like babel
-import Img from 'react-img'
+import Img from 'react-img-multi'
 
 // otherwise
-let Img = require('react-img')
+let Img = require('react-img-multi')
 ```
 
 and set a source for the image:
@@ -83,13 +87,13 @@ const myComponent = () =>
 
 Browser Support
 ---
-React-Img dose not include an `Object.assign` polyfill, that may be needed [depending on your targeted browsers](http://kangax.github.io/compat-table/es6/#test-Object_static_methods_Object.assign). You can add it in one of the following ways:
+react-img-multi dose not include an `Object.assign` polyfill, that may be needed [depending on your targeted browsers](http://kangax.github.io/compat-table/es6/#test-Object_static_methods_Object.assign). You can add it in one of the following ways:
 
 1. include it in your package: `https://www.npmjs.com/package/es6-object-assign`
 
 2. Use Mozilla's polyfill: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Object/assign#Polyfill
 
-3. Include the following code before including `react-img`:
+3. Include the following code before including `react-img-multi`:
 
   ```js
   Object.assign||function(r){for(var t=1;t<arguments.length;t++){var n=arguments[t];for(var a in n)Object.prototype.hasOwnProperty.call(n,a)&&(r[a]=n[a])}return r};
