@@ -3,7 +3,7 @@ React Image Multi
 
 **React Image Multi** is an `<img>` tag replacement for [React.js](https://facebook.github.io/react/) with preloader and multiple image fallback support.
 
-With **React Image Multi** you can specify multiple images to be used as fallbacks in the event the browser couldn't load the previous image. Additionally, you can specify any React element to be used as before an image is loaded (i.e. a spinner) and in the event than the specified image(s) could not be loaded.
+With **React Image Multi** you can specify multiple images to be used as fallbacks in the event that the browser couldn't load the previous image. Additionally, you can specify any React element to be used before an image is loaded (i.e. a spinner) and in the event than the specified image(s) could not be loaded.
 
 **React Image Multi** will cleverly hide "broken" images to prevent showing a the browser default "broken image"  placeholder.
 
@@ -23,7 +23,7 @@ Getting started
 
 Dependencies
 ---
-`react-img-multi` has no external dependencies, aside for the usual React and React-dom
+`react-img-multi` has no external dependencies, aside for the usual `react` and `react-dom`.
 
 
 Documentation
@@ -51,8 +51,9 @@ will generate:
 ```
 If the image cannot be loaded, **`src` will be set to `src=""` or totally removed**, preventing a "broken" image from showing.
 
-### Multiple fallback images are supported:
-This will attempt to load the first image. If that won't load, it will attempt to load the second.
+### Multiple fallback images:
+When `src` is specified as an array, `react-img-multi` will attempt to load all the images specified in the array, starting at the first and continuing until an image has been successfully loaded.
+
 ```js
 const myComponent = () =>
   <Img src={[
@@ -61,7 +62,7 @@ const myComponent = () =>
   ]}>
 ```
 
-### A "spinner" or other element can be shown before the image is loaded:
+### Show a "spinner" or other element before the image is loaded:
 ```js
 const myComponent = () =>
   <Img
@@ -73,7 +74,7 @@ const myComponent = () =>
   >
 ```
 
-### If non of the images could be loaded, a fallback element can be shown:
+### Show a fallback element if non of the images could be loaded:
 ```js
 const myComponent = () =>
   <Img
@@ -87,7 +88,7 @@ const myComponent = () =>
 
 Browser Support
 ---
-react-img-multi dose not include an `Object.assign` polyfill, that may be needed [depending on your targeted browsers](http://kangax.github.io/compat-table/es6/#test-Object_static_methods_Object.assign). You can add it in one of the following ways:
+`react-img-multi` dose not include an `Object.assign` polyfill, that may be needed [depending on your targeted browsers](http://kangax.github.io/compat-table/es6/#test-Object_static_methods_Object.assign). You can add it in one of the following ways:
 
 1. include it in your package: `https://www.npmjs.com/package/es6-object-assign`
 

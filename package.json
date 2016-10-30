@@ -1,7 +1,7 @@
 {
-  "name": "react-img",
+  "name": "react-img-multi",
   "version": "0.0.1",
-  "description": "<img> tagg rendering for React with multiple fallback & loader support",
+  "description": "**React Image Multi** is an `<img>` tag replacement for [React.js](https://facebook.github.io/react/) with preloader and multiple image fallback support",
   "main": "src/index.js",
   "scripts": {
     "test": "jest --config jest.json",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/mbrevda/react-img.git"
+    "url": "git+ssh://git@github.com/mbrevda/react-img-multi.git"
   },
   "keywords": [
     "reactjs",
@@ -21,9 +21,9 @@
   "author": "mbrevda@gmail.com",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/mbrevda/react-img/issues"
+    "url": "https://github.com/mbrevda/react-img-multi/issues"
   },
-  "homepage": "https://github.com/mbrevda/react-img#readme",
+  "homepage": "https://github.com/mbrevda/react-img-multi#readme",
   "devDependencies": {
     "babel-eslint": "^7.1.0",
     "babel-jest": "^16.0.0",
