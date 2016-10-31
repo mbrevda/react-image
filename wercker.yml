@@ -12,7 +12,7 @@ build:
     - wercker/npm-test
 deploy:
   steps:
-     - script:
+    - script:
       name: npm config
       code: >
         npm config set loglevel warn;
