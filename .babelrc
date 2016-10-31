@@ -3,5 +3,24 @@
   "plugins": [
     ["transform-object-rest-spread", { "useBuiltIns": true }],
     "transform-class-properties"
-  ]
+  ],
+  "env": {
+    "commonjs": {
+      "plugins": [
+        "transform-runtime",
+        ["transform-object-rest-spread", { "useBuiltIns": true }],
+        ["transform-react-remove-prop-types", {"mode": "wrap"}],
+        "transform-class-properties"
+      ],
+      "presets": ["es2015", "react"]
+    },
+    "es": {
+      "plugins": [
+        "transform-runtime",
+        ["transform-react-remove-prop-types", {"mode": "wrap"}],
+        "transform-class-properties"
+      ],
+      "presets": ["es2015-rollup", "react"]
+    }
+  }
 }

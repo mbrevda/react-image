@@ -6,3 +6,6 @@ build/
 npm-debug.log
 disc/
 coverage/
+umd/
+cjs/
+es/
