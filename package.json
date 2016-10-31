@@ -33,7 +33,7 @@
   ],
   "jsnext:main": "es/index",
   "author": "mbrevda@gmail.com",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/mbrevda/react-img-multi/issues"
   },

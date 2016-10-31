@@ -25,7 +25,7 @@ Getting started
 
 2. To include the code globally from a cdn:
   ```
-  //TODO
+  <script src="https://unpkg.com/react-img-multi/umd/index.min.js"></script>
   ```
 
 Dependencies
@@ -109,3 +109,4 @@ Browser Support
 
 License
 ---
+`react-img-multi` is available under the MIT License
