@@ -10,6 +10,9 @@ build:
       name: lint js
       code: npm run lint
     - wercker/npm-test
+    - script:
+      name: build
+      code: npm run build
 deploy:
   steps:
     - script:
