@@ -1,4 +1,4 @@
-React Image Multi
+React Image Multi 🏝 🏖 🏜
 ===
 
 [![npm](https://img.shields.io/npm/v/react-img-multi.svg?style=flat-square)](https://www.npmjs.com/package/react-img-multi)
@@ -24,7 +24,7 @@ Getting started
   ```
 
 2. To include the code globally from a cdn:
-  ```
+  ```html
   <script src="https://unpkg.com/react-img-multi/umd/index.min.js"></script>
   ```
 

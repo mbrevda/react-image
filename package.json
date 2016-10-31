@@ -11,7 +11,7 @@
     "build:umd:min": "NODE_ENV=production webpack -p --config webpack.config.umd.js --bail  umd/index.min.js",
     "test": "jest --config jest.json",
     "lint": "eslint src/ -f 'node_modules/eslint-friendly-formatter'",
-    "shouldPublish": "PUB=`npm -s view react-img-multi version` && [ $PUB != $npm_package_version ]  && [ $(semver $PUB $npm_package_version|tail -n1) = $npm_package_version ]"
+    "shouldPublish": "PUB=`npm -s view react-img-multi version` && test $PUB != $npm_package_version && test $(semver $PUB $npm_package_version|tail -n1) = $npm_package_version"
   },
   "repository": {
     "type": "git",
