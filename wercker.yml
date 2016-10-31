@@ -12,6 +12,11 @@ build:
     - wercker/npm-test
 deploy:
   steps:
+     - script:
+      name: npm config
+      code: >
+        npm config set loglevel warn;
+        npm config set //registry.npmjs.org/:_authToken=$NPM_TOKEN -q
     - script:
       name: npm publish
       code: npm run -s shouldPublish && npm publish || echo 'publish not required'
