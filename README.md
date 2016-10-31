@@ -1,6 +1,13 @@
 React Image Multi
 ===
 
+[![npm](https://img.shields.io/npm/v/react-img-multi.svg?style=flat-square)](https://www.npmjs.com/package/react-img-multi)
+[![npm](https://img.shields.io/npm/l/react-img-multi.svg?style=flat-square)](https://www.npmjs.com/package/react-img-multi)
+[![npm](https://img.shields.io/npm/dt/react-img-multi.svg?style=flat-square)](https://www.npmjs.com/package/react-img-multi)
+[![npm](https://img.shields.io/npm/dm/react-img-multi.svg?style=flat-square)](https://www.npmjs.com/package/react-img-multi)
+[![Wercker](https://img.shields.io/wercker/ci/mbrevda/react-img-multi.svg?style=flat-square)](https://app.wercker.com/mbrevda/react-img-multi)
+
+<br>
 **React Image Multi** is an `<img>` tag replacement for [React.js](https://facebook.github.io/react/) with preloader and multiple image fallback support.
 
 With **React Image Multi** you can specify multiple images to be used as fallbacks in the event that the browser couldn't load the previous image. Additionally, you can specify any React element to be used before an image is loaded (i.e. a spinner) and in the event than the specified image(s) could not be loaded.
