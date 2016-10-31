@@ -3,11 +3,16 @@ build:
   steps:
     - script:
       name: npm config
-      code: >
-        npm config set loglevel warn;
+      code: npm config set loglevel warn;
     - npm-install:
       options: --loglevel=warn
     - script:
       name: lint js
       code: npm run lint
     - wercker/npm-test
+deploy:
+  steps:
+    - script:
+      name: npm publish
+      code: >
+        npm run -s shouldPublish && npm publish
