@@ -54,3 +54,9 @@ it('show unloader', () => {
   i.find('img').simulate('error')
   expect(i.html()).toEqual('<span>Could not load image!</span>')
 })
+
+it('show nothing on error without fallback', () => {
+  const i = shallow(<Img/>)
+  i.find('img').simulate('error')
+  expect(i.html()).toEqual(null)
+})
