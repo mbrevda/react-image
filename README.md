@@ -5,7 +5,7 @@ React Image Multi 🏝 🏖 🏜
 [![npm](https://img.shields.io/npm/l/react-img-multi.svg?style=flat-square)](https://www.npmjs.com/package/react-img-multi)
 [![npm](https://img.shields.io/npm/dt/react-img-multi.svg?style=flat-square)](https://www.npmjs.com/package/react-img-multi)
 [![npm](https://img.shields.io/npm/dm/react-img-multi.svg?style=flat-square)](https://www.npmjs.com/package/react-img-multi)
-[![Wercker](https://img.shields.io/wercker/ci/mbrevda/react-img-multi.svg?style=flat-square)](https://app.wercker.com/mbrevda/react-img-multi)
+[![wercker status](https://app.wercker.com/status/deff357a6b8d111f465c78e690dc9019/s/master "wercker status")](https://app.wercker.com/project/byKey/deff357a6b8d111f465c78e690dc9019)
 
 <br>
 **React Image Multi** is an `<img>` tag replacement for [React.js](https://facebook.github.io/react/) with preloader and multiple image fallback support.
