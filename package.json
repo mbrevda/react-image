@@ -26,10 +26,9 @@
   ],
   "files": [
     "*.md",
-    "es",
-    "lib",
-    "umd",
-    "cjs"
+    "es/**",
+    "umd/**",
+    "cjs/**"
   ],
   "jsnext:main": "es/index",
   "author": "mbrevda@gmail.com",
