@@ -15,4 +15,4 @@ deploy:
     - script:
       name: npm publish
       code: >
-        npm run -s shouldPublish && npm publish
+        npm run -s shouldPublish && npm publish || 'publish not required'
