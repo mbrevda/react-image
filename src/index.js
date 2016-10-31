@@ -18,22 +18,11 @@ class Img extends Component {
   state = {currentIndex: 0, isLoading: true, isLoaded: false}
   sourceList = []
   onLoad = () => this.setState({isLoaded: true})
-
+  img = props => <img {...props} />
   onError = () => {
-    // currentIndex is zero bases, length is 1 based. If no image is found, this
-    // will prevent a "broken" placeholder from showing by setting src=""
-    // or removing the src prop completely
-    if (this.state.currentIndex < this.sourceList.length) {
-      this.setState({currentIndex: ++this.state.currentIndex})
-    } else {
-      this.setState({isLoading: false})
-    }
-  }
-
-  placeholder = () => {
-    if (!this.state.isLoaded) {
-      return this.state.isLoading ? this.props.loader : this.props.unloader
-    }
+    // currentIndex is zero bases, length is 1 based.
+    this.setState({currentIndex: ++this.state.currentIndex})
+    if (this.state.currentIndex >= this.sourceList.length) this.setState({isLoading: false})
   }
 
   componentWillMount () {
@@ -44,17 +33,16 @@ class Img extends Component {
     let {src, loader, unloader, ...rest} = this.props //eslint-disable-line
     src = this.sourceList[this.state.currentIndex]
 
-    return (
-      <span>
-        <img
-          src={src}
-          onError={this.onError}
-          onLoad={this.onLoad}
-          {...rest}
-        />
-        {this.placeholder()}
-      </span>
-    )
+    let img = this.img({src, onError: this.onError, onLoad: this.onLoad, ...rest})
+
+    // if we have loaded, show img
+    if (this.state.isLoaded) return img
+
+    // if we are still trying to load, show img and a loader if requested
+    if (!this.state.isLoaded && this.state.isLoading) return this.props.loader ? <span>{this.props.loader}{img}</span> : img
+
+    // if we have given up on loading, show a place holder if requested, or nothing
+    if (!this.state.isLoaded && !this.state.isLoading) return this.props.unloader ? this.props.unloader : false
   }
 }
 

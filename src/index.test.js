@@ -4,50 +4,53 @@ import Img from './index.js'
 import { shallow } from 'enzyme'
 
 it('render with no opts', () => {
-  expect(shallow(<Img />).html()).toEqual('<span><img/></span>')
+  expect(shallow(<Img />).html()).toEqual('<img/>')
 })
 
-it('render with src string', () => {
+it('render with src string, before load', () => {
+  const i = shallow(<Img src="foo" loader={<span>loading...</span>}/>)
+  expect(i.html()).toEqual('<span><span>loading...</span><img src="foo"/></span>')
+})
+
+it('render with src string, after load', () => {
   const i = shallow(<Img src="foo"/>)
-  expect(i.html()).toEqual('<span><img src="foo"/></span>')
+  i.find('img').simulate('load')
+  expect(i.html()).toEqual('<img src="foo"/>')
 })
 
 it('render with src array', () => {
   const i = shallow(<Img src={['foo']}/>)
-  expect(i.html()).toEqual('<span><img src="foo"/></span>')
-})
-
-it('render with src blank string', () => {
-  const i = shallow(<Img src=""/>)
-  expect(i.html()).toEqual('<span><img src=""/></span>')
+  i.find('img').simulate('load')
+  expect(i.html()).toEqual('<img src="foo"/>')
 })
 
 it('fallback to next image', () => {
   const i = shallow(<Img src={['foo', 'bar']}/>)
   i.find('img').simulate('error')
-  expect(i.html()).toEqual('<span><img src="bar"/></span>')
+  expect(i.html()).toEqual('<img src="bar"/>')
 })
 
 it('ensure missing image isnt renreder to browser', () => {
   const i = shallow(<Img src={['foo', 'bar']}/>)
   i.find('img').simulate('error')
   i.find('img').simulate('error')
-  expect(i.html()).toEqual('<span><img/></span>')
+  expect(i.html()).toEqual(null)
 })
 
 it('show loader', () => {
-  const i = shallow(<Img loader="Loading..."/>)
-  expect(i.html()).toEqual('<span><img/>Loading...</span>')
+  const i = shallow(<Img loader={<span>Loading...</span>}/>)
+  expect(i.html()).toEqual('<span><span>Loading...</span><img/></span>')
 })
 
 it('clear loader after load', () => {
-  const i = shallow(<Img loader="Loading..."/>)
-  i.find('img').simulate('load')
-  expect(i.html()).toEqual('<span><img/></span>')
+  const i = shallow(<Img loader={<span>Loading...</span>}/>)
+  expect(i.html()).toEqual('<span><span>Loading...</span><img/></span>')
+  i.setState({isLoading: false, isLoaded: true})
+  expect(i.html()).toEqual('<img/>')
 })
 
 it('show unloader', () => {
-  const i = shallow(<Img unloader="Could not load image!"/>)
+  const i = shallow(<Img unloader={<span>Could not load image!</span>}/>)
   i.find('img').simulate('error')
-  expect(i.html()).toEqual('<span><img/>Could not load image!</span>')
+  expect(i.html()).toEqual('<span>Could not load image!</span>')
 })
