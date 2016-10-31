@@ -14,5 +14,4 @@ deploy:
   steps:
     - script:
       name: npm publish
-      code: >
-        npm run -s shouldPublish && npm publish || 'publish not required'
+      code: npm run -s shouldPublish && npm publish || echo 'publish not required'
