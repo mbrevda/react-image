@@ -42,7 +42,7 @@ class Img extends Component {
     if (!this.state.isLoaded && this.state.isLoading) return this.props.loader ? <span>{this.props.loader}{img}</span> : img
 
     // if we have given up on loading, show a place holder if requested, or nothing
-    if (!this.state.isLoaded && !this.state.isLoading) return this.props.unloader ? this.props.unloader : false
+    if (!this.state.isLoaded && !this.state.isLoading) return this.props.unloader ? this.props.unloader : null
   }
 }
 
