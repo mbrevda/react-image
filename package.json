@@ -1,8 +1,7 @@
 {
   "name": "react-img-multi",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "**React Image Multi** is an `<img>` tag replacement for [React.js](https://facebook.github.io/react/) with preloader and multiple image fallback support",
-  "main": "umd/index.js",
   "scripts": {
     "build": "npm run build:cjs && npm run build:es && npm run build:umd && npm run build:umd:min",
     "build:cjs": "NODE_ENV=production BABEL_ENV=commonjs babel src/ --out-dir cjs/ --ignore *.test.js",
@@ -31,7 +30,8 @@
     "cjs"
   ],
   "jsnext:main": "es/index",
-  "browser": "cjs/index",
+  "module": "es/index",
+  "main": "cjs/index.js",
   "author": "mbrevda@gmail.com",
   "license": "MIT",
   "bugs": {
