@@ -1,3 +1,7 @@
+0.0.10
+===
+* Made react a peer depends
+
 0.0.8
 ===
 

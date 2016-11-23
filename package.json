@@ -1,6 +1,6 @@
 {
   "name": "react-img-multi",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "**React Image Multi** is an `<img>` tag replacement for [React.js](https://facebook.github.io/react/) with preloader and multiple image fallback support",
   "scripts": {
     "build": "npm run build:cjs && npm run build:es && npm run build:umd && npm run build:umd:min",
@@ -63,9 +63,9 @@
     "semver": "5.3.0",
     "webpack": "1.13.3"
   },
-  "dependencies": {
-    "react": "15.4.1",
-    "react-dom": "15.4.1"
+  "peerDependencies": {
+    "react": "^15",
+    "react-dom": "^15"
   },
   "browserify": {
     "transform": [
