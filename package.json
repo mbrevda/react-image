@@ -51,7 +51,7 @@
     "babel-preset-es2015-rollup": "1.2.0",
     "babel-preset-react": "6.16.0",
     "enzyme": "2.5.1",
-    "eslint": "3.11.0",
+    "eslint": "3.11.1",
     "eslint-config-standard": "6.2.1",
     "eslint-friendly-formatter": "2.0.6",
     "eslint-plugin-promise": "3.4.0",
