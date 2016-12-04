@@ -26,7 +26,11 @@ class Img extends Component {
   }
 
   componentWillMount () {
-    this.sourceList = typeof this.props.src === 'string' ? [this.props.src] : this.props.src
+    if (this.props.src) {
+      this.sourceList = typeof this.props.src === 'string' ? [this.props.src] : this.props.src
+    } else {
+      this.setState({isLoading: false, isLoaded: false})
+    }
   }
 
   render () {
