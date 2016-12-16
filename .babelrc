@@ -20,7 +20,7 @@
         ["transform-react-remove-prop-types", {"mode": "wrap"}],
         "transform-class-properties"
       ],
-      "presets": ["es2015-rollup", "react"]
+      "presets": ["es2015", "react"]
     }
   }
 }
