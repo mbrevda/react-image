@@ -18,32 +18,61 @@ class Img extends Component {
   state = {currentIndex: 0, isLoading: true, isLoaded: false}
   sourceList = []
   onLoad = () => this.setState({isLoaded: true})
-  img = props => <img {...props} />
+
   onError = () => {
     // currentIndex is zero bases, length is 1 based.
     this.setState({currentIndex: ++this.state.currentIndex})
-    if (this.state.currentIndex >= this.sourceList.length) this.setState({isLoading: false})
+
+    // if we have no more sources to try, return - we are done
+    if (this.state.currentIndex >= this.sourceList.length) return this.setState({isLoading: false})
+
+    // otherwise, try the next img
+    this.loadImg()
+  }
+
+  loadImg = () => {
+    this.i = new Image()
+    this.i.src = this.sourceList[this.state.currentIndex]
+    this.i.onload = this.onLoad
+    this.i.onerror = this.onError
+  }
+
+  unloadImg = () => {
+    this.i.onerror = null
+    this.i.onload = null
+    this.i.src = null
+    this.i = null
   }
 
   componentWillMount () {
-    if (this.props.src) {
-      this.sourceList = typeof this.props.src === 'string' ? [this.props.src] : this.props.src
-    } else {
-      this.setState({isLoading: false, isLoaded: false})
-    }
+    this.sourceList = this.props.src && typeof this.props.src === 'string'
+        ? [this.props.src]
+        : this.props.src
+
+    // if we dont have any sources, jump directly to fallback
+    if (!this.sourceList.length) return this.setState({isLoading: false, isLoaded: false})
+  }
+
+  componentDidMount () {
+    // kick off process
+    this.loadImg()
+  }
+
+  componentWillUnmount () {
+    // ensure that we dont leave any lingering listeners
+    this.unloadImg()
   }
 
   render () {
-    let {src, loader, unloader, ...rest} = this.props //eslint-disable-line
-    src = this.sourceList[this.state.currentIndex]
-
-    let img = this.img({src, onError: this.onError, onLoad: this.onLoad, ...rest})
-
     // if we have loaded, show img
-    if (this.state.isLoaded) return img
+    if (this.state.isLoaded) {
+      // clear non img props
+      let {src, loader, unloader, ...rest} = this.props //eslint-disable-line
+      return <img src={this.sourceList[this.state.currentIndex]} {...rest} />
+    }
 
     // if we are still trying to load, show img and a loader if requested
-    if (!this.state.isLoaded && this.state.isLoading) return this.props.loader ? <span>{this.props.loader}{img}</span> : img
+    if (!this.state.isLoaded && this.state.isLoading) return this.props.loader ? this.props.loader : null
 
     // if we have given up on loading, show a place holder if requested, or nothing
     if (!this.state.isLoaded && !this.state.isLoading) return this.props.unloader ? this.props.unloader : null

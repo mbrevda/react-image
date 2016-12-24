@@ -1,3 +1,8 @@
+0.1.0
+===
+* Don't use <img> until we know the image can be rendered. This will prevent the "jumping"
+when loading an image and the preloader is displayed at the same time as the image
+
 0.0.11
 ===
 * Don't require `src` to be set
