@@ -18,6 +18,7 @@ class Img extends Component {
   state = {currentIndex: 0, isLoading: true, isLoaded: false}
   sourceList = []
   onLoad = () => this.setState({isLoaded: true})
+  srcToArray = src => Array.isArray(src) ? src : [src]
 
   onError = () => {
     // currentIndex is zero bases, length is 1 based.
@@ -45,9 +46,7 @@ class Img extends Component {
   }
 
   componentWillMount () {
-    this.sourceList = this.props.src && typeof this.props.src === 'string'
-        ? [this.props.src]
-        : this.props.src
+    this.sourceList = this.srcToArray(this.props.src)
 
     // if we dont have any sources, jump directly to fallback
     if (!this.sourceList.length) return this.setState({isLoading: false, isLoaded: false})
@@ -61,6 +60,21 @@ class Img extends Component {
   componentWillUnmount () {
     // ensure that we dont leave any lingering listeners
     this.unloadImg()
+  }
+
+  componentWillReceiveProps (nextProps) {
+    let src = this.srcToArray(nextProps.src)
+    if (!src.length) return true
+
+    let srcAdded = src.filter(s => this.srcToArray(this.props.src).indexOf(s) === -1)
+    let srcRemoved = this.srcToArray(this.props.src).filter(s => src.indexOf(s) === -1)
+
+    // if the src prop changed, restart the loading process
+    if (srcAdded.length || srcRemoved.length) {
+      this.sourceList = src
+      this.setState({currentIndex: 0, isLoading: true, isLoaded: false})
+      this.loadImg()
+    }
   }
 
   render () {

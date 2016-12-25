@@ -1,3 +1,7 @@
+0.2.0
+===
+* Restart the loading process when src prop changes
+
 0.1.0
 ===
 * Don't use <img> until we know the image can be rendered. This will prevent the "jumping"
