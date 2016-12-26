@@ -18,14 +18,14 @@ class Img extends Component {
   state = {currentIndex: 0, isLoading: true, isLoaded: false}
   sourceList = []
   onLoad = () => this.setState({isLoaded: true})
-  srcToArray = src => Array.isArray(src) ? src : [src]
+  srcToArray = src => (Array.isArray(src) ? src : [src]).filter(x => x)
 
   onError = () => {
     // currentIndex is zero bases, length is 1 based.
-    this.setState({currentIndex: ++this.state.currentIndex})
-
     // if we have no more sources to try, return - we are done
-    if (this.state.currentIndex >= this.sourceList.length) return this.setState({isLoading: false})
+    if (this.state.currentIndex === this.sourceList.length) return this.setState({isLoading: false})
+
+    this.setState({currentIndex: ++this.state.currentIndex})
 
     // otherwise, try the next img
     this.loadImg()
@@ -47,7 +47,6 @@ class Img extends Component {
 
   componentWillMount () {
     this.sourceList = this.srcToArray(this.props.src)
-
     // if we dont have any sources, jump directly to fallback
     if (!this.sourceList.length) return this.setState({isLoading: false, isLoaded: false})
   }
@@ -66,14 +65,13 @@ class Img extends Component {
     let src = this.srcToArray(nextProps.src)
     if (!src.length) return true
 
-    let srcAdded = src.filter(s => this.srcToArray(this.props.src).indexOf(s) === -1)
-    let srcRemoved = this.srcToArray(this.props.src).filter(s => src.indexOf(s) === -1)
+    let srcAdded = src.filter(s => this.sourceList.indexOf(s) === -1)
+    let srcRemoved = this.sourceList.filter(s => src.indexOf(s) === -1)
 
-    // if the src prop changed, restart the loading process
+    // if src prop changed, restart the loading process
     if (srcAdded.length || srcRemoved.length) {
       this.sourceList = src
-      this.setState({currentIndex: 0, isLoading: true, isLoaded: false})
-      this.loadImg()
+      this.setState({currentIndex: 0, isLoading: true, isLoaded: false}, this.loadImg)
     }
   }
 

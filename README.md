@@ -54,9 +54,9 @@ const myComponent = () => <Img src="www.example.com/foo.jpg">
 will generate:
 
 ```js
-<span><img src="www.example.com/foo.jpg"></span>
+<img src="www.example.com/foo.jpg">
 ```
-If the image cannot be loaded, **`src` will be set to `src=""` or totally removed**, preventing a "broken" image from showing.
+If the image cannot be loaded, **`src` will no be rendered**, preventing a "broken" image from showing.
 
 ### Multiple fallback images:
 When `src` is specified as an array, `react-img-multi` will attempt to load all the images specified in the array, starting at the first and continuing until an image has been successfully loaded.

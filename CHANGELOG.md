@@ -1,3 +1,8 @@
+0.3.0
+===
+* Don't overshoot sourceList when state.currentIndex
+* Ensure state has been set before trying to load images when new props are delivered
+
 0.2.0
 ===
 * Restart the loading process when src prop changes
