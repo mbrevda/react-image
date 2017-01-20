@@ -5,6 +5,7 @@ React Image Multi 🏝 🏖 🏜
 [![npm](https://img.shields.io/npm/l/react-img-multi.svg?style=flat-square)](https://www.npmjs.com/package/react-img-multi)
 [![npm](https://img.shields.io/npm/dt/react-img-multi.svg?style=flat-square)](https://www.npmjs.com/package/react-img-multi)
 [![npm](https://img.shields.io/npm/dm/react-img-multi.svg?style=flat-square)](https://www.npmjs.com/package/react-img-multi)
+[![Known Vulnerabilities](https://snyk.io/test/npm/react-img-multi/badge.svg)](https://snyk.io/test/npm/react-img-multi)
 [![wercker status](https://app.wercker.com/status/deff357a6b8d111f465c78e690dc9019/s/master "wercker status")](https://app.wercker.com/project/byKey/deff357a6b8d111f465c78e690dc9019)
 
 <br>
