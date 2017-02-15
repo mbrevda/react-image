@@ -21,12 +21,11 @@ class Img extends Component {
   srcToArray = src => (Array.isArray(src) ? src : [src]).filter(x => x)
 
   onError = () => {
-    let {currentIndex} = this.state
-    // currentIndex is zero bases, length is 1 based. Increment currentIndex
-    // before comparing it to length. If they are the same we have no more sources to try
-    if (++currentIndex === this.sourceList.length) return this.setState({isLoading: false})
+    // currentIndex is zero bases, length is 1 based.
+    // if we have no more sources to try, return - we are done
+    if (this.state.currentIndex === this.sourceList.length) return this.setState({isLoading: false})
 
-    this.setState({currentIndex})
+    this.setState({currentIndex: ++this.state.currentIndex})
 
     // otherwise, try the next img
     this.loadImg()

@@ -1,7 +1,3 @@
-0.4.0
-===
-* Fix issue where images wont be displayed even after they have been loaded
-
 0.3.0
 ===
 * Don't overshoot sourceList when state.currentIndex
