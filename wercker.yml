@@ -1,4 +1,4 @@
-box: node
+box: node:alpine
 build:
   steps:
     - script:
