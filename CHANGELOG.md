@@ -1,3 +1,7 @@
+0.4.1
+===
+* Revert 0.4.0
+
 0.3.0
 ===
 * Don't overshoot sourceList when state.currentIndex
