@@ -1,3 +1,7 @@
+0.4.2
+===
+* Remove Browsierfy config
+
 0.4.1
 ===
 * Revert 0.4.0
