@@ -1,3 +1,8 @@
+0.5.0
+===
+* Fix issue where index would overshoot available sources
+* Don't try setting state if `this.i` was already destroyed, which probably means that we have been unmounted
+
 0.4.2
 ===
 * Remove Browsierfy config
