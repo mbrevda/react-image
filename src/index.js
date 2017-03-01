@@ -15,7 +15,7 @@ class Img extends Component {
     src: []
   }
 
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.sourceList = this.srcToArray(this.props.src)
 
@@ -25,14 +25,13 @@ class Img extends Component {
         : {isLoading: false, isLoaded: false}
   }
 
-  onLoad = () => {if (this.i) this.setState({isLoaded: true})}
+  onLoad = () => { if (this.i) this.setState({isLoaded: true}) }
   srcToArray = src => (Array.isArray(src) ? src : [src]).filter(x => x)
 
   onError = () => {
     // if the current image has already been destroyed, we are probably no longer mounted
     // no need to do anything then
     if (!this.i) return
-
 
     // currentIndex is zero bases, length is 1 based.
     // if we have no more sources to try, return - we are done
