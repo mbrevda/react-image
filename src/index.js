@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 
 const { node, oneOfType, string, array } = React.PropTypes
-
+const cache = {}
 class Img extends Component {
   static propTypes = {
     loader: node,
@@ -17,18 +17,37 @@ class Img extends Component {
 
   constructor (props) {
     super(props)
+
     this.sourceList = this.srcToArray(this.props.src)
 
-    // if we dont have any sources, jump directly to fallback
+    // check cache to decide at which index to start
+    for (let i = 0; i < this.sourceList.length; i++) {
+      // if we've never seen this image before, the cache wont help. GET OUT!
+      if (!(this.sourceList[i] in cache)) break
+
+      // if we have loaded this image before, just load it again
+      if (cache[this.sourceList[i]] === true) {
+        this.state = {currentIndex: i, isLoading: false, isLoaded: true}
+        return true
+      }
+    }
+
     this.state = this.sourceList.length
+        // 'normal' opperation: start at 0 and try to load
         ? {currentIndex: 0, isLoading: true, isLoaded: false}
+        // if we dont have any sources, jump directly to unloaded
         : {isLoading: false, isLoaded: false}
   }
 
-  onLoad = () => { if (this.i) this.setState({isLoaded: true}) }
+  onLoad = () => {
+    cache[this.sourceList[this.state.currentIndex]] = true
+    if (this.i) this.setState({isLoaded: true})
+  }
+
   srcToArray = src => (Array.isArray(src) ? src : [src]).filter(x => x)
 
   onError = () => {
+    cache[this.sourceList[this.state.currentIndex]] = false
     // if the current image has already been destroyed, we are probably no longer mounted
     // no need to do anything then
     if (!this.i) return
@@ -37,7 +56,26 @@ class Img extends Component {
     // if we have no more sources to try, return - we are done
     if (this.state.currentIndex + 1 === this.sourceList.length) return this.setState({isLoading: false})
 
-    this.setState({currentIndex: ++this.state.currentIndex})
+    // before loading the next image, check to see if it was loaded ever in the past
+    for (let i = 0; i < this.sourceList.length - this.state.currentIndex + 1; i++) {
+      // get next img
+      let src = this.sourceList[this.state.currentIndex + i]
+
+      // if we have never seen it, its the one we want to try next
+      if (!(src in cache)) {
+        this.setState({currentIndex: this.state.currentIndex + i})
+        break
+      }
+
+      // if we know it exists, use it!
+      if (cache[src] === true) {
+        this.setState({currentIndex: this.state.currentIndex + i, isLoading: false, isLoaded: true})
+        return true
+      }
+
+      // if we know it doesn't exist, skip it!
+      if (cache[src] === false) continue
+    }
 
     // otherwise, try the next img
     this.loadImg()
@@ -77,9 +115,8 @@ class Img extends Component {
     if (srcAdded.length || srcRemoved.length) {
       this.sourceList = src
 
-      // if we dont have any sources, jump directly to fallback
+      // if we dont have any sources, jump directly to unloader
       if (!src.length) return this.setState({isLoading: false, isLoaded: false})
-
       this.setState({currentIndex: 0, isLoading: true, isLoaded: false}, this.loadImg)
     }
   }

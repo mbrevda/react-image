@@ -1,3 +1,7 @@
+0.6.0
+===
+* Add a cache so that we don't attempt the same image twice (per page load)
+
 0.5.0
 ===
 * Fix issue where index would overshoot available sources
