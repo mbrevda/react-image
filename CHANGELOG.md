@@ -1,3 +1,7 @@
+0.6.1
+===
+* Start iteration at current location
+
 0.6.0
 ===
 * Add a cache so that we don't attempt the same image twice (per page load)

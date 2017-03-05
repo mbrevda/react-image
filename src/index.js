@@ -22,7 +22,8 @@ class Img extends Component {
 
     // check cache to decide at which index to start
     for (let i = 0; i < this.sourceList.length; i++) {
-      // if we've never seen this image before, the cache wont help. GET OUT!
+      // if we've never seen this image before, the cache wont help.
+      // no need to look further, just start loading
       if (!(this.sourceList[i] in cache)) break
 
       // if we have loaded this image before, just load it again
@@ -39,12 +40,12 @@ class Img extends Component {
         : {isLoading: false, isLoaded: false}
   }
 
+  srcToArray = src => (Array.isArray(src) ? src : [src]).filter(x => x)
+
   onLoad = () => {
     cache[this.sourceList[this.state.currentIndex]] = true
     if (this.i) this.setState({isLoaded: true})
   }
-
-  srcToArray = src => (Array.isArray(src) ? src : [src]).filter(x => x)
 
   onError = () => {
     cache[this.sourceList[this.state.currentIndex]] = false
@@ -52,24 +53,27 @@ class Img extends Component {
     // no need to do anything then
     if (!this.i) return
 
+    // itterate to the next source in the list
+    let nextIndex = this.state.currentIndex + 1
+
     // currentIndex is zero bases, length is 1 based.
     // if we have no more sources to try, return - we are done
-    if (this.state.currentIndex + 1 === this.sourceList.length) return this.setState({isLoading: false})
+    if (nextIndex === this.sourceList.length) return this.setState({isLoading: false})
 
-    // before loading the next image, check to see if it was loaded ever in the past
-    for (let i = 0; i < this.sourceList.length - this.state.currentIndex + 1; i++) {
+    // before loading the next image, check to see if it was ever loaded in the past
+    for (let i = nextIndex; i < this.sourceList.length; i++) {
       // get next img
-      let src = this.sourceList[this.state.currentIndex + i]
+      let src = this.sourceList[i]
 
       // if we have never seen it, its the one we want to try next
       if (!(src in cache)) {
-        this.setState({currentIndex: this.state.currentIndex + i})
+        this.setState({currentIndex: i})
         break
       }
 
       // if we know it exists, use it!
       if (cache[src] === true) {
-        this.setState({currentIndex: this.state.currentIndex + i, isLoading: false, isLoaded: true})
+        this.setState({currentIndex: i, isLoading: false, isLoaded: true})
         return true
       }
 
