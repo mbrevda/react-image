@@ -1,3 +1,7 @@
+0.6.2
+===
+* Fix Readme formating
+
 0.6.1
 ===
 * Start iteration at current location
