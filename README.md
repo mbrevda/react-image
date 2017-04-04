@@ -101,6 +101,9 @@ Recipes
 ### Delay rendering until element is visible
 By definition, **React Image Multi** will try loading images as soon as the `<Img>` element is rendered in the DOM. This may be undesirable in some situations, such as when the page has many images. As with any react element, rendering can be delayed until the image is actually visible in the viewport using popular libraries such as [`react-visibility-sensor`](https://www.npmjs.com/package/react-visibility-sensor). Here is a quick sample:
 ```js
+import Img from 'react-img-multi'
+import VisibilitySensor from 'react-visibility-sensor'
+
 const myComponent = () =>
   <VisibilitySensor>
     <Img src='www.example.com/foo.jpg'>
