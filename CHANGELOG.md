@@ -1,6 +1,11 @@
+0.6.3
+===
+* Housekeeping: update dependencies
+* Add recipes
+
 0.6.2
 ===
-* Fix Readme formating
+* Fix Readme formatting
 
 0.6.1
 ===
