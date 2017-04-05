@@ -64,8 +64,8 @@ When `src` is specified as an array, `react-img-multi` will attempt to load all 
 ```js
 const myComponent = () =>
   <Img src={[
-    'www.example.com/foo.jpg',
-    'www.example.com/bar.jpg'
+    'https://www.example.com/foo.jpg',
+    'https://www.example.com/bar.jpg'
   ]}>
 ```
 If an image has previously been attempted unsuccessfully, `react-img-multi` will not retry loading it again until the page is reloaded.
@@ -75,8 +75,8 @@ If an image has previously been attempted unsuccessfully, `react-img-multi` will
 const myComponent = () =>
   <Img
     src={[
-      'www.example.com/foo.jpg',
-      'www.example.com/bar.jpg'
+      'https://www.example.com/foo.jpg',
+      'https://www.example.com/bar.jpg'
     ]}
     loader={/*any valid react element */}
   >
@@ -89,8 +89,8 @@ If an image was previously loaded successfully (since the last time this page wa
 const myComponent = () =>
   <Img
     src={[
-      'www.example.com/foo.jpg',
-      'www.example.com/bar.jpg'
+      'https://www.example.com/foo.jpg',
+      'https://www.example.com/bar.jpg'
     ]}
     unloader={/*any valid react element */}
   >
@@ -106,7 +106,7 @@ import VisibilitySensor from 'react-visibility-sensor'
 
 const myComponent = () =>
   <VisibilitySensor>
-    <Img src='www.example.com/foo.jpg'>
+    <Img src='https://www.example.com/foo.jpg'>
   </VisibilitySensor>
 ```
 
