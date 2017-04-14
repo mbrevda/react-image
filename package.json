@@ -1,7 +1,7 @@
 {
-  "name": "react-img-multi",
-  "version": "0.6.3",
-  "description": "**React Image Multi** is an `<img>` tag replacement for [React.js](https://facebook.github.io/react/) with preloader and multiple image fallback support",
+  "name": "react-image",
+  "version": "1.0.0",
+  "description": "**React Image** is an `<img>` tag replacement for [React.js](https://facebook.github.io/react/) with preloader and multiple image fallback support",
   "scripts": {
     "build": "npm run build:cjs && npm run build:es && npm run build:umd && npm run build:umd:min",
     "build:cjs": "NODE_ENV=production BABEL_ENV=commonjs babel src/ --out-dir cjs/ --ignore *.test.js",
@@ -14,14 +14,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/mbrevda/react-img-multi.git"
+    "url": "git+ssh://git@github.com/mbrevda/react-image.git"
   },
   "keywords": [
     "reactjs",
     "img",
     "image",
     "loader",
-    "fallback"
+    "fallback",
+    "react image",
+    "react-image",
+    "react img multi",
+    "react-img-multi",
+    "react image fallback",
+    "react image loader",
+    "react image preloader"
   ],
   "files": [
     "*.md",
@@ -35,9 +42,9 @@
   "author": "mbrevda@gmail.com",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mbrevda/react-img-multi/issues"
+    "url": "https://github.com/mbrevda/react-image/issues"
   },
-  "homepage": "https://github.com/mbrevda/react-img-multi#readme",
+  "homepage": "https://github.com/mbrevda/react-image#readme",
   "devDependencies": {
     "babel-eslint": "7.2.2",
     "babel-cli": "6.24.1",
