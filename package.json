@@ -78,5 +78,8 @@
   "peerDependencies": {
     "react": "^15",
     "react-dom": "^15"
+  },
+  "dependencies": {
+    "prop-types": "^15.5.8"
   }
 }
