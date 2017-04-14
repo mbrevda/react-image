@@ -113,7 +113,7 @@ const myComponent = () =>
 
 Browser Support
 ---
-`react-img-multi` dose not include an `Object.assign` polyfill, that may be needed [depending on your targeted browsers](http://kangax.github.io/compat-table/es6/#test-Object_static_methods_Object.assign). You can add it in one of the following ways:
+`react-img-multi` does not include an `Object.assign` polyfill, that may be needed [depending on your targeted browsers](http://kangax.github.io/compat-table/es6/#test-Object_static_methods_Object.assign). You can add it in one of the following ways:
 
 1. include it in your package: `https://www.npmjs.com/package/es6-object-assign`
 
