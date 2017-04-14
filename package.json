@@ -65,7 +65,7 @@
     "webpack": "2.3.3"
   },
   "peerDependencies": {
-    "react": "^15.5.4",
+    "react": "^15",
     "react-dom": "^15"
   }
 }
