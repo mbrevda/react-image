@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
+import { node, oneOfType, string, array } from 'prop-types'
 
-const { node, oneOfType, string, array } = React.PropTypes
 const cache = {}
 class Img extends Component {
   static propTypes = {
@@ -24,9 +24,11 @@ class Img extends Component {
     for (let i = 0; i < this.sourceList.length; i++) {
       // if we've never seen this image before, the cache wont help.
       // no need to look further, just start loading
+      /* istanbul ignore else */
       if (!(this.sourceList[i] in cache)) break
 
       // if we have loaded this image before, just load it again
+      /* istanbul ignore else */
       if (cache[this.sourceList[i]] === true) {
         this.state = {currentIndex: i, isLoading: false, isLoaded: true}
         return true
@@ -34,16 +36,17 @@ class Img extends Component {
     }
 
     this.state = this.sourceList.length
-        // 'normal' opperation: start at 0 and try to load
-        ? {currentIndex: 0, isLoading: true, isLoaded: false}
-        // if we dont have any sources, jump directly to unloaded
-        : {isLoading: false, isLoaded: false}
+      // 'normal' opperation: start at 0 and try to load
+      ? {currentIndex: 0, isLoading: true, isLoaded: false}
+      // if we dont have any sources, jump directly to unloaded
+      : {isLoading: false, isLoaded: false}
   }
 
   srcToArray = src => (Array.isArray(src) ? src : [src]).filter(x => x)
 
   onLoad = () => {
     cache[this.sourceList[this.state.currentIndex]] = true
+    /* istanbul ignore else */
     if (this.i) this.setState({isLoaded: true})
   }
 
@@ -51,35 +54,34 @@ class Img extends Component {
     cache[this.sourceList[this.state.currentIndex]] = false
     // if the current image has already been destroyed, we are probably no longer mounted
     // no need to do anything then
-    if (!this.i) return
-
-    // itterate to the next source in the list
-    let nextIndex = this.state.currentIndex + 1
-
-    // currentIndex is zero bases, length is 1 based.
-    // if we have no more sources to try, return - we are done
-    if (nextIndex === this.sourceList.length) return this.setState({isLoading: false})
+    /* istanbul ignore else */
+    if (!this.i) return false
 
     // before loading the next image, check to see if it was ever loaded in the past
-    for (let i = nextIndex; i < this.sourceList.length; i++) {
+    for (var nextIndex = this.state.currentIndex + 1; nextIndex < this.sourceList.length; nextIndex++) {
       // get next img
-      let src = this.sourceList[i]
+      let src = this.sourceList[nextIndex]
 
       // if we have never seen it, its the one we want to try next
       if (!(src in cache)) {
-        this.setState({currentIndex: i})
+        this.setState({currentIndex: nextIndex})
         break
       }
 
       // if we know it exists, use it!
       if (cache[src] === true) {
-        this.setState({currentIndex: i, isLoading: false, isLoaded: true})
+        this.setState({currentIndex: nextIndex, isLoading: false, isLoaded: true})
         return true
       }
 
       // if we know it doesn't exist, skip it!
+      /* istanbul ignore else */
       if (cache[src] === false) continue
     }
+
+    // currentIndex is zero bases, length is 1 based.
+    // if we have no more sources to try, return - we are done
+    if (nextIndex === this.sourceList.length) return this.setState({isLoading: false})
 
     // otherwise, try the next img
     this.loadImg()
@@ -101,11 +103,13 @@ class Img extends Component {
 
   componentDidMount () {
     // kick off process
+    /* istanbul ignore else */
     if (this.state.isLoading) this.loadImg()
   }
 
   componentWillUnmount () {
     // ensure that we dont leave any lingering listeners
+    /* istanbul ignore else */
     if (this.i) this.unloadImg()
   }
 
@@ -137,6 +141,7 @@ class Img extends Component {
     if (!this.state.isLoaded && this.state.isLoading) return this.props.loader ? this.props.loader : null
 
     // if we have given up on loading, show a place holder if requested, or nothing
+    /* istanbul ignore else */
     if (!this.state.isLoaded && !this.state.isLoading) return this.props.unloader ? this.props.unloader : null
   }
 }

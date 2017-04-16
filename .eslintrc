@@ -17,7 +17,7 @@
         "react"
     ],
     "globals": {
-        "it": true,
+        "test": true,
         "expect": true
     },
     "rules": {

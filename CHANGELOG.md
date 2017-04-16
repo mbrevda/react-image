@@ -1,3 +1,12 @@
+1.0.1
+===
+* move to new prop-types package
+* add 100% test coverage
+
+1.0.0
+===
+* Renamed to react-image
+
 0.6.3
 ===
 * Housekeeping: update dependencies

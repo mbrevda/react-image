@@ -13,6 +13,9 @@ build:
     - script:
       name: build
       code: npm run build
+    - script:
+      name: update codecov
+      code: npm run codecov
 deploy:
   steps:
     - script:
