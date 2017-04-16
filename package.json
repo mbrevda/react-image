@@ -1,7 +1,7 @@
 {
   "name": "react-image",
   "version": "1.0.1",
-  "description": "**React Image** is an `<img>` tag replacement for [React.js](https://facebook.github.io/react/) with preloader and multiple image fallback support",
+  "description": "React Image is an <img> tag replacement for react, featuring preloader and multiple image fallback support",
   "scripts": {
     "build": "npm run build:cjs && npm run build:es && npm run build:umd && npm run build:umd:min",
     "build:cjs": "NODE_ENV=production BABEL_ENV=commonjs babel src/ --out-dir cjs/ --ignore *.test.js",
