@@ -6,7 +6,9 @@ React Image 🏝 🏖 🏜
 [![npm](https://img.shields.io/npm/dt/react-image.svg?style=flat-square)](https://www.npmjs.com/package/react-image)
 [![npm](https://img.shields.io/npm/dm/react-image.svg?style=flat-square)](https://www.npmjs.com/package/react-image)
 [![Known Vulnerabilities](https://snyk.io/test/github/mbrevda/react-image/badge.svg)](https://snyk.io/test/github/mbrevda/react-image)
-[![wercker status](https://app.wercker.com/status/deff357a6b8d111f465c78e690dc9019/s/master "wercker status")](https://app.wercker.com/project/byKey/deff357a6b8d111f465c78e690dc9019)
+[![wercker status](https://app.wercker.com/status/51bfd9b8aa6e52acf77310e17f00aff4/s/master "wercker status")](https://app.wercker.com/project/byKey/51bfd9b8aa6e52acf77310e17f00aff4)
+[![codecov](https://codecov.io/gh/mbrevda/react-image/branch/master/graph/badge.svg)](https://codecov.io/gh/mbrevda/react-image)
+
 
 **React Image** is an `<img>` tag replacement for [React.js](https://facebook.github.io/react/) with preloader and multiple image fallback support.
 
