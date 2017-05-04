@@ -73,7 +73,7 @@
     "react-addons-test-utils": "15.5.1",
     "react-dom": "15.5.4",
     "semver": "5.3.0",
-    "webpack": "2.4.1"
+    "webpack": "2.5.0"
   },
   "peerDependencies": {
     "react": "^15",
