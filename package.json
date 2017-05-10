@@ -58,7 +58,7 @@
     "babel-preset-es2015": "6.24.1",
     "babel-preset-react": "6.24.1",
     "eslint-config-standard": "10.2.1",
-    "codecov": "2.1.0",
+    "codecov": "2.2.0",
     "enzyme": "2.8.2",
     "eslint": "3.18.0",
     "eslint-config-standard": "10.2.0",
