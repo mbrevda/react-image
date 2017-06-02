@@ -63,7 +63,7 @@
     "eslint": "3.18.0",
     "eslint-config-standard": "10.2.0",
     "eslint-friendly-formatter": "3.0.0",
-    "eslint-plugin-import": "2.3.0",
+    "eslint-plugin-import": "2.4.0",
     "eslint-plugin-node": "4.2.2",
     "eslint-plugin-promise": "3.5.0",
     "eslint-plugin-react": "7.0.0",
