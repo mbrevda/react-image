@@ -10,11 +10,11 @@ React Image 🏝 🏖 🏜
 [![codecov](https://codecov.io/gh/mbrevda/react-image/branch/master/graph/badge.svg)](https://codecov.io/gh/mbrevda/react-image)
 
 
-**React Image** is an `<img>` tag replacement for [React.js](https://facebook.github.io/react/) with preloader and multiple image fallback support.
+**React Image** is an `<img>` tag replacement for [React.js](https://facebook.github.io/react/), featuring preloader and multiple image fallback support.
 
 With **React Image** you can specify multiple images to be used as fallbacks in the event that the browser couldn't load the previous image. Additionally, you can specify any React element to be used before an image is loaded (i.e. a spinner) and in the event than the specified image(s) could not be loaded.
 
-**React Image** will cleverly hide "broken" images to prevent showing a the browser default "broken image"  placeholder. **React Image** caches past attempts to load an image so that the same image won't be attempted to be pulled over the network again, until the next page reload.
+**React Image** will cleverly hide "broken" images to prevent showing the browsers default "broken image"  placeholder. **React Image** caches past attempts to load an image so that the same image won't be attempted to be pulled over the network again, until the next page reload.
 
 This package was formerly known as `react-img-multi`. Special thanks to @yuanyan for agreeing to relinquish the name!
 
