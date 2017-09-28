@@ -4,6 +4,6 @@
   "rebaseStalePrs": true,
   "separateMajorReleases": false,
   "lockFileMaintenance": { "enabled": false },
-  "automerge": "all",
+  "automerge": true,
   "automergeType": "branch-push"
 }
