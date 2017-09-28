@@ -3,7 +3,6 @@
   "timezone": "UTC",
   "rebaseStalePrs": true,
   "separateMajorReleases": false,
-  "automerge": "none",
   "lockFileMaintenance": { "enabled": false },
   "automerge": "all",
   "automergeType": "branch-push"
