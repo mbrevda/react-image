@@ -60,7 +60,7 @@
     "eslint-config-standard": "10.2.1",
     "codecov": "2.3.0",
     "enzyme": "2.8.2",
-    "eslint": "4.7.2",
+    "eslint": "4.8.0",
     "eslint-config-standard": "10.2.1",
     "eslint-friendly-formatter": "3.0.0",
     "eslint-plugin-node": "5.2.0",
