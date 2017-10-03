@@ -1,8 +1,8 @@
 {
   "enabled": true,
   "timezone": "UTC",
+  "extends": [":base"],
   "rebaseStalePrs": true,
-  "separateMajorReleases": false,
   "lockFileMaintenance": { "enabled": false },
   "automerge": true,
   "automergeType": "branch-push"
