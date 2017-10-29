@@ -1,3 +1,7 @@
+1.2.0
+===
+* Add support for React 16
+
 1.0.1
 ===
 * move to new prop-types package

@@ -1,6 +1,9 @@
 import React from 'react'
+import Enzyme,  {shallow} from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16'
 import Img from './index.js'
-import {shallow} from 'enzyme'
+
+Enzyme.configure({adapter: new Adapter()})
 
 test('render with no opts', () => {
   expect(shallow(<Img />).html()).toEqual(null)
