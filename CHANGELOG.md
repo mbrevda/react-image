@@ -1,3 +1,7 @@
+1.3.0
+===
+* Use img.decode() by default where available
+
 1.2.0
 ===
 * Add support for React 16

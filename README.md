@@ -100,6 +100,17 @@ const myComponent = () =>
   >
 ```
 
+### Decoding before paint
+By default and when supported by the browser, `react-image` uses [`img.decode()`](https://html.spec.whatwg.org/multipage/embedded-content.html#dom-img-decode) to decode the image and only render it when it's fully ready to be painted. While this doesn't matter much for vector images (such as svg's) which are rendered immediately, decoding the image before painting prevents the browser from hanging or flashing while the image is decoded. If this behaviour is undesirable, it can be disabled by setting the `decode` prop to `false`:
+
+```js
+const myComponent = () =>
+  <Img
+    src={'https://www.example.com/foo.jpg'}
+    decode={false}
+  >
+```
+
 Recipes
 ---
 ### Delay rendering until element is visible (lazy rendering)

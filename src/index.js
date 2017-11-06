@@ -1,17 +1,19 @@
 import React, {Component} from 'react'
-import { node, oneOfType, string, array } from 'prop-types'
+import {node, oneOfType, string, array, bool} from 'prop-types'
 
 const cache = {}
 class Img extends Component {
   static propTypes = {
     loader: node,
     unloader: node,
+    decode: bool,
     src: oneOfType([string, array])
   }
 
   static defaultProps = {
     loader: false,
     unloader: false,
+    decode: true,
     src: []
   }
 
@@ -90,7 +92,11 @@ class Img extends Component {
   loadImg = () => {
     this.i = new Image()
     this.i.src = this.sourceList[this.state.currentIndex]
-    this.i.onload = this.onLoad
+    if (this.props.decode && this.i.decode) {
+      this.i.decode().then(this.onLoad).catch(this.onError)
+    } else {
+      this.i.onload = this.onLoad
+    }
     this.i.onerror = this.onError
   }
 
