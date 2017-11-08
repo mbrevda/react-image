@@ -92,11 +92,13 @@ class Img extends Component {
   loadImg = () => {
     this.i = new Image()
     this.i.src = this.sourceList[this.state.currentIndex]
+
     if (this.props.decode && this.i.decode) {
       this.i.decode().then(this.onLoad).catch(this.onError)
     } else {
       this.i.onload = this.onLoad
     }
+
     this.i.onerror = this.onError
   }
 

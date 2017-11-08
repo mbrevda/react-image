@@ -21,6 +21,17 @@ test('render with src array', () => {
   expect(i.html()).toEqual('<img src="foo"/>')
 })
 
+test('render with decode=true', () => {
+  const origionalDecode = window.Image.prototype.decode
+  window.Image.prototype.decode = () => Promise.resolve()
+
+  const i = shallow(<Img src="foo" />)
+  i.setState({isLoaded: true})
+  expect(i.html()).toEqual('<img src="foo"/>')
+
+  window.Image.prototype.decode = origionalDecode
+})
+
 test('fallback to next image', () => {
   const i = shallow(<Img src={['foo', 'bar']}/>)
   i.setState({currentIndex: i.state('currentIndex') + 1, isLoaded: true})

@@ -1,3 +1,7 @@
+1.3.1
+===
+* bug: Don't pass decode prop to underlying `<img>`
+
 1.3.0
 ===
 * Use img.decode() by default where available
