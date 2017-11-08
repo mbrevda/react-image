@@ -139,7 +139,7 @@ class Img extends Component {
     // if we have loaded, show img
     if (this.state.isLoaded) {
       // clear non img props
-      let {src, loader, unloader, ...rest} = this.props //eslint-disable-line
+      let {src, loader, unloader, decode, ...rest} = this.props //eslint-disable-line
       return <img src={this.sourceList[this.state.currentIndex]} {...rest} />
     }
 
