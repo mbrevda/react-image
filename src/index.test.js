@@ -5,6 +5,8 @@ import Img from './index.js'
 
 Enzyme.configure({adapter: new Adapter()})
 
+// const trigger = (i, e) => i.instance().i.dispatchEvent(new Event(e))
+
 test('render with no opts', () => {
   expect(shallow(<Img />).html()).toEqual(null)
 })
@@ -21,15 +23,18 @@ test('render with src array', () => {
   expect(i.html()).toEqual('<img src="foo"/>')
 })
 
-test('render with decode=true', () => {
+test.skip('render with decode=true', () => {
   const origionalDecode = window.Image.prototype.decode
-  window.Image.prototype.decode = () => Promise.resolve()
+  const p = Promise.resolve()
+  window.Image.prototype.decode = () => p
 
   const i = shallow(<Img src="foo" />)
-  i.setState({isLoaded: true})
-  expect(i.html()).toEqual('<img src="foo"/>')
-
   window.Image.prototype.decode = origionalDecode
+  return p.then(() => {
+    // i.instance().i.dispatchEvent(new Event('load'))
+    i.update()
+    expect(i.html()).toEqual('<img src="foo"/>')
+  })
 })
 
 test('fallback to next image', () => {
@@ -38,7 +43,7 @@ test('fallback to next image', () => {
   expect(i.html()).toEqual('<img src="bar"/>')
 })
 
-test('ensure missing image isnt renreder to browser', () => {
+test('ensure missing image isnt renderer to browser', () => {
   const i = shallow(<Img src={['foo', 'bar']}/>)
   i.setState({currentIndex: i.state('currentIndex') + 2})
   expect(i.html()).toEqual(null)
