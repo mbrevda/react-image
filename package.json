@@ -68,7 +68,7 @@
     "eslint-plugin-node": "5.2.1",
     "eslint-plugin-import": "2.8.0",
     "eslint-plugin-promise": "3.6.0",
-    "eslint-plugin-react": "7.5.1",
+    "eslint-plugin-react": "7.6.0",
     "eslint-plugin-standard": "3.0.1",
     "jest": "22.1.4",
     "react": "16.2.0",
