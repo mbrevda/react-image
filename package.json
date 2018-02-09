@@ -49,7 +49,7 @@
   },
   "homepage": "https://github.com/mbrevda/react-image#readme",
   "devDependencies": {
-    "babel-jest": "22.2.0",
+    "babel-jest": "22.2.2",
     "babel-cli": "6.26.0",
     "babel-eslint": "8.2.1",
     "babel-loader": "7.1.2",
@@ -70,7 +70,7 @@
     "eslint-plugin-promise": "3.6.0",
     "eslint-plugin-react": "7.6.1",
     "eslint-plugin-standard": "3.0.1",
-    "jest": "22.2.1",
+    "jest": "22.2.2",
     "react": "16.2.0",
     "react-addons-test-utils": "15.6.2",
     "react-dom": "16.2.0",
