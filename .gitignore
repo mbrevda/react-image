@@ -9,3 +9,4 @@ coverage/
 umd/
 cjs/
 es/
+package-lock.json
