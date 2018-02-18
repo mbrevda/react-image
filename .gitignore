@@ -10,3 +10,4 @@ umd/
 cjs/
 es/
 package-lock.json
+dist/

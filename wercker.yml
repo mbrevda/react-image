@@ -6,9 +6,6 @@ build:
       code: npm config set loglevel warn;
     - npm-install:
       options: --loglevel=warn
-    - script:
-      name: lint js
-      code: npm run lint
     - wercker/npm-test
     - script:
       name: build

@@ -23,7 +23,7 @@ test('render with src array', () => {
   expect(i.html()).toEqual('<img src="foo"/>')
 })
 
-test.skip('render with decode=true', () => {
+test('render with decode=true', () => {
   const origionalDecode = window.Image.prototype.decode
   const p = Promise.resolve()
   window.Image.prototype.decode = () => p

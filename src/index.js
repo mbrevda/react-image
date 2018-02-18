@@ -17,7 +17,7 @@ class Img extends Component {
     src: []
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.sourceList = this.srcToArray(this.props.src)
@@ -38,10 +38,10 @@ class Img extends Component {
     }
 
     this.state = this.sourceList.length
-      // 'normal' opperation: start at 0 and try to load
-      ? {currentIndex: 0, isLoading: true, isLoaded: false}
-      // if we dont have any sources, jump directly to unloaded
-      : {isLoading: false, isLoaded: false}
+      ? // 'normal' opperation: start at 0 and try to load
+        {currentIndex: 0, isLoading: true, isLoaded: false}
+      : // if we dont have any sources, jump directly to unloaded
+        {isLoading: false, isLoaded: false}
   }
 
   srcToArray = src => (Array.isArray(src) ? src : [src]).filter(x => x)
@@ -60,7 +60,11 @@ class Img extends Component {
     if (!this.i) return false
 
     // before loading the next image, check to see if it was ever loaded in the past
-    for (var nextIndex = this.state.currentIndex + 1; nextIndex < this.sourceList.length; nextIndex++) {
+    for (
+      var nextIndex = this.state.currentIndex + 1;
+      nextIndex < this.sourceList.length;
+      nextIndex++
+    ) {
       // get next img
       let src = this.sourceList[nextIndex]
 
@@ -72,7 +76,11 @@ class Img extends Component {
 
       // if we know it exists, use it!
       if (cache[src] === true) {
-        this.setState({currentIndex: nextIndex, isLoading: false, isLoaded: true})
+        this.setState({
+          currentIndex: nextIndex,
+          isLoading: false,
+          isLoaded: true
+        })
         return true
       }
 
@@ -83,7 +91,8 @@ class Img extends Component {
 
     // currentIndex is zero bases, length is 1 based.
     // if we have no more sources to try, return - we are done
-    if (nextIndex === this.sourceList.length) return this.setState({isLoading: false})
+    if (nextIndex === this.sourceList.length)
+      return this.setState({isLoading: false})
 
     // otherwise, try the next img
     this.loadImg()
@@ -94,7 +103,10 @@ class Img extends Component {
     this.i.src = this.sourceList[this.state.currentIndex]
 
     if (this.props.decode && this.i.decode) {
-      this.i.decode().then(this.onLoad).catch(this.onError)
+      this.i
+        .decode()
+        .then(this.onLoad)
+        .catch(this.onError)
     } else {
       this.i.onload = this.onLoad
     }
@@ -109,19 +121,19 @@ class Img extends Component {
     delete this.i
   }
 
-  componentDidMount () {
+  componentDidMount() {
     // kick off process
     /* istanbul ignore else */
     if (this.state.isLoading) this.loadImg()
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     // ensure that we dont leave any lingering listeners
     /* istanbul ignore else */
     if (this.i) this.unloadImg()
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     let src = this.srcToArray(nextProps.src)
 
     let srcAdded = src.filter(s => this.sourceList.indexOf(s) === -1)
@@ -133,11 +145,14 @@ class Img extends Component {
 
       // if we dont have any sources, jump directly to unloader
       if (!src.length) return this.setState({isLoading: false, isLoaded: false})
-      this.setState({currentIndex: 0, isLoading: true, isLoaded: false}, this.loadImg)
+      this.setState(
+        {currentIndex: 0, isLoading: true, isLoaded: false},
+        this.loadImg
+      )
     }
   }
 
-  render () {
+  render() {
     // if we have loaded, show img
     if (this.state.isLoaded) {
       // clear non img props
@@ -146,11 +161,13 @@ class Img extends Component {
     }
 
     // if we are still trying to load, show img and a loader if requested
-    if (!this.state.isLoaded && this.state.isLoading) return this.props.loader ? this.props.loader : null
+    if (!this.state.isLoaded && this.state.isLoading)
+      return this.props.loader ? this.props.loader : null
 
     // if we have given up on loading, show a place holder if requested, or nothing
     /* istanbul ignore else */
-    if (!this.state.isLoaded && !this.state.isLoading) return this.props.unloader ? this.props.unloader : null
+    if (!this.state.isLoaded && !this.state.isLoading)
+      return this.props.unloader ? this.props.unloader : null
   }
 }
 
