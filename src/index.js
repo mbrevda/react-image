@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {node, oneOfType, string, array, bool} from 'prop-types'
+import {node, func, oneOfType, string, array, bool} from 'prop-types'
 
 const cache = {}
 class Img extends Component {
@@ -7,14 +7,18 @@ class Img extends Component {
     loader: node,
     unloader: node,
     decode: bool,
-    src: oneOfType([string, array])
+    src: oneOfType([string, array]),
+    container: func
   }
 
   static defaultProps = {
     loader: false,
     unloader: false,
     decode: true,
-    src: []
+    src: [],
+    // by default, just return what gets sent in. Can be used for advanced rendering
+    // such as animations
+    container: x => x
   }
 
   constructor(props) {
@@ -156,18 +160,24 @@ class Img extends Component {
     // if we have loaded, show img
     if (this.state.isLoaded) {
       // clear non img props
-      let {src, loader, unloader, decode, ...rest} = this.props //eslint-disable-line
-      return <img src={this.sourceList[this.state.currentIndex]} {...rest} />
+      let {src, loader, unloader, decode, container, ...rest} = this.props //eslint-disable-line
+      let imgProps = {
+        ...{src: this.sourceList[this.state.currentIndex]},
+        ...rest
+      }
+      return this.props.container(<img {...imgProps} />)
     }
 
     // if we are still trying to load, show img and a loader if requested
     if (!this.state.isLoaded && this.state.isLoading)
-      return this.props.loader ? this.props.loader : null
+      return this.props.loader ? this.props.container(this.props.loader) : null
 
     // if we have given up on loading, show a place holder if requested, or nothing
     /* istanbul ignore else */
     if (!this.state.isLoaded && !this.state.isLoading)
-      return this.props.unloader ? this.props.unloader : null
+      return this.props.unloader
+        ? this.props.container(this.props.unloader)
+        : null
   }
 }
 

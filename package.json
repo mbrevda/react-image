@@ -1,17 +1,24 @@
 {
   "name": "react-image",
   "version": "1.3.1",
-  "description": "React Image is an <img> tag replacement for react, featuring preloader and multiple image fallback support",
+  "description":
+    "React Image is an <img> tag replacement for react, featuring preloader and multiple image fallback support",
   "scripts": {
-    "build": "npm run build:cjs && npm run build:es && npm run build:umd && npm run build:umd:min && node ./webpack.site.js",
-    "build:cjs": "NODE_ENV=production BABEL_ENV=commonjs babel src/ --out-dir cjs/ --ignore *.test.js",
-    "build:es": "NODE_ENV=production BABEL_ENV=es babel src/ --out-dir es/ --ignore *.test.js",
-    "build:umd": "NODE_ENV=production webpack --config webpack.config.umd.js --bail umd/index.js",
-    "build:umd:min": "NODE_ENV=production webpack -p --config webpack.config.umd.js --bail  umd/index.min.js",
+    "build":
+      "npm run build:cjs && npm run build:es && npm run build:umd && npm run build:umd:min && node ./webpack.site.js",
+    "build:cjs":
+      "NODE_ENV=production BABEL_ENV=commonjs babel src/ --out-dir cjs/ --ignore *.test.js",
+    "build:es":
+      "NODE_ENV=production BABEL_ENV=es babel src/ --out-dir es/ --ignore *.test.js",
+    "build:umd":
+      "NODE_ENV=production webpack --config webpack.config.umd.js --bail umd/index.js",
+    "build:umd:min":
+      "NODE_ENV=production webpack -p --config webpack.config.umd.js --bail  umd/index.min.js",
     "test": "jest --config jest.json",
     "pretty": "prettier src/**/*.js --write",
     "dev": "node ./webpack.site.js --watch --server",
-    "shouldPublish": "semver `npm -s view $npm_package_name version` --range \"<$npm_package_version\"",
+    "shouldPublish":
+      "semver `npm -s view $npm_package_name version` --range \"<$npm_package_version\"",
     "codecov": "codecov"
   },
   "repository": {
@@ -32,14 +39,14 @@
     "react image loader",
     "react image preloader",
     "react images",
-    "placeholder"
+    "placeholder",
+    "placeholders",
+    "react image transition",
+    "react image fade",
+    "image transition",
+    "image fade"
   ],
-  "files": [
-    "*.md",
-    "es",
-    "umd",
-    "cjs"
-  ],
+  "files": ["*.md", "es", "umd", "cjs"],
   "jsnext:main": "es/index",
   "module": "es/index",
   "main": "cjs/index.js",
@@ -59,19 +66,20 @@
     "babel-plugin-transform-runtime": "6.23.0",
     "babel-preset-es2015": "6.24.1",
     "babel-preset-react": "6.24.1",
-    "clean-webpack-plugin": "^0.1.18",
+    "clean-webpack-plugin": "0.1.18",
     "codecov": "3.0.0",
     "commander": "2.14.1",
     "enzyme": "3.3.0",
     "enzyme-adapter-react-16": "1.1.1",
-    "express": "^4.16.2",
+    "express": "4.16.2",
     "jest": "22.3.0",
     "prettier": "1.10.2",
     "react": "16.2.0",
     "react-addons-test-utils": "15.6.2",
+    "react-css-transition-replace": "3.0.2",
     "react-dom": "16.2.0",
     "semver": "5.5.0",
-    "serve-static": "^1.13.2",
+    "serve-static": "1.13.2",
     "uglifyjs-webpack-plugin": "1.2.0",
     "webpack": "3.11.0"
   },
