@@ -7,8 +7,8 @@ export default () => (
       justifyContent: 'center',
       alignItems: 'center',
       flexDirection: 'column',
-      height: 240,
-      width: 320
+      height: '100%',
+      width: '100%'
     }}
   >
     <img src="./loader.gif" />

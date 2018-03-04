@@ -26,7 +26,7 @@ style.innerHTML = `
 .fade-wait-enter.fade-wait-enter-active {
   opacity: 1;
   /* Delay the enter animation until the leave completes */
-  transition: opacity ${fadeOut}ms ease-in ${fadeIn}ms;
+  transition: opacity ${fadeOut}ms ease-in-out;
 }
 
 .fade-wait-height {
@@ -47,7 +47,7 @@ export default () => (
         container={children => {
           return (
             <ReactCSSTransitionReplace
-              transitionEnterTimeout={fadeIn * 10}
+              transitionEnterTimeout={fadeIn}
               transitionLeaveTimeout={fadeOut}
               transitionName="fade-wait"
               changeWidth={true}
