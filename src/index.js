@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {node, func, oneOfType, string, array, bool} from 'prop-types'
+import {node, func, oneOfType, string, arrayOf, bool} from 'prop-types'
 
 const cache = {}
 class Img extends Component {
@@ -7,7 +7,7 @@ class Img extends Component {
     loader: node,
     unloader: node,
     decode: bool,
-    src: oneOfType([string, array]),
+    src: oneOfType([string, arrayOf(string)]),
     container: func
   }
 
