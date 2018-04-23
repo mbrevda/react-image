@@ -24,12 +24,12 @@ test('render with src array', () => {
 })
 
 test.skip('render with decode=true', () => {
-  const origionalDecode = window.Image.prototype.decode
+  const originalDecode = window.Image.prototype.decode
   const p = Promise.resolve()
   window.Image.prototype.decode = () => p
 
   const i = shallow(<Img src="foo" />)
-  window.Image.prototype.decode = origionalDecode
+  window.Image.prototype.decode = originalDecode
   return p.then(() => {
     // i.instance().i.dispatchEvent(new Event('load'))
     i.update()
@@ -172,4 +172,20 @@ test('onError try the next image. If its cached as error, skip it', () => {
     isLoading: false,
     isLoaded: false
   })
+})
+
+test('onLoad callback is passed', () => {
+  const onLoadMock = jest.fn()
+  const i = shallow(<Img src="bar10" onLoad={onLoadMock}/>)
+  const instance = i.instance()
+  instance.onLoad()
+  expect(onLoadMock).toHaveBeenCalled()
+})
+
+test('onError callback is passed', () => {
+  const onErrorMock = jest.fn()
+  const i = shallow(<Img src="bar11" onError={onErrorMock}/>)
+  const instance = i.instance()
+  instance.onError();
+  expect(onErrorMock).toHaveBeenCalled()
 })

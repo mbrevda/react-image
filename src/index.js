@@ -8,7 +8,9 @@ class Img extends Component {
     unloader: node,
     decode: bool,
     src: oneOfType([string, arrayOf(string)]),
-    container: func
+    container: func,
+    onLoad: func,
+    onError: func
   }
 
   static defaultProps = {
@@ -54,6 +56,7 @@ class Img extends Component {
     cache[this.sourceList[this.state.currentIndex]] = true
     /* istanbul ignore else */
     if (this.i) this.setState({isLoaded: true})
+    if (this.props.onLoad) this.props.onLoad()
   }
 
   onError = () => {
@@ -95,9 +98,10 @@ class Img extends Component {
 
     // currentIndex is zero bases, length is 1 based.
     // if we have no more sources to try, return - we are done
-    if (nextIndex === this.sourceList.length)
+    if (nextIndex === this.sourceList.length) {
+      if (this.props.onError) this.props.onError()
       return this.setState({isLoading: false})
-
+    }
     // otherwise, try the next img
     this.loadImg()
   }
