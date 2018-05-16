@@ -23,17 +23,15 @@ test('render with src array', () => {
   expect(i.html()).toEqual('<img src="foo"/>')
 })
 
-test.skip('render with decode=true', () => {
-  const origionalDecode = window.Image.prototype.decode
-  const p = Promise.resolve()
-  window.Image.prototype.decode = () => p
+test('render with decode=true', () => {
+  const img = new Image()
+  img.decode = () => Promise.resolve()
+  const i = shallow(<Img src="fooDecode" mockImage={img} />)
 
-  const i = shallow(<Img src="foo" />)
-  window.Image.prototype.decode = origionalDecode
-  return p.then(() => {
-    // i.instance().i.dispatchEvent(new Event('load'))
+  // run on next tick
+  return Promise.resolve().then(() => {
     i.update()
-    expect(i.html()).toEqual('<img src="foo"/>')
+    expect(i.html()).toEqual('<img src="fooDecode"/>')
   })
 })
 

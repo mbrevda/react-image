@@ -1,5 +1,13 @@
 import React, {Component} from 'react'
-import {node, func, oneOfType, string, arrayOf, bool} from 'prop-types'
+import {
+  node,
+  func,
+  oneOfType,
+  string,
+  array,
+  bool,
+  instanceOf
+} from 'prop-types'
 
 const cache = {}
 class Img extends Component {
@@ -7,8 +15,9 @@ class Img extends Component {
     loader: node,
     unloader: node,
     decode: bool,
-    src: oneOfType([string, arrayOf(string)]),
-    container: func
+    src: oneOfType([string, array]),
+    container: func,
+    mockImage: instanceOf(Image) //used for testing only
   }
 
   static defaultProps = {
@@ -103,7 +112,7 @@ class Img extends Component {
   }
 
   loadImg = () => {
-    this.i = new Image()
+    this.i = this.props.mockImage || new Image()
     this.i.src = this.sourceList[this.state.currentIndex]
 
     if (this.props.decode && this.i.decode) {
@@ -166,7 +175,15 @@ class Img extends Component {
     // if we have loaded, show img
     if (this.state.isLoaded) {
       // clear non img props
-      let {src, loader, unloader, decode, container, ...rest} = this.props //eslint-disable-line
+      let {
+        src,
+        loader,
+        unloader,
+        decode,
+        container,
+        mockImage,
+        ...rest
+      } = this.props //eslint-disable-line
       let imgProps = {
         ...{src: this.sourceList[this.state.currentIndex]},
         ...rest
