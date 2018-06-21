@@ -121,7 +121,13 @@ class Img extends Component {
   unloadImg = () => {
     delete this.i.onerror
     delete this.i.onload
-    delete this.i.src
+    try {
+      delete this.i.src
+    } catch (e) {
+      // On Safari in Strict mode this will throw an exception,
+      //  - https://github.com/mbrevda/react-image/issues/187
+      // We don't need to do anything about it.
+    }
     delete this.i
   }
 
