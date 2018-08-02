@@ -3,7 +3,7 @@ const path = require('path'),
   CleanWebpackPlugin = require('clean-webpack-plugin'),
   webpack = require('webpack'),
   cmd = require('commander'),
-  {writeFileSync} = require('fs'),
+  {writeFileSync, mkdirSync, statSync} = require('fs'),
   outputdir = path.resolve(__dirname, 'dist')
 
 const opts = {
@@ -66,6 +66,12 @@ const webpackError = err => {
 }
 
 const buildIndex = stats => {
+  try {
+    statSync(outputdir)
+  } catch(e) {
+    if (e.code == 'ENOENT') mkdirSync(outputdir)
+  }
+
   const chunks = {}
   stats.compilation.chunks.map(c => {
     // name = path

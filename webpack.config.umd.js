@@ -2,25 +2,24 @@ let path = require('path')
 
 module.exports = {
   entry: './src/index.js',
-  // output: {
-  //   path: './umd',
-  //   filename: 'index.js'
-  // },
+  mode: 'production',
   output: {
     library: 'ReactImageMulti',
     libraryTarget: 'umd'
   },
   externals: {
-    'react': 'React',
+    react: 'React',
     'react-dom': 'ReactDOM'
   },
   module: {
-    loaders: [{
-      test: /\.js$/,
-      include: [
-        path.join(__dirname, 'src')
-      ],
-      loader: 'babel-loader'
-    }]
+    rules: [
+      {
+        test: /\.js$/,
+        include: [path.join(__dirname, 'src')],
+        use: {
+          loader: 'babel-loader'
+        }
+      }
+    ]
   }
 }
