@@ -1,24 +1,17 @@
 {
   "name": "react-image",
   "version": "1.3.1",
-  "description":
-    "React Image is an <img> tag replacement for react, featuring preloader and multiple image fallback support",
+  "description": "React Image is an <img> tag replacement for react, featuring preloader and multiple image fallback support",
   "scripts": {
-    "build":
-      "npm run build:cjs && npm run build:es && npm run build:umd && npm run build:umd:min && node ./webpack.site.js",
-    "build:cjs":
-      "NODE_ENV=production BABEL_ENV=commonjs babel src/ --out-dir cjs/ --ignore *.test.js",
-    "build:es":
-      "NODE_ENV=production BABEL_ENV=es babel src/ --out-dir es/ --ignore *.test.js",
-    "build:umd":
-      "NODE_ENV=production webpack --config webpack.config.umd.js --bail umd/index.js",
-    "build:umd:min":
-      "NODE_ENV=production webpack -p --config webpack.config.umd.js --bail  umd/index.min.js",
+    "build": "npm run build:cjs && npm run build:es && npm run build:umd && npm run build:umd:min && node ./webpack.site.js",
+    "build:cjs": "NODE_ENV=production BABEL_ENV=commonjs babel src/ --out-dir cjs/ --ignore *.test.js",
+    "build:es": "NODE_ENV=production BABEL_ENV=es babel src/ --out-dir es/ --ignore *.test.js",
+    "build:umd": "NODE_ENV=production webpack --config webpack.config.umd.js --bail umd/index.js",
+    "build:umd:min": "NODE_ENV=production webpack -p --config webpack.config.umd.js --bail  umd/index.min.js",
     "test": "jest --config jest.json",
     "pretty": "prettier src/**/*.js --write",
     "dev": "node ./webpack.site.js --watch --server",
-    "shouldPublish":
-      "semver `npm -s view $npm_package_name version` --range \"<$npm_package_version\"",
+    "shouldPublish": "semver `npm -s view $npm_package_name version` --range \"<$npm_package_version\"",
     "codecov": "codecov"
   },
   "repository": {
@@ -46,7 +39,12 @@
     "image transition",
     "image fade"
   ],
-  "files": ["*.md", "es", "umd", "cjs"],
+  "files": [
+    "*.md",
+    "es",
+    "umd",
+    "cjs"
+  ],
   "jsnext:main": "es/index",
   "module": "es/index",
   "main": "cjs/index.js",
