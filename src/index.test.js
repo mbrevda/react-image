@@ -84,7 +84,7 @@ test('componentDidMount start loading', () => {
   const i = shallow(<Img src="foo2" />)
   const inst = i.instance()
   inst.componentDidMount()
-  expect(inst.i.src).toEqual('foo2')
+  expect(inst.i.src).toEqual('http://localhost/foo2')
 })
 
 test('componentWillReceiveProps', () => {
