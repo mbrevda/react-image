@@ -52,7 +52,7 @@ let Img = require('react-image')
 and set a source for the image:
 
 ```js
-const myComponent = () => <Img src="www.example.com/foo.jpg">
+const myComponent = () => <Img src="www.example.com/foo.jpg" />
 ```
 
 will generate:
@@ -70,7 +70,8 @@ const myComponent = () =>
   <Img src={[
     'https://www.example.com/foo.jpg',
     'https://www.example.com/bar.jpg'
-  ]}>
+    ]}
+  />
 ```
 If an image has previously been attempted unsuccessfully, `react-image` will not retry loading it again until the page is reloaded.
 
@@ -83,7 +84,7 @@ const myComponent = () =>
       'https://www.example.com/bar.jpg'
     ]}
     loader={/*any valid react element */}
-  >
+  />
 ```
 If an image was previously loaded successfully (since the last time this page was loaded), the loader will not be shown and the image will be rendered directly instead.
 
@@ -97,7 +98,7 @@ const myComponent = () =>
       'https://www.example.com/bar.jpg'
     ]}
     unloader={/*any valid react element */}
-  >
+  />
 ```
 
 ### Decoding before paint
@@ -108,8 +109,31 @@ const myComponent = () =>
   <Img
     src={'https://www.example.com/foo.jpg'}
     decode={false}
-  >
+  />
 ```
+
+### Animations and other advanced uses
+A wrapper element `container` can be used to facilitate higher level operations which are beyond the scope of this project. `container` takes a single property, `children` which is whatever is passed in by **React Image** (i.e. the final `<img>`).
+
+For example, to animate the display of the image (and animate out the loader) a wrapper can be set:
+
+```js
+<Img
+  src={'https://www.example.com/foo.jpg'}
+  container={children => {
+    return (
+      <div class="foo">
+        {children}
+      </div>
+    )
+  }}
+/>
+```
+
+The `<img>` will now be contained by the `div` with class `foo` which can be targeted via css.
+A crude example of a transition using [ReactCSSTransitionReplace](https://github.com/marnusw/react-css-transition-replace) can be [found here](https://github.com/mbrevda/react-image/tree/master/site). Error reporting (i.e. logging images that loaded ok or failed to load) can be accomplished with `container`, too.
+A sample implementation can be [found here](https://github.com/mbrevda/react-image/pull/192#issuecomment-384340042).
+
 
 Recipes
 ---
@@ -125,6 +149,8 @@ const myComponent = () =>
   </VisibilitySensor>
 ```
 
+### Animate image loading
+see above
 
 Browser Support
 ---

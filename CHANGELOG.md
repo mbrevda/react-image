@@ -1,3 +1,10 @@
+1.4.0
+===
+* Add: `container` props
+* Fix: issue deleting `src` prop in Safari https://github.com/mbrevda/react-image/issues/187
+* Add: `babel-runtime` ad peer dep for https://pnpm.js.org/.
+* Add: (crude) demo including transitions
+
 1.3.1
 ===
 * bug: Don't pass decode prop to underlying `<img>`

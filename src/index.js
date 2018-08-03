@@ -172,35 +172,37 @@ class Img extends Component {
   }
 
   render() {
+    // set img props as rest
+    const {
+      src,
+      loader,
+      unloader,
+      decode,
+      container,
+      mockImage,
+      ...rest
+    } = this.props //eslint-disable-line
+
     // if we have loaded, show img
     if (this.state.isLoaded) {
-      // clear non img props
-      let {
-        src,
-        loader,
-        unloader,
-        decode,
-        container,
-        mockImage,
-        ...rest
-      } = this.props //eslint-disable-line
-      let imgProps = {
+      const imgProps = {
         ...{src: this.sourceList[this.state.currentIndex]},
         ...rest
       }
-      return this.props.container(<img {...imgProps} />)
+
+      return container(<img {...imgProps} />)
     }
 
     // if we are still trying to load, show img and a loader if requested
-    if (!this.state.isLoaded && this.state.isLoading)
-      return this.props.loader ? this.props.container(this.props.loader) : null
+    if (!this.state.isLoaded && this.state.isLoading) {
+      return loader ? container(this.props.loader) : null
+    }
 
     // if we have given up on loading, show a place holder if requested, or nothing
     /* istanbul ignore else */
-    if (!this.state.isLoaded && !this.state.isLoading)
-      return this.props.unloader
-        ? this.props.container(this.props.unloader)
-        : null
+    if (!this.state.isLoaded && !this.state.isLoading) {
+      return unloader ? container(this.props.unloader) : null
+    }
   }
 }
 
