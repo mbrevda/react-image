@@ -2,6 +2,7 @@ import React from 'react'
 import Enzyme, {shallow} from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 import Img from './index.js'
+import ReactDOMServer from 'react-dom/server'
 
 Enzyme.configure({adapter: new Adapter()})
 
@@ -170,4 +171,16 @@ test('onError try the next image. If its cached as error, skip it', () => {
     isLoading: false,
     isLoaded: false
   })
+})
+
+test('should ssr a loader', () => {
+  const html = ReactDOMServer.renderToStaticMarkup(
+    <Img src="foo10" loader={<span>Loading...</span>} />
+  )
+  expect(html).toEqual('<span>Loading...</span>')
+})
+
+test('should ssr nothing if only src is set', () => {
+  const html = ReactDOMServer.renderToStaticMarkup(<Img src="foo11" />)
+  expect(html).toEqual('')
 })
