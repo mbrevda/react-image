@@ -1,3 +1,7 @@
+1.4.1
+===
+* Fix: strip dev-specific code when compiling
+
 1.4.0
 ===
 * Add: `container` props

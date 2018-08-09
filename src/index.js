@@ -10,15 +10,20 @@ import {
 } from 'prop-types'
 
 const cache = {}
+const imgPropTypes = {
+  loader: node,
+  unloader: node,
+  decode: bool,
+  src: oneOfType([string, array]),
+  container: func
+}
+
+if (process.env.NODE_ENV != 'production') {
+  imgPropTypes.containermockImage = instanceOf(Image) //used for testing only
+}
+
 class Img extends Component {
-  static propTypes = {
-    loader: node,
-    unloader: node,
-    decode: bool,
-    src: oneOfType([string, array]),
-    container: func,
-    mockImage: instanceOf(Image) //used for testing only
-  }
+  static propTypes = imgPropTypes
 
   static defaultProps = {
     loader: false,
@@ -112,7 +117,11 @@ class Img extends Component {
   }
 
   loadImg = () => {
-    this.i = this.props.mockImage || new Image()
+    if (process.env.NODE_ENV != 'production') {
+      this.i = this.props.mockImage || new Image()
+    } else {
+      this.i = new Image()
+    }
     this.i.src = this.sourceList[this.state.currentIndex]
 
     if (this.props.decode && this.i.decode) {

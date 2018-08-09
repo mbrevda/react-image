@@ -2,7 +2,8 @@
   "presets": ["es2015", "react"],
   "plugins": [
     ["transform-object-rest-spread", { "useBuiltIns": true }],
-    "transform-class-properties"
+    "transform-class-properties",
+    "transform-inline-environment-variables"
   ],
   "env": {
     "commonjs": {
@@ -10,7 +11,8 @@
         "transform-runtime",
         ["transform-object-rest-spread", { "useBuiltIns": true }],
         ["transform-react-remove-prop-types", {"mode": "wrap"}],
-        "transform-class-properties"
+        "transform-class-properties",
+        "transform-inline-environment-variables"
       ],
       "presets": ["es2015", "react"]
     },
@@ -18,7 +20,8 @@
       "plugins": [
         "transform-runtime",
         ["transform-react-remove-prop-types", {"mode": "wrap"}],
-        "transform-class-properties"
+        "transform-class-properties",
+        "transform-inline-environment-variables"
       ],
       "presets": ["es2015", "react"]
     }

@@ -11,6 +11,9 @@ build:
       name: build
       code: npm run build
     - script:
+      name: test built
+      code: npm run test:built
+    - script:
       name: update codecov
       code: npm run codecov
 deploy:
