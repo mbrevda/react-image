@@ -60,7 +60,7 @@
     "babel-jest": "23.4.2",
     "babel-loader": "7.1.5",
     "babel-plugin-transform-class-properties": "6.24.1",
-    "babel-plugin-transform-inline-environment-variables": "^0.4.3",
+    "babel-plugin-transform-inline-environment-variables": "0.4.3",
     "babel-plugin-transform-object-rest-spread": "6.26.0",
     "babel-plugin-transform-react-remove-prop-types": "0.4.14",
     "babel-plugin-transform-runtime": "6.23.0",
