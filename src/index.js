@@ -199,18 +199,18 @@ class Img extends Component {
         ...rest
       }
 
-      return container(<img {...imgProps} />)
+      return container(<img {...imgProps} />, 0)
     }
 
     // if we are still trying to load, show img and a loader if requested
     if (!this.state.isLoaded && this.state.isLoading) {
-      return loader ? container(this.props.loader) : null
+      return loader ? container(this.props.loader, 1) : null
     }
 
     // if we have given up on loading, show a place holder if requested, or nothing
     /* istanbul ignore else */
     if (!this.state.isLoaded && !this.state.isLoading) {
-      return unloader ? container(this.props.unloader) : null
+      return unloader ? container(this.props.unloader, -1) : null
     }
   }
 }

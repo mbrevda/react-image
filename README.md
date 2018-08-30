@@ -113,7 +113,7 @@ const myComponent = () =>
 ```
 
 ### Animations and other advanced uses
-A wrapper element `container` can be used to facilitate higher level operations which are beyond the scope of this project. `container` takes a single property, `children` which is whatever is passed in by **React Image** (i.e. the final `<img>`).
+A wrapper element `container` can be used to facilitate higher level operations which are beyond the scope of this project. `container` takes a function with signature `(children, loadingStatus)`, where loadingStatus is optional. `children` is whatever is normally returned by **React Image** (i.e. the loader, the final `<img>`, or the unloader). `loadingStatus` is 1, 0, or -1, indicating if **React Image** is showing the loader, the image, or the unloader respectively.
 
 For example, to animate the display of the image (and animate out the loader) a wrapper can be set:
 
