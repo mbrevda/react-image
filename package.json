@@ -58,7 +58,7 @@
   "devDependencies": {
     "babel-cli": "6.26.0",
     "babel-jest": "23.6.0",
-    "babel-loader": "7.1.5",
+    "babel-loader": "8.0.2",
     "babel-plugin-transform-class-properties": "6.24.1",
     "babel-plugin-transform-inline-environment-variables": "0.4.3",
     "babel-plugin-transform-object-rest-spread": "6.26.0",
