@@ -1,29 +1,29 @@
 {
-  "presets": ["es2015", "react"],
+  "presets": ["@babel/preset-env", "@babel/preset-react"],
   "plugins": [
-    ["transform-object-rest-spread", { "useBuiltIns": true }],
-    "transform-class-properties",
+    ["@babel/plugin-proposal-object-rest-spread", { "useBuiltIns": true }],
+    "@babel/plugin-proposal-class-properties",
     "transform-inline-environment-variables"
   ],
   "env": {
     "commonjs": {
       "plugins": [
-        "transform-runtime",
-        ["transform-object-rest-spread", { "useBuiltIns": true }],
+        "@babel/plugin-transform-runtime",
+        ["@babel/plugin-proposal-object-rest-spread", { "useBuiltIns": true }],
         ["transform-react-remove-prop-types", {"mode": "wrap"}],
-        "transform-class-properties",
+        "@babel/plugin-proposal-class-properties",
         "transform-inline-environment-variables"
       ],
-      "presets": ["es2015", "react"]
+      "presets": ["@babel/preset-env", "@babel/preset-react"],
     },
     "es": {
       "plugins": [
-        "transform-runtime",
+        "@babel/plugin-transform-runtime",
         ["transform-react-remove-prop-types", {"mode": "wrap"}],
-        "transform-class-properties",
+        "@babel/plugin-proposal-class-properties",
         "transform-inline-environment-variables"
       ],
-      "presets": ["es2015", "react"]
+      "presets": ["@babel/preset-env", "@babel/preset-react"],
     }
   }
 }
