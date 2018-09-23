@@ -15,7 +15,9 @@ const imgPropTypes = {
   unloader: node,
   decode: bool,
   src: oneOfType([string, array]),
-  container: func
+  container: func,
+  loaderContainer: func,
+  unloaderContainer: func
 }
 
 if (process.env.NODE_ENV != 'production') {
@@ -37,6 +39,11 @@ class Img extends Component {
 
   constructor(props) {
     super(props)
+    
+    // default loader/unloader container to just container. If no container was set
+    // this will be a noop
+    this.loaderContainer = props.loaderContainer || props.container
+    this.unloaderContainer = props.unloaderContainer || props.container
 
     this.sourceList = this.srcToArray(this.props.src)
 
@@ -162,6 +169,9 @@ class Img extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    this.loaderContainer = nextProps.loaderContainer || nextProps.container
+    this.unloaderContainer = nextProps.unloaderContainer || nextProps.container
+
     let src = this.srcToArray(nextProps.src)
 
     let srcAdded = src.filter(s => this.sourceList.indexOf(s) === -1)
@@ -183,12 +193,17 @@ class Img extends Component {
   render() {
     // set img props as rest
     const {
-      src,
+      container,
       loader,
       unloader,
+
+      // props to exclude from the rest property
+      src,
       decode,
-      container,
+      loaderContainer,
+      unloaderContainer,
       mockImage,
+
       ...rest
     } = this.props //eslint-disable-line
 
@@ -204,13 +219,13 @@ class Img extends Component {
 
     // if we are still trying to load, show img and a loader if requested
     if (!this.state.isLoaded && this.state.isLoading) {
-      return loader ? container(this.props.loader) : null
+      return loader ? this.loaderContainer(loader) : null
     }
 
     // if we have given up on loading, show a place holder if requested, or nothing
     /* istanbul ignore else */
     if (!this.state.isLoaded && !this.state.isLoading) {
-      return unloader ? container(this.props.unloader) : null
+      return unloader ? this.unloaderContainer(unloader) : null
     }
   }
 }
