@@ -39,7 +39,9 @@ class Img extends Component {
 
   constructor(props) {
     super(props)
-
+    
+    // default loader/unloader container to just container. If no container was set
+    // this will be a noop
     this.loaderContainer = props.loaderContainer || props.container
     this.unloaderContainer = props.unloaderContainer || props.container
 
