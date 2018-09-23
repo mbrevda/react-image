@@ -1,3 +1,8 @@
+1.5.0 Sep 23, 2018
+===
+* Add: `loaderContainer`/`unloaderContainer` (#208, #211). Thanks @eedrah!
+* Test: test built libs
+
 1.4.1
 ===
 * Fix: strip dev-specific code when compiling
@@ -5,8 +10,8 @@
 1.4.0
 ===
 * Add: `container` props
-* Fix: issue deleting `src` prop in Safari https://github.com/mbrevda/react-image/issues/187
-* Add: `babel-runtime` ad peer dep for https://pnpm.js.org/.
+* Fix: issue deleting `src` prop in Safari (#87)
+* Add: `babel-runtime` as peer dep for https://pnpm.js.org/ (#199, #200). Thanks @vjpr!
 * Add: (crude) demo including transitions
 
 1.3.1
