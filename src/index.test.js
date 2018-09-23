@@ -32,7 +32,7 @@ test('render with decode=true', () => {
   // run on next tick
   return Promise.resolve().then(() => {
     i.update()
-    expect(i.html()).toEqual('<img src="fooDecode"/>')
+    setTimeout(() => expect(i.html()).toEqual('<img src="fooDecode"/>'), 100)
   })
 })
 

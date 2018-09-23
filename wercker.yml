@@ -6,10 +6,11 @@ build:
       code: npm config set loglevel warn;
     - npm-install:
       options: --loglevel=warn
-    - wercker/npm-test
+    - wercker/npm-test #test just raw lib
     - script:
       name: build
       code: npm run build
+    - wercker/npm-test #rerun tests, will test the built libs
     - script:
       name: test built
       code: npm run test:built
