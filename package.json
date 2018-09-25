@@ -3,16 +3,12 @@
   "version": "1.5.1",
   "description": "React Image is an <img> tag replacement for react, featuring preloader and multiple image fallback support",
   "scripts": {
-    "build": "npm run build:cjs && npm run build:es && npm run build:umd && npm run build:umd:min && node ./webpack.site.js",
-    "build:cjs": "NODE_ENV=production BABEL_ENV=commonjs babel src/ --out-dir cjs/ --ignore *.test.js",
-    "build:es": "NODE_ENV=production BABEL_ENV=es babel src/ --out-dir es/ --ignore *.test.js",
-    "build:umd": "NODE_ENV=production webpack --config webpack.config.umd.js && cp src/*.test.js umd/",
-    "build:umd:min": "webpack -p --config webpack.config.umd.js -o umd/index.min.js&& cp src/*.test.js umd/",
-    "test": "jest --projects jest*.json",
-    "pretty": "prettier src/**/*.js --write",
+    "build": "NODE_ENV=production rollup -c && node ./webpack.site.js && for i in cjs esm umd; do cp src/*test.js $i; done",
+    "codecov": "codecov",
     "dev": "node ./webpack.site.js --watch --server",
+    "pretty": "prettier *.js src/**/*.js --write",
     "shouldPublish": "semver `npm -s view $npm_package_name version` --range \"<$npm_package_version\"",
-    "codecov": "codecov"
+    "test": "jest --projects jest*.json"
   },
   "repository": {
     "type": "git",
@@ -45,9 +41,9 @@
     "umd",
     "cjs"
   ],
-  "jsnext:main": "es/index",
-  "module": "es/index",
+  "module": "esm/index.js",
   "main": "cjs/index.js",
+  "browser": "umd/index.js",
   "author": "mbrevda@gmail.com",
   "license": "MIT",
   "bugs": {
@@ -80,6 +76,9 @@
     "react-addons-test-utils": "15.6.2",
     "react-css-transition-replace": "3.0.3",
     "react-dom": "16.5.2",
+    "rollup": "0.66.2",
+    "rollup-plugin-babel": "4.0.3",
+    "rollup-plugin-babel-minify": "6.0.0",
     "semver": "5.5.1",
     "serve-static": "1.13.2",
     "uglifyjs-webpack-plugin": "2.0.1",

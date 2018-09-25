@@ -8,6 +8,6 @@ disc/
 coverage/
 umd/
 cjs/
-es/
+esm/
 package-lock.json
 dist/

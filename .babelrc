@@ -1,49 +1,21 @@
 {
-  "presets": ["@babel/preset-env", "@babel/preset-react"],
-  "plugins": [
+  presets: ['@babel/env', '@babel/preset-react'],
+  plugins: [
     [
-      "@babel/plugin-proposal-object-rest-spread",
+      '@babel/plugin-proposal-object-rest-spread',
       {
-        "useBuiltIns": true
+        useBuiltIns: true
       }
     ],
-    "@babel/plugin-proposal-class-properties",
-    "transform-inline-environment-variables"
-  ],
-  "env": {
-    "commonjs": {
-      "plugins": [
-        "@babel/plugin-transform-runtime",
-        [
-          "@babel/plugin-proposal-object-rest-spread",
-          {
-            "useBuiltIns": true
-          }
-        ],
-        [
-          "transform-react-remove-prop-types",
-          {
-            "mode": "wrap"
-          }
-        ],
-        "@babel/plugin-proposal-class-properties",
-        "transform-inline-environment-variables"
-      ],
-      "presets": ["@babel/preset-env", "@babel/preset-react"]
-    },
-    "es": {
-      "plugins": [
-        "@babel/plugin-transform-runtime",
-        [
-          "transform-react-remove-prop-types",
-          {
-            "mode": "wrap"
-          }
-        ],
-        "@babel/plugin-proposal-class-properties",
-        "transform-inline-environment-variables"
-      ],
-      "presets": ["@babel/preset-env", "@babel/preset-react"]
-    }
-  }
+
+    [
+      'transform-react-remove-prop-types',
+      {
+        mode: 'wrap'
+      }
+    ],
+    '@babel/plugin-proposal-class-properties',
+    'transform-inline-environment-variables',
+    '@babel/transform-runtime'
+  ]
 }

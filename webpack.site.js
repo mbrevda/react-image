@@ -68,7 +68,7 @@ const webpackError = err => {
 const buildIndex = stats => {
   try {
     statSync(outputdir)
-  } catch(e) {
+  } catch (e) {
     if (e.code == 'ENOENT') mkdirSync(outputdir)
   }
 
