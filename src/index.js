@@ -20,7 +20,7 @@ const imgPropTypes = {
   unloaderContainer: func
 }
 
-if (process.env.NODE_ENV != 'production') {
+if (process.env.NODE_ENV != 'production' && process.env.NODE_ENV != 'test') {
   imgPropTypes.containermockImage = instanceOf(Image) //used for testing only
 }
 
@@ -39,7 +39,7 @@ class Img extends Component {
 
   constructor(props) {
     super(props)
-    
+
     // default loader/unloader container to just container. If no container was set
     // this will be a noop
     this.loaderContainer = props.loaderContainer || props.container
