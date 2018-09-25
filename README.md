@@ -29,7 +29,7 @@ Getting started
 
 2. To include the code globally from a cdn:
   ```html
-  <script src="https://unpkg.com/react-image/umd/index.min.js"></script>
+  <script src="https://unpkg.com/react-image/umd/index.js"></script>
   ```
 
 Dependencies
