@@ -1,4 +1,8 @@
-1.5.0 Sep 23, 2018
+1.5.1
+===
+* update babel loader to v7
+
+1.5.0
 ===
 * Add: `loaderContainer`/`unloaderContainer` (#208, #211). Thanks @eedrah!
 * Test: test built libs
