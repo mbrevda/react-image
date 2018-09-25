@@ -12,9 +12,6 @@ build:
       code: npm run build
     - wercker/npm-test #rerun tests, will test the built libs
     - script:
-      name: test built
-      code: npm run test:built
-    - script:
       name: update codecov
       code: npm run codecov
 deploy:
