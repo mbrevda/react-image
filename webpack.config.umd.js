@@ -11,8 +11,8 @@ module.exports = {
     path: path.resolve(__dirname, 'umd')
   },
   externals: {
-    react: 'React',
-    'react-dom': 'ReactDOM'
+    react: 'react',
+    'react-dom': 'react-dom'
   },
   module: {
     rules: [
