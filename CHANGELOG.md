@@ -1,3 +1,7 @@
+NEXT
+===
+* build: move to rollup
+
 1.5.1
 ===
 * update babel loader to v7
