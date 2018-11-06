@@ -63,7 +63,7 @@
     "babel-jest": "23.6.0",
     "babel-loader": "8.0.4",
     "babel-plugin-transform-inline-environment-variables": "0.4.3",
-    "babel-plugin-transform-react-remove-prop-types": "0.4.19",
+    "babel-plugin-transform-react-remove-prop-types": "0.4.20",
     "clean-webpack-plugin": "0.1.19",
     "codecov": "3.1.0",
     "commander": "2.19.0",
