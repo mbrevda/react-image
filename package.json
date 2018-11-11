@@ -76,7 +76,7 @@
     "react-addons-test-utils": "15.6.2",
     "react-css-transition-replace": "3.0.3",
     "react-dom": "16.6.1",
-    "rollup": "0.67.0",
+    "rollup": "0.67.1",
     "rollup-plugin-babel": "4.0.3",
     "rollup-plugin-babel-minify": "6.1.1",
     "rollup-plugin-node-resolve": "3.4.0",
