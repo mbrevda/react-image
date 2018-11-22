@@ -78,7 +78,7 @@
     "react-dom": "16.6.3",
     "rollup": "0.67.3",
     "rollup-plugin-babel": "4.0.3",
-    "rollup-plugin-babel-minify": "6.1.1",
+    "rollup-plugin-babel-minify": "6.2.0",
     "rollup-plugin-node-resolve": "3.4.0",
     "semver": "5.6.0",
     "serve-static": "1.13.2",
