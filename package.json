@@ -82,7 +82,7 @@
     "rollup-plugin-node-resolve": "4.0.0",
     "semver": "5.6.0",
     "serve-static": "1.13.2",
-    "uglifyjs-webpack-plugin": "2.0.1",
+    "uglifyjs-webpack-plugin": "2.1.0",
     "webpack": "4.28.2",
     "webpack-cli": "3.1.2"
   },
