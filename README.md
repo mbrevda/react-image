@@ -122,7 +122,7 @@ For example, to animate the display of the image (and animate out the loader) a 
   src={'https://www.example.com/foo.jpg'}
   container={children => {
     return (
-      <div class="foo">
+      <div className="foo">
         {children}
       </div>
     )
