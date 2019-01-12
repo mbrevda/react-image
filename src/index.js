@@ -58,7 +58,7 @@ class Img extends Component {
       /* istanbul ignore else */
       if (cache[this.sourceList[i]] === true) {
         this.state = {currentIndex: i, isLoading: false, isLoaded: true}
-        return true
+        return
       }
     }
 
