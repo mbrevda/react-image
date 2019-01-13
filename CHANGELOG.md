@@ -1,6 +1,7 @@
-NEXT
+2.0.0
 ===
 * build: move to rollup
+* Fix: Don't return a bool from constructor https://github.com/mbrevda/react-image/pull/220
 
 1.5.1
 ===

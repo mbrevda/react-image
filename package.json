@@ -1,6 +1,6 @@
 {
   "name": "react-image",
-  "version": "1.5.1",
+  "version": "2.0.0",
   "description": "React Image is an <img> tag replacement for react, featuring preloader and multiple image fallback support",
   "scripts": {
     "build": "NODE_ENV=production rollup -c && node ./webpack.site.js && for i in cjs esm umd; do cp src/*test.js $i; done",
