@@ -92,6 +92,6 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0",
-    "prop-types": "15.7.0"
+    "prop-types": "15.7.1"
   }
 }
