@@ -68,7 +68,7 @@
     "codecov": "3.2.0",
     "commander": "2.19.0",
     "enzyme": "3.9.0",
-    "enzyme-adapter-react-16": "1.9.1",
+    "enzyme-adapter-react-16": "1.10.0",
     "express": "4.16.4",
     "jest": "24.1.0",
     "prettier": "1.16.4",
