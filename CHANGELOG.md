@@ -1,3 +1,7 @@
+2.1.0
+===
+* Add: abort image download on unmount https://github.com/mbrevda/react-image/pull/223
+
 2.0.0
 ===
 * build: move to rollup

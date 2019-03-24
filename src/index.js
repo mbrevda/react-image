@@ -146,6 +146,10 @@ class Img extends Component {
   unloadImg = () => {
     delete this.i.onerror
     delete this.i.onload
+
+    // abort any current downloads https://jsbin.com/giqojirina/edit?html,css,js,output
+    this.i = ''
+
     try {
       delete this.i.src
     } catch (e) {

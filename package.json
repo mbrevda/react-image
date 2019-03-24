@@ -1,6 +1,6 @@
 {
   "name": "react-image",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "React Image is an <img> tag replacement for react, featuring preloader and multiple image fallback support",
   "scripts": {
     "build": "NODE_ENV=production rollup -c && node ./webpack.site.js && for i in cjs esm umd; do cp src/*test.js $i; done",
@@ -58,7 +58,7 @@
     "@babel/plugin-transform-runtime": "7.4.0",
     "@babel/preset-env": "7.4.2",
     "@babel/preset-react": "7.0.0",
-    "@babel/runtime": "7.4.2",
+    "@babel/runtime": "^7.4.2",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "24.5.0",
     "babel-loader": "8.0.5",
@@ -91,7 +91,6 @@
     "react-dom": "^15 || ^16"
   },
   "dependencies": {
-    "@babel/runtime": "^7.0.0",
     "prop-types": "15.7.2"
   }
 }

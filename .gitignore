@@ -11,3 +11,4 @@ cjs/
 esm/
 package-lock.json
 dist/
+tags
