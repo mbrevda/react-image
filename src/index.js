@@ -147,7 +147,7 @@ class Img extends Component {
     delete this.i.onerror
     delete this.i.onload
 
-    // abort any current downloads https://jsbin.com/giqojirina/edit?html,css,js,output
+    // abort any current downloads https://github.com/mbrevda/react-image/pull/223
     this.i = ''
 
     try {
