@@ -148,7 +148,7 @@ class Img extends Component {
     delete this.i.onload
 
     // abort any current downloads https://github.com/mbrevda/react-image/pull/223
-    this.i = ''
+    this.i.src = ''
 
     try {
       delete this.i.src

@@ -1,3 +1,7 @@
+2.1.1
+===
+* fix: unset incorrect prop in https://github.com/mbrevda/react-image/pull/223
+
 2.1.0
 ===
 * Add: abort image download on unmount https://github.com/mbrevda/react-image/pull/223

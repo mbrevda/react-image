@@ -1,6 +1,6 @@
 {
   "name": "react-image",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "React Image is an <img> tag replacement for react, featuring preloader and multiple image fallback support",
   "scripts": {
     "build": "NODE_ENV=production rollup -c && node ./webpack.site.js && for i in cjs esm umd; do cp src/*test.js $i; done",
@@ -71,7 +71,7 @@
     "enzyme-adapter-react-16": "1.11.2",
     "express": "4.16.4",
     "jest": "24.5.0",
-    "prettier": "1.16.4",
+    "prettier": "^1.16.4",
     "react": "16.8.5",
     "react-addons-test-utils": "15.6.2",
     "react-css-transition-replace": "3.0.3",
