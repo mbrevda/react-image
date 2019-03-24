@@ -71,7 +71,7 @@
     "enzyme-adapter-react-16": "1.11.2",
     "express": "4.16.4",
     "jest": "24.5.0",
-    "prettier": "^1.16.4",
+    "prettier": "1.16.4",
     "react": "16.8.5",
     "react-addons-test-utils": "15.6.2",
     "react-css-transition-replace": "3.0.3",
