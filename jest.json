@@ -1,6 +1,6 @@
 {
   "collectCoverage": true,
-  "collectCoverageFrom": ["src/**"],
+  "collectCoverageFrom": ["src/**/*.js"],
   "coverageReporters": ["json", "lcov", "text-summary", "html"],
   "testURL": "http://localhost"
 }

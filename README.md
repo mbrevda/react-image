@@ -14,7 +14,7 @@ With **React Image** you can specify multiple images to be used as fallbacks in 
 
 **React Image** will cleverly hide "broken" images to prevent showing the browsers default "broken image" placeholder. **React Image** caches past attempts to load an image so that the same image won't be attempted to be pulled over the network again, until the next page reload.
 
-On unmount **React Image** will abort any current image downloads potentially saving bandwidth and browser resources should the image no longer be desirable.
+On unmount **React Image** will abort any current image downloads potentially saving bandwidth and browser resources should the image no longer be desirable. Note this relies on unstandardised yet common browser behaviour. Some browsers, like Safari, may not support this behaviour ([tracking bug](https://bugs.webkit.org/show_bug.cgi?id=6656))
 
 This package was formerly known as `react-img-multi`. Special thanks to @yuanyan for agreeing to relinquish the name!
 
