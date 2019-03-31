@@ -1,99 +1,133 @@
 import React from 'react'
-import Enzyme, {shallow} from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
 import Img from './index.js'
 import ReactDOMServer from 'react-dom/server'
+import {render, act, cleanup, wait} from 'react-testing-library'
 
-Enzyme.configure({adapter: new Adapter()})
-
-// const trigger = (i, e) => i.instance().i.dispatchEvent(new Event(e))
+afterEach(cleanup)
 
 test('render with src string, after load', () => {
   const mockImage = new Image()
-  const i = shallow(<Img src="foo" mockImage={mockImage} />)
-  mockImage.onload()
-  expect(i.html()).toEqual('<img src="foo"/>')
+  const {getByAltText} = render(<Img src="foo" mockImage={mockImage} alt="" />)
+  act(() => mockImage.onload())
+  expect(getByAltText('').src).toEqual(location.href + 'foo')
 })
 
 test('render with src array', () => {
   const mockImage = new Image()
-  const i = shallow(<Img src={['foo']} mockImage={mockImage} />)
-  mockImage.onload()
-  expect(i.html()).toEqual('<img src="foo"/>')
+  const {getByAltText} = render(
+    <Img src={['foo']} mockImage={mockImage} alt="" />
+  )
+  act(() => mockImage.onload())
+  expect(getByAltText('').src).toEqual(location.href + 'foo')
 })
 
+// https://github.com/kentcdodds/react-testing-library/issues/281
 test('render with decode=true', () => {
   const mockImage = new Image()
   mockImage.decode = () => Promise.resolve()
-  const i = shallow(<Img src="fooDecode" mockImage={mockImage} />)
-
-  setTimeout(() => expect(i.html()).toEqual('<img src="fooDecode"/>'), 100)
+  const {getByAltText} = render(
+    <Img src="fooDecode" mockImage={mockImage} alt="" />
+  )
+  wait(() => expect(getByAltText('').src).toEqual(location.href + 'fooDecode'))
 })
 
 test('fallback to next image', () => {
   const mockImage = new Image()
-  const i = shallow(<Img src={['foo', 'bar']} mockImage={mockImage} />)
-  mockImage.onerror()
-  mockImage.onload()
-  expect(i.html()).toEqual('<img src="bar"/>')
+  const {getByAltText} = render(
+    <Img src={['foo', 'bar']} mockImage={mockImage} alt="" />
+  )
+  act(() => {
+    mockImage.onerror()
+    mockImage.onload()
+  })
+  expect(getByAltText('').src).toEqual(location.href + 'bar')
 })
 
 test('ensure missing image isnt renderer to browser', () => {
   const mockImage = new Image()
-  const i = shallow(<Img src={['foo', 'bar']} mockImage={mockImage} />)
-  mockImage.onerror()
-  mockImage.onerror()
-  expect(i.html()).toEqual(null)
+  const {container} = render(
+    <Img src={['foo', 'bar']} mockImage={mockImage} alt="" />
+  )
+  act(() => {
+    mockImage.onerror()
+    mockImage.onerror()
+  })
+  expect(container.innerHTML).toEqual('')
 })
 
 test('show loader', () => {
-  const i = shallow(<Img src="foo" loader={<span>Loading...</span>} />)
-  expect(i.html()).toEqual('<span>Loading...</span>')
+  const {container} = render(
+    <Img src="foo" loader={<span>Loading...</span>} alt="" />
+  )
+  expect(container.innerHTML).toEqual('<span>Loading...</span>')
 })
 
 test('clear loader after load', () => {
   const mockImage = new Image()
-  const i = shallow(
-    <Img src="foo" loader={<span>Loading...</span>} mockImage={mockImage} />
+  const {container, getByAltText} = render(
+    <Img
+      src="foo"
+      loader={<span>Loading...</span>}
+      alt=""
+      mockImage={mockImage}
+    />
   )
-  expect(i.html()).toEqual('<span>Loading...</span>')
-  mockImage.onload()
-  expect(i.html()).toEqual('<img src="foo"/>')
+  expect(container.innerHTML).toEqual('<span>Loading...</span>')
+  act(() => mockImage.onload())
+  expect(getByAltText('').src).toEqual(location.href + 'foo')
 })
 
 test('show unloader', () => {
   const mockImage = new Image()
-  const i = shallow(
+  const {container} = render(
     <Img unloader={<span>Could not load image!</span>} mockImage={mockImage} />
   )
-  mockImage.onerror()
+  act(() => mockImage.onerror())
   setTimeout(
-    () => expect(i.html()).toEqual('<span>Could not load image!</span>'),
+    () =>
+      expect(container.innerHTML).toEqual('<span>Could not load image!</span>'),
     1
   )
 })
 
 test('update image on src prop change', () => {
   const mockImage = new Image()
-  const i = shallow(<Img src="foo" mockImage={mockImage} />)
-  mockImage.onload()
-  i.setProps({src: 'bar'})
-  mockImage.onload()
-  expect(i.html()).toEqual('<img src="bar"/>')
+  const {rerender, getByAltText} = render(
+    <Img src="foo" mockImage={mockImage} alt="" />
+  )
+  act(() => mockImage.onload())
+  rerender(<Img src="bar" mockImage={mockImage} alt="" />)
+  act(() => mockImage.onload())
+  expect(getByAltText('').src).toEqual(location.href + 'bar')
+})
+
+test('start over on src prop change', () => {
+  const mockImage = new Image()
+  const {getByAltText, rerender} = render(
+    <Img src={['foo', 'bar']} mockImage={mockImage} alt="" />
+  )
+  //fail first image so that index gets incremented
+  act(() => {
+    mockImage.onerror()
+    mockImage.onload()
+  })
+  expect(getByAltText('').src).toEqual(location.href + 'bar')
+  rerender(<Img src="baz" mockImage={mockImage} alt="" />)
+  act(() => mockImage.onload())
+  expect(getByAltText('').src).toEqual(location.href + 'baz')
 })
 
 test('updated props no src', () => {
   const mockImage = new Image()
-  const i = shallow(<Img src="foo" mockImage={mockImage} />)
-  mockImage.onload()
-  i.setProps({src: ''})
-  expect(i.html()).toEqual(null)
+  const {container, rerender} = render(<Img src="foo" mockImage={mockImage} />)
+  act(() => mockImage.onload())
+  rerender(<Img src="" mockImage={mockImage} />)
+  expect(container.innerHTML).toEqual('')
 })
 
-//test('onError does nothing if unmounted', () => {
-//  const mockImage = new Image()
-//  const i = shallow(<Img src="foo5" mockImage={mockImage} />)
-//  i.unmount()
-//  mockImage.onerror()
-//  //expect(img.onerror()).toBe(false)
-//})
+test('onError does nothing if unmounted', () => {
+  const mockImage = new Image()
+  const {unmount} = render(<Img src="foo5" mockImage={mockImage} />)
+  act(() => mockImage.onerror())
+  unmount()
+})

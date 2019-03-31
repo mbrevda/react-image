@@ -3,17 +3,19 @@ import React, {useEffect, useReducer, useRef} from 'react'
 const removeBlankArrayElements = a => a.filter(x => x)
 const stringToArray = x => (Array.isArray(x) ? x : [x])
 const arrayEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b)
+const defaultState = {index: 0, isLoading: true, isLoaded: false}
 
 const reducer = (state, action) => {
+  let newState = state
   switch (action.type) {
     case 'wontload':
       return {...state, isLoading: false, isLoaded: false}
     case 'loaded':
       return {...state, isLoading: false, isLoaded: true}
     case 'trynext':
-      return {...state, index: ++state.index}
+      return {...state, index: state.index + 1}
     case 'startover':
-      return {...state, index: 0}
+      return {...state, ...defaultState}
     default:
       return state
   }
@@ -35,44 +37,53 @@ export default function Img({
   const prevSourceList = useRef()
   const sourceList = removeBlankArrayElements(stringToArray(src))
 
-  const [{isLoading, isLoaded, index}, dispatch] = useReducer(reducer, {
-    index: 0,
-    isLoading: true,
-    isLoaded: false
-  })
-  // set up image object
-  let i = mockImage || new Image()
+  const [{isLoading, isLoaded, index}, dispatch] = useReducer(
+    (state, action) => {
+      let res = reducer(state, action)
+      //console.log(action.type, res)
+      return res
+    },
+    defaultState
+  )
+  //console.log({isLoading, isLoaded, sourceList, src, index})
 
-  // Image callbacks. Only run if `i` exists (i.e. if still mounted)
-  const onLoad = () => i && dispatch({type: 'loaded'})
-  const onError = () => i && dispatch({type: 'trynext'})
-
-  i.onload = onLoad
-  i.onerror = onError
-
-  //console.log({isLoading, isLoaded, sourceList, src})
   useEffect(() => {
+    // set up image object
+    let i = mockImage || new Image()
+
+    // Image callbacks. Only run if `i` exists (i.e. if still mounted)
+    const onLoad = () => i && dispatch({type: 'loaded'})
+    const onError = () => i && dispatch({type: 'trynext'})
+
+    i.onload = onLoad
+    i.onerror = onError
+
+    let startOver = false
     // if `src` changed, start loading again from index 0
     if (!arrayEqual(prevSourceList.current, sourceList)) {
       // save the list for next render
       prevSourceList.current = sourceList
-
       // no need to start over if were at 0 already
-      if (index > 0) dispatch({type: 'startover'})
+      if (index > 0 || isLoaded) {
+        dispatch({type: 'startover'})
+        startOver = true
+      }
     }
 
-    // if there are no images left to process, give up
-    if (index >= sourceList.length) {
-      dispatch({type: 'wontload'})
-    } else {
-      // otherwise, set `src` to the current source
-      i.src = sourceList[index]
-      decode &&
-        i.decode &&
-        i
-          .decode()
-          .then(onLoad)
-          .catch(onError)
+    if (!startOver && !isLoaded) {
+      if (index >= sourceList.length) {
+        // if there are no images left to process, give up
+        dispatch({type: 'wontload'})
+      } else {
+        // otherwise, set `src` to the current source
+        i.src = sourceList[index]
+        decode &&
+          i.decode &&
+          i
+            .decode()
+            .then(onLoad)
+            .catch(onError)
+      }
     }
 
     // on unmount, clear callbacks to prevent them from running on an
