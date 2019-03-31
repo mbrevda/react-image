@@ -6,7 +6,6 @@ const arrayEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 const defaultState = {index: 0, isLoading: true, isLoaded: false}
 
 const reducer = (state, action) => {
-  let newState = state
   switch (action.type) {
     case 'wontload':
       return {...state, isLoading: false, isLoaded: false}
@@ -93,7 +92,7 @@ export default function Img({
       i.src = i.onerror = i.onload = null
       i = null
     }
-  }, [index, sourceList, decode])
+  }, [index, sourceList, decode, isLoaded, mockImage])
 
   // show img if loaded
   if (isLoaded) return container(<img src={sourceList[index]} {...imgProps} />)
