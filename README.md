@@ -114,6 +114,16 @@ const myComponent = () => (
 )
 ```
 
+### Loading images with a CORS policy
+
+When loading images from another domain with a [CORS policy](https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_settings_attributes), you may find you need to use the `crossorigin` attribute. For example:
+
+```js
+const myComponent = () => (
+  <Img src={'https://www.example.com/foo.jpg'} crossorigin="anonymous" />
+)
+```
+
 ### Animations and other advanced uses
 
 A wrapper element `container` can be used to facilitate higher level operations which are beyond the scope of this project. `container` takes a single property, `children` which is whatever is passed in by **React Image** (i.e. the final `<img>` or the loaders).

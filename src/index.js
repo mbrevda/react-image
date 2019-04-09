@@ -14,6 +14,7 @@ const imgPropTypes = {
   loader: node,
   unloader: node,
   decode: bool,
+  crossorigin: string,
   src: oneOfType([string, array]),
   container: func,
   loaderContainer: func,
@@ -131,6 +132,10 @@ class Img extends Component {
     }
     this.i.src = this.sourceList[this.state.currentIndex]
 
+    if (this.props.crossorigin) {
+      this.i.crossorigin = this.props.crossorigin;
+    }
+
     if (this.props.decode && this.i.decode) {
       this.i
         .decode()
@@ -203,6 +208,7 @@ class Img extends Component {
 
       // props to exclude from the rest property
       src,
+      crossorigin,
       decode,
       loaderContainer,
       unloaderContainer,
