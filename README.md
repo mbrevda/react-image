@@ -51,13 +51,13 @@ let Img = require('react-image')
 and set a source for the image:
 
 ```js
-const myComponent = () => <Img src="www.example.com/foo.jpg" />
+const myComponent = () => <Img src="https://www.example.com/foo.jpg" />
 ```
 
 will generate:
 
 ```js
-<img src="www.example.com/foo.jpg">
+<img src="https://www.example.com/foo.jpg">
 ```
 
 If the image cannot be loaded, **`<img>` will not be rendered**, preventing a "broken" image from showing.
