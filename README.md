@@ -176,7 +176,7 @@ see above
 3. Include the following code before including `react-image`:
 
 ```js
-Object.assign ||
+Object.assign = Object.assign ||
   function(r) {
     for (var t = 1; t < arguments.length; t++) {
       var n = arguments[t]
