@@ -83,7 +83,7 @@
     "semver": "6.0.0",
     "serve-static": "1.13.2",
     "uglifyjs-webpack-plugin": "2.1.2",
-    "webpack": "4.29.6",
+    "webpack": "4.30.0",
     "webpack-cli": "3.3.0"
   },
   "peerDependencies": {
