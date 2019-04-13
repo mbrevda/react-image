@@ -91,7 +91,7 @@ const myComponent = () =>
 
 If an image was previously loaded successfully (since the last time this page was loaded), the loader will not be shown and the image will be rendered directly instead.
 
-### Show a fallback element if non of the images could be loaded:
+### Show a fallback element if none of the images could be loaded:
 
 ```js
 const myComponent = () =>
