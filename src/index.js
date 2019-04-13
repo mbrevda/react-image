@@ -1,8 +1,7 @@
-import React, {useEffect, useReducer, useRef} from 'react'
+import React, {useEffect, useReducer} from 'react'
 
 const removeBlankArrayElements = a => a.filter(x => x)
 const stringToArray = x => (Array.isArray(x) ? x : [x])
-const arrayEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 const defaultState = {index: 0, isLoading: true, isLoaded: false}
 
 const reducer = (state, action) => {
@@ -33,21 +32,17 @@ export default function Img({
   mockImage, // used for testing
   ...imgProps // anything else will be passed to the <img> element
 }) {
-  const prevSourceList = useRef()
   const sourceList = removeBlankArrayElements(stringToArray(src))
+  const sourceKey = sourceList.join('')
 
   const [{isLoading, isLoaded, index}, dispatch] = useReducer(
-    (state, action) => {
-      let res = reducer(state, action)
-      //console.log(action.type, res)
-      return res
-    },
+    reducer,
     defaultState
   )
   //console.log({isLoading, isLoaded, sourceList, src, index})
 
+  useEffect(() => dispatch({type: 'startover'}), [sourceKey])
   useEffect(() => {
-    // set up image object
     let i = mockImage || new Image()
 
     // Image callbacks. Only run if `i` exists (i.e. if still mounted)
@@ -57,31 +52,20 @@ export default function Img({
     i.onload = onLoad
     i.onerror = onError
 
-    let startOver = false
-    // if `src` changed, start loading again from index 0
-    if (!arrayEqual(prevSourceList.current, sourceList)) {
-      // save the list for next render
-      prevSourceList.current = sourceList
-      // no need to start over if were at 0 already
-      if (index > 0 || isLoaded) {
-        dispatch({type: 'startover'})
-        startOver = true
-      }
-    }
-
-    if (!startOver && !isLoaded) {
+    if (!isLoaded) {
       if (index >= sourceList.length) {
         // if there are no images left to process, give up
         dispatch({type: 'wontload'})
       } else {
-        // otherwise, set `src` to the current source
-        i.src = sourceList[index]
-        decode &&
-          i.decode &&
-          i
-            .decode()
+        // setup decode handler if supported
+        if (decode && i.decode) {
+          i.decode()
             .then(onLoad)
             .catch(onError)
+        }
+
+        // set `src` to the current source and start downloading the image
+        i.src = sourceList[index]
       }
     }
 
