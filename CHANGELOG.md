@@ -1,3 +1,7 @@
+2.1.2
+===
+* fix: don't call handlers multiple times, fixes: #236
+
 2.1.1
 ===
 * fix: unset incorrect prop in https://github.com/mbrevda/react-image/pull/223

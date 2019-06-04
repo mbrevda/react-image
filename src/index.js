@@ -143,9 +143,8 @@ class Img extends Component {
         .catch(this.onError)
     } else {
       this.i.onload = this.onLoad
+      this.i.onerror = this.onError
     }
-
-    this.i.onerror = this.onError
   }
 
   unloadImg = () => {
