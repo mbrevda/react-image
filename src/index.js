@@ -148,8 +148,8 @@ class Img extends Component {
   }
 
   unloadImg = () => {
-    delete this.i.onerror
-    delete this.i.onload
+    this.i.onerror = null
+    this.i.onload = null
 
     // abort any current downloads https://github.com/mbrevda/react-image/pull/223
     this.i.src = ''
