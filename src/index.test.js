@@ -123,8 +123,9 @@ test('onError does nothing if unmounted', () => {
   const inst = i.instance()
   inst.componentDidMount()
   const img = inst.i
+  expect(img.onerror).not.toBe(null)
   i.unmount()
-  expect(img.onerror()).toBe(false)
+  expect(img.onerror).toBe(null)
 })
 
 test('onError if there are no more sources, we are done', () => {
