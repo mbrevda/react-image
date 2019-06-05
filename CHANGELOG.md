@@ -1,3 +1,7 @@
+2.1.3
+===
+* fix: nullify callbacks before removing - #237
+
 2.1.2
 ===
 * fix: don't call handlers multiple times, fixes: #236
