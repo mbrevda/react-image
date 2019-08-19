@@ -133,7 +133,7 @@ class Img extends Component {
     this.i.src = this.sourceList[this.state.currentIndex]
 
     if (this.props.crossorigin) {
-      this.i.crossorigin = this.props.crossorigin;
+      this.i.crossOrigin = this.props.crossorigin
     }
 
     if (this.props.decode && this.i.decode) {
@@ -207,7 +207,6 @@ class Img extends Component {
 
       // props to exclude from the rest property
       src,
-      crossorigin,
       decode,
       loaderContainer,
       unloaderContainer,

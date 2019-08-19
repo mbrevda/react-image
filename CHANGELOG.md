@@ -1,3 +1,7 @@
+2.2.0
+===
+* fix:Use correct case for crossOrigin and ensure prop is used both for the initial image fetch and in the final `<img>` element
+
 2.1.3
 ===
 * fix: nullify callbacks before removing - #237

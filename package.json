@@ -1,6 +1,6 @@
 {
   "name": "react-image",
-  "version": "2.1.3",
+  "version": "2.2.0",
   "description": "React Image is an <img> tag replacement for react, featuring preloader and multiple image fallback support",
   "scripts": {
     "build": "NODE_ENV=production rollup -c && node ./webpack.site.js && for i in cjs esm umd; do cp src/*test.js $i; done",
@@ -75,12 +75,12 @@
     "react": "16.9.0",
     "react-addons-test-utils": "15.6.2",
     "react-css-transition-replace": "3.0.3",
-    "react-dom": "16.9.0",
     "rollup": "1.19.4",
     "rollup-plugin-babel": "4.3.3",
     "rollup-plugin-babel-minify": "9.0.0",
     "rollup-plugin-node-resolve": "5.2.0",
     "semver": "6.3.0",
+    "react-dom": "16.9.0",
     "serve-static": "1.14.1",
     "uglifyjs-webpack-plugin": "2.2.0",
     "webpack": "4.39.2",
