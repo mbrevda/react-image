@@ -65,7 +65,7 @@
     "babel-plugin-transform-inline-environment-variables": "0.4.3",
     "babel-plugin-transform-react-remove-prop-types": "0.4.24",
     "clean-webpack-plugin": "1.0.1",
-    "codecov": "3.6.0",
+    "codecov": "3.6.1",
     "commander": "3.0.1",
     "enzyme": "3.10.0",
     "enzyme-adapter-react-16": "1.14.0",
