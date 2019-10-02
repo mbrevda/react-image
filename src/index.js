@@ -140,7 +140,7 @@ class Img extends Component {
       this.i
         .decode()
         .then(this.onLoad)
-        .catch(this.onError)
+        .catch(this.props.onError || this.onError)
     } else {
       this.i.onload = this.onLoad
       this.i.onerror = this.onError
