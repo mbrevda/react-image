@@ -74,7 +74,7 @@
     "prettier": "1.18.2",
     "react": "16.10.2",
     "react-addons-test-utils": "15.6.2",
-    "react-css-transition-replace": "4.0.0",
+    "react-css-transition-replace": "4.0.1",
     "rollup": "1.23.1",
     "rollup-plugin-babel": "4.3.3",
     "rollup-plugin-babel-minify": "9.1.0",
