@@ -1,3 +1,7 @@
+2.2.1
+===
+* fix: Removes warnings of unsafe lifecycle methods from console due to react 16.9 update.
+
 2.2.0
 ===
 * fix:Use correct case for crossOrigin and ensure prop is used both for the initial image fetch and in the final `<img>` element

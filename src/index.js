@@ -176,7 +176,7 @@ class Img extends Component {
     if (this.i) this.unloadImg()
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.loaderContainer = nextProps.loaderContainer || nextProps.container
     this.unloaderContainer = nextProps.unloaderContainer || nextProps.container
 
