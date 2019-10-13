@@ -16,7 +16,7 @@ You encountered a bug? Report it by [opening a new issue](https://github.com/mbr
 Pull requests are the best way to propose changes to the codebase and contribute. Follow this guide to send your PR:
 
 1. Fork the repo, clone it and create your branch from `master`.
-2. Commit the changes in created branch by `git remote add upstream https://github.com/original-owner-username/react-images.git`.
+2. Commit the changes in created branch.
 3. [Submit a pull request (referencing the issue)!](https://github.com/mbrevda/react-image/pulls)
 
 ## License
