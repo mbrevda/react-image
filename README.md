@@ -45,7 +45,7 @@ Include `react-image` in your component:
 import Img from 'react-image'
 
 // otherwise
-let Img = require('react-image')
+const Img = require('react-image')
 ```
 
 and set a source for the image:
