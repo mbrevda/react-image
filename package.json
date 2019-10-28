@@ -39,11 +39,13 @@
     "*.md",
     "es",
     "umd",
-    "cjs"
+    "cjs",
+    "react-image.d.ts"
   ],
   "module": "esm/index.js",
   "main": "cjs/index.js",
   "browser": "umd/index.js",
+  "types": "react-image.d.ts",
   "author": "mbrevda@gmail.com",
   "license": "MIT",
   "bugs": {
