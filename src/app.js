@@ -10,13 +10,13 @@ function App() {
   return (
     <>
       <div>
-        <h5>Should not show anything</h5>
-        <Img style={{width: 100}} src={[imageOn404]} />
+        <h5>Should show</h5>
+        <Img style={{width: 100}} src="http://i.imgur.com/ozEaj1Z.jpg" />
       </div>
 
       <div>
-        <h5>Try to show image returning 404</h5>
-        <Img style={{width: 100}} src={[tmdbImg]} />
+        <h5>Should not show anything</h5>
+        <Img style={{width: 100}} src={[imageOn404]} />
       </div>
     </>
   )
