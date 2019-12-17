@@ -5,7 +5,7 @@
   "scripts": {
     "build": "NODE_ENV=production rollup -c && node ./webpack.site.js && for i in cjs esm umd; do cp src/*test.js $i; done",
     "codecov": "codecov",
-    "dev": "node ./webpack.site.js --watch --server",
+    "dev": "webpack-dev-server",
     "pretty": "prettier *.js src/**/*.js --write",
     "shouldPublish": "semver `npm -s view $npm_package_name version` --range \"<$npm_package_version\"",
     "test": "jest --projects jest*.json"
@@ -72,25 +72,27 @@
     "enzyme": "3.10.0",
     "enzyme-adapter-react-16": "1.15.1",
     "express": "4.17.1",
+    "html-webpack-plugin": "3.2.0",
     "jest": "24.9.0",
     "prettier": "1.19.1",
     "react": "16.12.0",
     "react-addons-test-utils": "15.6.2",
     "react-css-transition-replace": "4.0.2",
+    "react-dom": "16.12.0",
     "rollup": "1.27.13",
     "rollup-plugin-babel": "4.3.3",
     "rollup-plugin-babel-minify": "9.1.1",
     "rollup-plugin-node-resolve": "5.2.0",
     "semver": "7.1.1",
-    "react-dom": "16.12.0",
     "serve-static": "1.14.1",
     "uglifyjs-webpack-plugin": "2.2.0",
     "webpack": "4.41.3",
-    "webpack-cli": "3.3.10"
+    "webpack-cli": "3.3.10",
+    "webpack-dev-server": "3.9.0"
   },
   "peerDependencies": {
-    "react": "^15 || ^16",
-    "react-dom": "^15 || ^16"
+    "react": "15 || 16",
+    "react-dom": "15 || 16"
   },
   "dependencies": {
     "prop-types": "15.7.2"
