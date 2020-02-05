@@ -1,4 +1,8 @@
-# 2.2.2
+# 2.3.0
+
+- fix: typescript declarations
+
+ # 2.2.2
 
 - add: typescript declarations
 
