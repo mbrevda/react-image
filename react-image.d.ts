@@ -1,18 +1,15 @@
 declare module 'react-image' {
     import * as React from 'react'
   
-    export interface ImgProps {
+    export interface ImgProps extends React.ComponentPropsWithoutRef<'img'> {
       src?: string | string[]
       loader?: JSX.Element
       unloader?: JSX.Element
       decode?: boolean
       crossorigin?: string
-      container?: () => JSX.Element
-      loaderContainer?: () => JSX.Element
-      unloaderContainer?: () => JSX.Element
-  
-      // For img element props such as 'alt'
-      [key: string]: any
+      container?: (children: React.ReactNode) => JSX.Element
+      loaderContainer?: (children: React.ReactNode) => JSX.Element
+      unloaderContainer?: (children: React.ReactNode) => JSX.Element
     }
   
     export default class Img extends React.Component<ImgProps> {
