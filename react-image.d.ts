@@ -1,7 +1,7 @@
 declare module 'react-image' {
     import * as React from 'react'
   
-    export interface ImgProps extends React.ComponentPropsWithoutRef<'img'> {
+    export interface ImgProps extends Omit<React.ComponentPropsWithoutRef<'img'>, 'src'> {
       src?: string | string[]
       loader?: JSX.Element
       unloader?: JSX.Element

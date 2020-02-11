@@ -1,3 +1,6 @@
+# 2.4.0
+- fix: TS Interface Error for 'src' attribute. Related to issue: #260
+
 # 2.3.0
 
 - fix: typescript declarations
