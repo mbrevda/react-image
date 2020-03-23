@@ -73,7 +73,7 @@
     "express": "4.17.1",
     "html-webpack-plugin": "4.0.1",
     "jest": "25.1.0",
-    "prettier": "2.0.1",
+    "prettier": "2.0.2",
     "react": "16.13.1",
     "react-addons-test-utils": "15.6.2",
     "react-css-transition-replace": "4.0.2",
