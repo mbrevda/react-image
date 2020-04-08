@@ -1,30 +1,30 @@
 declare module "react-image" {
-    import * as React from "react";
+  import * as React from "react";
 
-    export type ImgProps = Omit<
-        React.DetailedHTMLProps<React.ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>,
-        "src"
-    > & {
-        src?: string | string[];
-        loader?: JSX.Element;
-        unloader?: JSX.Element;
-        decode?: boolean;
-        crossorigin?: string;
-        container?: (children: React.ReactNode) => JSX.Element;
-        loaderContainer?: (children: React.ReactNode) => JSX.Element;
-        unloaderContainer?: (children: React.ReactNode) => JSX.Element;
-    };
+  export type ImgProps = Omit<
+    React.DetailedHTMLProps<React.ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>,
+    "src"
+  > & {
+    src?: string | string[];
+    loader?: JSX.Element;
+    unloader?: JSX.Element;
+    decode?: boolean;
+    crossorigin?: string;
+    container?: (children: React.ReactNode) => JSX.Element;
+    loaderContainer?: (children: React.ReactNode) => JSX.Element;
+    unloaderContainer?: (children: React.ReactNode) => JSX.Element;
+  };
 
-    export default class Img extends React.Component<ImgProps> {
-        constructor(props: ImgProps);
-        srcToArray(src: string): [];
-        onLoad(): void;
-        onError(): void;
-        loadImg(): void;
-        unloadImg(): void;
-        componentDidMount(): void;
-        componentWillUnmount(): void;
-        componentWillReceiveProps(nextProps: ImgProps): void;
-        render(): JSX.Element;
-    }
+  export default class Img extends React.Component<ImgProps> {
+    constructor(props: ImgProps);
+    srcToArray(src: string): [];
+    onLoad(): void;
+    onError(): void;
+    loadImg(): void;
+    unloadImg(): void;
+    componentDidMount(): void;
+    componentWillUnmount(): void;
+    componentWillReceiveProps(nextProps: ImgProps): void;
+    render(): JSX.Element;
+  }
 }
