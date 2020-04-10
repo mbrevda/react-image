@@ -1,56 +1,87 @@
 import React from 'react'
 import Img from './index.js'
 import ReactDOMServer from 'react-dom/server'
-import {render, act, cleanup, wait} from 'react-testing-library'
+import {render, act, cleanup, waitFor} from '@testing-library/react'
 
 afterEach(cleanup)
 
+const mockImgPromise = () => {
+  let images = []
+  const imgPromise = (decode) => (src) => {
+    return new Promise((resolve, reject) => {
+      const img = new Image()
+      images.push(img)
+      img.decode = () => Promise.resolve()
+      img.onload = () => {
+        decode ? img.decode().then(resolve).catch(reject) : resolve()
+      }
+      img.onerror = reject
+      img.src = src
+    })
+  }
+
+  return {
+    img: (index = 0) => images[index],
+    imgPromise,
+  }
+}
+
 test('render with src string, after load', () => {
-  const mockImage = new Image()
-  const {getByAltText} = render(<Img src="foo" mockImage={mockImage} alt="" />)
-  act(() => mockImage.onload())
-  expect(getByAltText('').src).toEqual(location.href + 'foo')
+  const {img, imgPromise} = mockImgPromise()
+  const {getByAltText} = render(
+    <Img src="foo" imgPromise={imgPromise} alt="" />
+  )
+  act(() => img().onload())
+  waitFor(() => expect(getByAltText('').src).toEqual(location.href + 'foo'))
 })
 
 test('render with src array', () => {
-  const mockImage = new Image()
+  const {img, imgPromise} = mockImgPromise()
   const {getByAltText} = render(
-    <Img src={['foo']} mockImage={mockImage} alt="" />
+    <Img src={['foo']} imgPromise={imgPromise} alt="" />
   )
-  act(() => mockImage.onload())
-  expect(getByAltText('').src).toEqual(location.href + 'foo')
+  act(() => img().onload())
+  waitFor(() => expect(getByAltText('').src).toEqual(location.href + 'foo'))
 })
 
 // https://github.com/kentcdodds/react-testing-library/issues/281
 test('render with decode=true', () => {
-  const mockImage = new Image()
-  mockImage.decode = () => Promise.resolve()
+  const {img, imgPromise} = mockImgPromise()
   const {getByAltText} = render(
-    <Img src="fooDecode" mockImage={mockImage} alt="" />
+    <Img src="fooDecode" imgPromise={imgPromise} alt="" />
   )
-  wait(() => expect(getByAltText('').src).toEqual(location.href + 'fooDecode'))
+  waitFor(() =>
+    expect(getByAltText('').src).toEqual(location.href + 'fooDecode')
+  )
 })
 
-test('fallback to next image', () => {
-  const mockImage = new Image()
+test('fallback to next image', async () => {
+  const {img, imgPromise} = mockImgPromise()
   const {getByAltText} = render(
-    <Img src={['foo', 'bar']} mockImage={mockImage} alt="" />
+    <Img src={['foo', 'bar']} imgPromise={imgPromise} alt="" />
   )
-  act(() => {
-    mockImage.onerror()
-    mockImage.onload()
+
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 1))
+    img(0).onerror()
+    await new Promise((r) => setTimeout(r, 1))
+    img(1).onload()
   })
-  expect(getByAltText('').src).toEqual(location.href + 'bar')
+
+  waitFor(() => expect(getByAltText('').src).toEqual(location.href + 'bar'))
 })
 
-test('ensure missing image isnt renderer to browser', () => {
-  const mockImage = new Image()
+test('ensure missing image isnt renderer to browser', async () => {
+  const {img, imgPromise} = mockImgPromise()
   const {container} = render(
-    <Img src={['foo', 'bar']} mockImage={mockImage} alt="" />
+    <Img src={['foo', 'bar']} imgPromise={imgPromise} alt="" />
   )
-  act(() => {
-    mockImage.onerror()
-    mockImage.onerror()
+
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 1))
+    img(0).onerror()
+    await new Promise((r) => setTimeout(r, 1))
+    img(1).onerror()
   })
   expect(container.innerHTML).toEqual('')
 })
@@ -62,72 +93,100 @@ test('show loader', () => {
   expect(container.innerHTML).toEqual('<span>Loading...</span>')
 })
 
-test('clear loader after load', () => {
-  const mockImage = new Image()
+test('clear loader after load', async () => {
+  const {img, imgPromise} = mockImgPromise()
   const {container, getByAltText} = render(
     <Img
       src="foo"
       loader={<span>Loading...</span>}
       alt=""
-      mockImage={mockImage}
+      imgPromise={imgPromise}
     />
   )
   expect(container.innerHTML).toEqual('<span>Loading...</span>')
-  act(() => mockImage.onload())
-  expect(getByAltText('').src).toEqual(location.href + 'foo')
-})
 
-test('show unloader', () => {
-  const mockImage = new Image()
-  const {container} = render(
-    <Img unloader={<span>Could not load image!</span>} mockImage={mockImage} />
-  )
-  act(() => mockImage.onerror())
-  setTimeout(
-    () =>
-      expect(container.innerHTML).toEqual('<span>Could not load image!</span>'),
-    1
-  )
-})
-
-test('update image on src prop change', () => {
-  const mockImage = new Image()
-  const {rerender, getByAltText} = render(
-    <Img src="foo" mockImage={mockImage} alt="" />
-  )
-  act(() => mockImage.onload())
-  rerender(<Img src="bar" mockImage={mockImage} alt="" />)
-  act(() => mockImage.onload())
-  expect(getByAltText('').src).toEqual(location.href + 'bar')
-})
-
-test('start over on src prop change', () => {
-  const mockImage = new Image()
-  const {getByAltText, rerender} = render(
-    <Img src={['foo', 'bar']} mockImage={mockImage} alt="" />
-  )
-  //fail first image so that index gets incremented
-  act(() => {
-    mockImage.onerror()
-    mockImage.onload()
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 1))
+    await img().onload()
   })
-  expect(getByAltText('').src).toEqual(location.href + 'bar')
-  rerender(<Img src="baz" mockImage={mockImage} alt="" />)
-  act(() => mockImage.onload())
-  expect(getByAltText('').src).toEqual(location.href + 'baz')
+  waitFor(() => expect(getByAltText('').src).toEqual(location.href + 'foo'))
 })
 
-test('updated props no src', () => {
-  const mockImage = new Image()
-  const {container, rerender} = render(<Img src="foo" mockImage={mockImage} />)
-  act(() => mockImage.onload())
-  rerender(<Img src="" mockImage={mockImage} />)
-  expect(container.innerHTML).toEqual('')
+test('show unloader', async () => {
+  const {img, imgPromise} = mockImgPromise()
+  const {container} = render(
+    <Img
+      unloader={<span>Could not load image!</span>}
+      imgPromise={imgPromise}
+    />
+  )
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 1))
+    await img().onerror()
+  })
+  waitFor(() =>
+    expect(container.innerHTML).toEqual('<span>Could not load image!</span>')
+  )
 })
 
-test('onError does nothing if unmounted', () => {
-  const mockImage = new Image()
-  const {unmount} = render(<Img src="foo5" mockImage={mockImage} />)
-  act(() => mockImage.onerror())
+test('update image on src prop change', async () => {
+  const {img, imgPromise} = mockImgPromise()
+  const {rerender, getByAltText} = render(
+    <Img src="foo" imgPromise={imgPromise} alt="" />
+  )
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 1))
+    await img().onload()
+  })
+  rerender(<Img src="bar" imgPromise={imgPromise} alt="" />)
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 1))
+    await img().onload()
+  })
+  waitFor(() => expect(getByAltText('').src).toEqual(location.href + 'bar'))
+})
+
+test('start over on src prop change', async () => {
+  const {img, imgPromise} = mockImgPromise()
+  const {getByAltText, rerender} = render(
+    <Img src={['foo', 'bar']} imgPromise={imgPromise} alt="" />
+  )
+
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 1))
+    img(0).onerror()
+    await new Promise((r) => setTimeout(r, 1))
+    img(1).onerror()
+  })
+  waitFor(() => expect(getByAltText('').src).toEqual(location.href + 'bar'))
+
+  rerender(<Img src="baz" imgPromise={imgPromise} alt="" />)
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 1))
+    await img().onload()
+  })
+  waitFor(() => expect(getByAltText('').src).toEqual(location.href + 'baz'))
+})
+
+test('updated props no src', async () => {
+  const {img, imgPromise} = mockImgPromise()
+  const {container, rerender} = render(
+    <Img src="foo" imgPromise={imgPromise} />
+  )
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 1))
+    img(0).onerror()
+  })
+  rerender(<Img src="" imgPromise={imgPromise} />)
+  waitFor(() => expect(container.innerHTML).toEqual(''))
+})
+
+test('onError does nothing if unmounted', async () => {
+  const {img, imgPromise} = mockImgPromise()
+  const {unmount} = render(<Img src="foo5" imgPromise={imgPromise} />)
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 1))
+    img(0).onerror()
+  })
   unmount()
 })
