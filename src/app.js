@@ -1,23 +1,94 @@
-import React from 'react'
+import React, {Suspense, useState, useEffect} from 'react'
 import ReactDOM from 'react-dom'
 import Img from '../src/index.js'
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {hasError: false}
+    this.onError = props.onError
+  }
+
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return {hasError: error}
+  }
+
+  render() {
+    if (this.state.hasError) {
+      if (this.onError) return this.onError
+      // You can render any custom fallback UI
+      return <h1>Something went wrong. {this.state.hasError}</h1>
+    }
+
+    return this.props.children
+  }
+}
+
+const randSeconds = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 
 function App() {
   const imageOn404 =
     'https://i9.ytimg.com/s_p/OLAK5uy_mwasty2cJpgWIpr61CqWRkHIT7LC62u7s/sddefault.jpg?sqp=CJz5ye8Fir7X7AMGCNKz4dEF&rs=AOn4CLC-JNn9jj-oFw94oM574w36xUL1iQ&v=5a3859d2'
   const tmdbImg =
     'https://image.tmdb.org/t/p/w500/kqjL17yufvn9OVLyXYpvtyrFfask.jpg'
+
+    // http://i.imgur.com/ozEaj1Z.jpg
+    const rand1 = randSeconds(1, 8)
+    const rand2 = randSeconds(2, 10)
+
   return (
     <>
-      <div>
-        <h5>Should show</h5>
-        <Img style={{width: 100}} src="http://i.imgur.com/ozEaj1Z.jpg" />
-      </div>
+        <div>
+        <h5>Should show (delayed {rand1} seconds)</h5>
+        <Img
+          style={{width: 100}}
+          src={`http://deelay.me/${rand1 * 1000}/https://picsum.photos/200`}
+          loader={<div>Loading...</div>}
+          unloader={<div>wont load!</div>}
+        />
+      </div> 
 
-      <div>
+       {/* <div>
         <h5>Should not show anything</h5>
         <Img style={{width: 100}} src={[imageOn404]} />
-      </div>
+      </div>   */}
+
+       <div>
+        <h5>Should  show unloader</h5>
+        <Img style={{width: 100}} src='http://127.0.0.1/foo_bar_baz_foo_bar.jpg'
+          loader={<div>Loading...</div>}
+          unloader={<div>wont load!</div>}
+        />
+      </div> 
+
+       <div>
+         <h5>Suspense (delayed {rand2} seconds)</h5>
+        <ErrorBoundary>
+          <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
+            <Img 
+              style={{width: 100}}
+              src={`http://deelay.me/${rand2 * 1000}/https://picsum.photos/200`} 
+              useSuspense={true}
+            />
+          </Suspense>
+        </ErrorBoundary>
+      </div>  
+
+
+      <div>
+         <h5>Suspense wont load</h5>
+        <ErrorBoundary onError={<div>Suspense... wont load</div>}>
+          <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
+            <Img 
+              style={{width: 100}}
+              src='http://127.0.0.1/foo_bar_baz_foo_bar.jpg' 
+              useSuspense={true}
+            />
+          </Suspense>
+        </ErrorBoundary>
+      </div>  
+      
     </>
   )
 }

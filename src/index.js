@@ -1,34 +1,11 @@
-import React, {useEffect, useReducer, useRef} from 'react'
-// function wrapPromise(promise) {
-//   let status = 'pending'
-//   let response
+import React, {useEffect, useState} from 'react'
 
-//   const suspender = promise.then(
-//     res => {
-//       status = 'success'
-//       response = res
-//     },
-//     err => {
-//       status = 'error'
-//       response = err
-//     }
-//   )
+const removeBlankArrayElements = (a) => a.filter((x) => x)
+const stringToArray = (x) => (Array.isArray(x) ? x : [x])
+const state = {}
 
-//   const read = () => {
-//     switch (status) {
-//       case 'pending':
-//         throw suspender
-//       case 'error':
-//         throw response
-//       default:
-//         return response
-//     }
-//   }
-
-//   return {read}
-// }
-
-const defaultImgPromise = (decode) => (src) => {
+// Promisized version of Image() api
+const defaultImgPromise = (decode = true) => (src) => {
   return new Promise((resolve, reject) => {
     const i = new Image()
     i.onload = () => {
@@ -39,12 +16,11 @@ const defaultImgPromise = (decode) => (src) => {
   })
 }
 
+// sequential map.find for promises
 const promiseFind = (arr, promiseFactory) => {
-  let canceled = false
-  const find = new Promise((resolve, reject) => {
-    let done = false
+  let done = false
+  return new Promise((resolve, reject) => {
     const queueNext = (src) => {
-      if (canceled) return reject('canceled')
       return promiseFactory(src).then(() => {
         done = true
         resolve(src)
@@ -53,90 +29,95 @@ const promiseFind = (arr, promiseFactory) => {
 
     arr
       .reduce((p, src) => {
+        // ensure we aren't done before enquing the next source
         return p.catch(() => {
           if (!done) return queueNext(src)
         })
       }, queueNext(arr.shift()))
       .catch(reject)
   })
-
-  return {find, cancel: () => (canceled = true)}
 }
 
-const removeBlankArrayElements = (a) => a.filter((x) => x)
-const stringToArray = (x) => (Array.isArray(x) ? x : [x])
-const defaultState = {isLoading: true, isLoaded: false}
+const useImage = ({
+  srcList,
+  imgPromise = defaultImgPromise(true),
+  useSuspense = true,
+}) => {
+  const [isLoading, setIsLoading] = useState(true)
+  const sourceList = removeBlankArrayElements(stringToArray(srcList))
+  const sourceKey = sourceList.join('')
 
-const reducer = (state, action) => {
-  switch (action.type) {
-    case 'wontload':
-      return {...state, isLoading: false, isLoaded: false}
-    case 'loaded':
-      return {...state, isLoading: false, isLoaded: true, src: action.src}
-    default:
-      return state
+  if (!state[sourceKey]) {
+    // create promise to loop through sources and try to load one
+    const find = promiseFind(sourceList, imgPromise)
+      // if a source was found, update state
+      // when not using suspense, update state to force a rerender
+      .then((src) => {
+        state[sourceKey] = {...state[sourceKey], state: 'resolved', src}
+        if (!useSuspense) setIsLoading(false)
+      })
+
+      // if no source was found, or if another error occured, update state
+      // when not using suspense, update state to force a rerender
+      .catch((error) => {
+        state[sourceKey] = {...state[sourceKey], state: 'rejected', error}
+        if (!useSuspense) setIsLoading(false)
+      })
+
+    state[sourceKey] = {
+      promise: find,
+      state: 'pending',
+      error: null,
+    }
+  }
+
+  if (state[sourceKey].state === 'resolved') {
+    return {src: state[sourceKey].src}
+  }
+
+  if (state[sourceKey].state === 'pending') {
+    if (useSuspense) throw state[sourceKey].promise
+    return {isLoading: true}
+  }
+
+  if (state[sourceKey].state === 'rejected') {
+    if (useSuspense) throw state[sourceKey].error
+    return {isLoading: false, error: state[sourceKey].error}
   }
 }
 
-const useImage = (srcList, {decode, imgPromise}) => {
-  const sourceList = removeBlankArrayElements(stringToArray(srcList))
-  const sourceKey = sourceList.join('')
-  const sourceKeyRef = useRef()
-  let isMounted = true
-
-  const [{isLoading, isLoaded, src}, dispatch] = useReducer(
-    reducer,
-    defaultState
-  )
-
-  // console.log({isLoading, isLoaded, src, sourceList})
-  useEffect(() => {
-    if (sourceKeyRef.current !== sourceKey) {
-      sourceKeyRef.current = sourceKey
-
-      const {find, cancel} = promiseFind(sourceList, imgPromise(decode))
-      find
-        .then((src) => isMounted && dispatch({type: 'loaded', src}))
-        .catch(() => isMounted && dispatch({type: 'wontload'}))
-
-      return () => {
-        isMounted = false
-        cancel()
-      }
-    }
-  }, [sourceList, decode, isLoaded, sourceKey])
-
-  return {src, isLoaded, isLoading}
-}
+export {useImage}
 
 const simpleContainer = (x) => x
 
 export default function Img({
   decode = true,
-  src = [],
+  src: srcList = [],
   loader = null,
   unloader = null,
   container = simpleContainer,
   loaderContainer = simpleContainer,
   unloaderContainer = simpleContainer,
-  imgPromise = defaultImgPromise, // used for testing
+  imgPromise = defaultImgPromise,
+  useSuspense = false,
   ...imgProps // anything else will be passed to the <img> element
 }) {
-  const {src: resolvedSrc, isLoaded, isLoading} = useImage(src, {
-    decode,
-    imgPromise,
+  const {src, isLoading} = useImage({
+    srcList,
+    imgPromise: imgPromise(decode),
+    useSuspense,
   })
 
-  // console.log({isLoading, isLoaded, resolvedSrc})
+  // console.log({src, isLoading, resolvedSrc, useSuspense})
 
   // show img if loaded
-  if (resolvedSrc) return container(<img src={resolvedSrc} {...imgProps} />)
+  if (src) return container(<img src={src} {...imgProps} />)
 
   // show loader if we have one and were still trying to load image
-  if (isLoading) return loaderContainer(loader)
+  if (!useSuspense && isLoading) return loaderContainer(loader)
 
   // show unloader if we have one and we have no more work to do
-  if (unloader) return unloaderContainer(unloader)
+  if (!useSuspense && unloader) return unloaderContainer(unloader)
 
   return null
 }
