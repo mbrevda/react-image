@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 
 const removeBlankArrayElements = (a) => a.filter((x) => x)
 const stringToArray = (x) => (Array.isArray(x) ? x : [x])
-const state = {}
+const cache = {}
 
 // Promisized version of Image() api
 const defaultImgPromise = (decode = true) => (src) => {
@@ -47,42 +47,42 @@ const useImage = ({
   const sourceList = removeBlankArrayElements(stringToArray(srcList))
   const sourceKey = sourceList.join('')
 
-  if (!state[sourceKey]) {
+  if (!cache[sourceKey]) {
     // create promise to loop through sources and try to load one
     const find = promiseFind(sourceList, imgPromise)
-      // if a source was found, update state
-      // when not using suspense, update state to force a rerender
+      // if a source was found, update cache
+      // when not using suspense, update cache to force a rerender
       .then((src) => {
-        state[sourceKey] = {...state[sourceKey], state: 'resolved', src}
+        cache[sourceKey] = {...cache[sourceKey], cache: 'resolved', src}
         if (!useSuspense) setIsLoading(false)
       })
 
-      // if no source was found, or if another error occured, update state
-      // when not using suspense, update state to force a rerender
+      // if no source was found, or if another error occured, update cache
+      // when not using suspense, update cache to force a rerender
       .catch((error) => {
-        state[sourceKey] = {...state[sourceKey], state: 'rejected', error}
+        cache[sourceKey] = {...cache[sourceKey], cache: 'rejected', error}
         if (!useSuspense) setIsLoading(false)
       })
 
-    state[sourceKey] = {
+    cache[sourceKey] = {
       promise: find,
-      state: 'pending',
+      cache: 'pending',
       error: null,
     }
   }
 
-  if (state[sourceKey].state === 'resolved') {
-    return {src: state[sourceKey].src}
+  if (cache[sourceKey].cache === 'resolved') {
+    return {src: cache[sourceKey].src, isLoading: false, error: null}
   }
 
-  if (state[sourceKey].state === 'pending') {
-    if (useSuspense) throw state[sourceKey].promise
-    return {isLoading: true}
+  if (cache[sourceKey].cache === 'pending') {
+    if (useSuspense) throw cache[sourceKey].promise
+    return {isLoading: true, src: null, error: null}
   }
 
-  if (state[sourceKey].state === 'rejected') {
-    if (useSuspense) throw state[sourceKey].error
-    return {isLoading: false, error: state[sourceKey].error}
+  if (cache[sourceKey].cache === 'rejected') {
+    if (useSuspense) throw cache[sourceKey].error
+    return {isLoading: false, error: cache[sourceKey].error, src: null}
   }
 }
 
@@ -98,15 +98,11 @@ export default function Img({
   container = simpleContainer,
   loaderContainer = simpleContainer,
   unloaderContainer = simpleContainer,
-  imgPromise = defaultImgPromise,
+  imgPromise = defaultImgPromise(decode),
   useSuspense = false,
   ...imgProps // anything else will be passed to the <img> element
 }) {
-  const {src, isLoading} = useImage({
-    srcList,
-    imgPromise: imgPromise(decode),
-    useSuspense,
-  })
+  const {src, isLoading} = useImage({srcList, imgPromise, useSuspense})
 
   // console.log({src, isLoading, resolvedSrc, useSuspense})
 

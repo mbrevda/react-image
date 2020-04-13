@@ -1,4 +1,4 @@
-import React, {Suspense, useState, useEffect} from 'react'
+import React, {Suspense, useState, useEffect, useRef} from 'react'
 import ReactDOM from 'react-dom'
 import Img from '../src/index.js'
 
@@ -18,7 +18,7 @@ class ErrorBoundary extends React.Component {
     if (this.state.hasError) {
       if (this.onError) return this.onError
       // You can render any custom fallback UI
-      return <h1>Something went wrong. {this.state.hasError}</h1>
+      return <h1>Something went wrong.</h1>
     }
 
     return this.props.children
@@ -26,6 +26,19 @@ class ErrorBoundary extends React.Component {
 }
 
 const randSeconds = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
+
+function Timer({until}) {
+  const startTimeRef = useRef(Date.now())
+  const [time, setTime] = useState(Date.now() - startTimeRef.current)
+
+  useEffect(() => {
+    const timer = setTimeout(() => setTime(Date.now() - startTimeRef.current), 1000)
+    return () => clearTimeout(timer)
+  }, [time])
+
+  if (((time / 1000) - 5) > until) return <h3>Max time elapsed!</h3>
+  return <h3>Elapsed seconds: {Math.trunc(time / 1000)}</h3>
+}
 
 function App() {
   const imageOn404 =
@@ -38,7 +51,8 @@ function App() {
     const rand2 = randSeconds(2, 10)
 
   return (
-    <>
+    <>  
+        <Timer until={Math.max(rand1, rand2)}/>
         <div>
         <h5>Should show (delayed {rand1} seconds)</h5>
         <Img
@@ -89,6 +103,24 @@ function App() {
         </ErrorBoundary>
       </div>  
       
+      <div>
+        <h5>Suspense should reuse cache (only one netowork call)</h5>
+        <ErrorBoundary>
+          <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
+            <Img 
+              style={{width: 100}}
+              src={`https://picsum.photos/200`} 
+              useSuspense={true}
+            />
+            <div style={{width: '50px'}} />
+            <Img 
+              style={{width: 100}}
+              src={`https://picsum.photos/200`} 
+              useSuspense={true}
+            />
+          </Suspense>
+        </ErrorBoundary>
+      </div>  
     </>
   )
 }
