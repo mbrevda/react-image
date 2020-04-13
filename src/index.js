@@ -51,14 +51,14 @@ const useImage = ({
     // create promise to loop through sources and try to load one
     const find = promiseFind(sourceList, imgPromise)
       // if a source was found, update cache
-      // when not using suspense, update cache to force a rerender
+      // when not using suspense, update state to force a rerender
       .then((src) => {
         cache[sourceKey] = {...cache[sourceKey], cache: 'resolved', src}
         if (!useSuspense) setIsLoading(false)
       })
 
       // if no source was found, or if another error occured, update cache
-      // when not using suspense, update cache to force a rerender
+      // when not using suspense, update state to force a rerender
       .catch((error) => {
         cache[sourceKey] = {...cache[sourceKey], cache: 'rejected', error}
         if (!useSuspense) setIsLoading(false)
@@ -98,11 +98,15 @@ export default function Img({
   container = simpleContainer,
   loaderContainer = simpleContainer,
   unloaderContainer = simpleContainer,
-  imgPromise = defaultImgPromise(decode),
+  imgPromise = defaultImgPromise,
   useSuspense = false,
   ...imgProps // anything else will be passed to the <img> element
 }) {
-  const {src, isLoading} = useImage({srcList, imgPromise, useSuspense})
+  const {src, isLoading} = useImage({
+    srcList,
+    imgPromise: imgPromise(decode),
+    useSuspense,
+  })
 
   // console.log({src, isLoading, resolvedSrc, useSuspense})
 
