@@ -82,7 +82,7 @@
     "rollup-plugin-babel": "4.4.0",
     "rollup-plugin-babel-minify": "10.0.0",
     "rollup-plugin-node-resolve": "5.2.0",
-    "semver": "7.2.3",
+    "semver": "7.3.0",
     "serve-static": "1.14.1",
     "uglifyjs-webpack-plugin": "2.2.0",
     "webpack": "4.42.1",
