@@ -72,7 +72,7 @@
     "enzyme-adapter-react-16": "1.15.2",
     "express": "4.17.1",
     "html-webpack-plugin": "4.2.1",
-    "jest": "25.5.1",
+    "jest": "25.5.2",
     "prettier": "2.0.5",
     "react": "16.13.1",
     "react-addons-test-utils": "15.6.2",
