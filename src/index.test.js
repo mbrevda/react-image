@@ -1,5 +1,5 @@
 import React from 'react'
-import Img from './index.js'
+import Img from './index'
 import ReactDOMServer from 'react-dom/server'
 import {render, act, cleanup, waitFor} from '@testing-library/react'
 
@@ -16,11 +16,10 @@ const imgPromise = (decode) => (src) => {
     img.onerror = reject
     img.src = src
 
-    // mock loading 
+    // mock loading
     src.endsWith('LOAD') ? img.onload() : img.onerror()
   })
 }
-
 
 test('render with src string, after load', () => {
   const {getByAltText} = render(
@@ -29,11 +28,11 @@ test('render with src string, after load', () => {
   waitFor(() => expect(getByAltText('').src).toEqual(location.href + 'foo'))
 })
 
-test('render with src array',  () => {
-  const {getByAltText} = render(  
+test('render with src array', () => {
+  const {getByAltText} = render(
     <Img src={['fooLOAD']} imgPromise={imgPromise} alt="" />
   )
-  
+
   waitFor(() => expect(getByAltText('').src).toEqual(location.href + 'foo'))
 })
 
@@ -67,7 +66,7 @@ test('show loader', () => {
   const {container} = render(
     <Img src="foo" loader={<span>Loading...</span>} alt="" />
   )
-  waitFor(() =>expect(container.innerHTML).toEqual('<span>Loading...</span>'))
+  waitFor(() => expect(container.innerHTML).toEqual('<span>Loading...</span>'))
 })
 
 test('clear loader after load', async () => {
