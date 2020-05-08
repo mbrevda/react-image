@@ -8,7 +8,7 @@ export default () => (
       alignItems: 'center',
       flexDirection: 'column',
       height: 240,
-      width: 320
+      width: 320,
     }}
   >
     <img src="./loader.gif" />

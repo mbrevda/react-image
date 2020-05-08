@@ -25,18 +25,22 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-const randSeconds = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
+const randSeconds = (min, max) =>
+  Math.floor(Math.random() * (max - min + 1) + min)
 
 function Timer({until}) {
   const startTimeRef = useRef(Date.now())
   const [time, setTime] = useState(Date.now() - startTimeRef.current)
 
   useEffect(() => {
-    const timer = setTimeout(() => setTime(Date.now() - startTimeRef.current), 1000)
+    const timer = setTimeout(
+      () => setTime(Date.now() - startTimeRef.current),
+      1000
+    )
     return () => clearTimeout(timer)
   }, [time])
 
-  if (((time / 1000) - 5) > until) return <h3>Max time elapsed!</h3>
+  if (time / 1000 - 5 > until) return <h3>Max time elapsed!</h3>
   return <h3>Elapsed seconds: {Math.trunc(time / 1000)}</h3>
 }
 
@@ -46,14 +50,14 @@ function App() {
   const tmdbImg =
     'https://image.tmdb.org/t/p/w500/kqjL17yufvn9OVLyXYpvtyrFfask.jpg'
 
-    // http://i.imgur.com/ozEaj1Z.jpg
-    const rand1 = randSeconds(1, 8)
-    const rand2 = randSeconds(2, 10)
+  // http://i.imgur.com/ozEaj1Z.jpg
+  const rand1 = randSeconds(1, 8)
+  const rand2 = randSeconds(2, 10)
 
   return (
-    <>  
-        <Timer until={Math.max(rand1, rand2)}/>
-        <div>
+    <>
+      <Timer until={Math.max(rand1, rand2)} />
+      <div>
         <h5>Should show (delayed {rand1} seconds)</h5>
         <Img
           style={{width: 100}}
@@ -61,66 +65,67 @@ function App() {
           loader={<div>Loading...</div>}
           unloader={<div>wont load!</div>}
         />
-      </div> 
+      </div>
 
-       {/* <div>
+      {/* <div>
         <h5>Should not show anything</h5>
         <Img style={{width: 100}} src={[imageOn404]} />
       </div>   */}
 
-       <div>
-        <h5>Should  show unloader</h5>
-        <Img style={{width: 100}} src='http://127.0.0.1/foo_bar_baz_foo_bar.jpg'
+      <div>
+        <h5>Should show unloader</h5>
+        <Img
+          style={{width: 100}}
+          src="http://127.0.0.1/foo_bar_baz_foo_bar.jpg"
           loader={<div>Loading...</div>}
           unloader={<div>wont load!</div>}
         />
-      </div> 
-
-       <div>
-         <h5>Suspense (delayed {rand2} seconds)</h5>
-        <ErrorBoundary>
-          <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
-            <Img 
-              style={{width: 100}}
-              src={`http://deelay.me/${rand2 * 1000}/https://picsum.photos/200`} 
-              useSuspense={true}
-            />
-          </Suspense>
-        </ErrorBoundary>
-      </div>  
-
+      </div>
 
       <div>
-         <h5>Suspense wont load</h5>
-        <ErrorBoundary onError={<div>Suspense... wont load</div>}>
+        <h5>Suspense (delayed {rand2} seconds)</h5>
+        <ErrorBoundary>
           <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
-            <Img 
+            <Img
               style={{width: 100}}
-              src='http://127.0.0.1/foo_bar_baz_foo_bar.jpg' 
+              src={`http://deelay.me/${rand2 * 1000}/https://picsum.photos/200`}
               useSuspense={true}
             />
           </Suspense>
         </ErrorBoundary>
-      </div>  
-      
+      </div>
+
+      <div>
+        <h5>Suspense wont load</h5>
+        <ErrorBoundary onError={<div>Suspense... wont load</div>}>
+          <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
+            <Img
+              style={{width: 100}}
+              src="http://127.0.0.1/foo_bar_baz_foo_bar.jpg"
+              useSuspense={true}
+            />
+          </Suspense>
+        </ErrorBoundary>
+      </div>
+
       <div>
         <h5>Suspense should reuse cache (only one netowork call)</h5>
         <ErrorBoundary>
           <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
-            <Img 
+            <Img
               style={{width: 100}}
-              src={`https://picsum.photos/200`} 
+              src={`https://picsum.photos/200`}
               useSuspense={true}
             />
             <div style={{width: '50px'}} />
-            <Img 
+            <Img
               style={{width: 100}}
-              src={`https://picsum.photos/200`} 
+              src={`https://picsum.photos/200`}
               useSuspense={true}
             />
           </Suspense>
         </ErrorBoundary>
-      </div>  
+      </div>
     </>
   )
 }

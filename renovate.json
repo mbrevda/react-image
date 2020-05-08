@@ -3,7 +3,7 @@
   "timezone": "UTC",
   "extends": [":base"],
   "rebaseStalePrs": true,
-  "lockFileMaintenance": { "enabled": false },
+  "lockFileMaintenance": {"enabled": false},
   "automerge": true,
   "automergeType": "branch-push",
   "recreateClosed": true

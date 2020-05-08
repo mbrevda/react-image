@@ -15,7 +15,7 @@ export default class DemoContainer extends Component {
           alignItems: 'center',
           flexDirection: 'column',
           height: 276,
-          width: 320
+          width: 320,
         }}
       >
         {this.props.children({rand: this.state.rand})}

@@ -79,4 +79,3 @@ export default function useImage({
   if (useSuspense) throw cache[sourceKey].promise
   return {isLoading: true, src: null, error: null}
 }
-
