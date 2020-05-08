@@ -4,7 +4,7 @@
   "description": "React Image is an <img> tag replacement for react, featuring preloader and multiple image fallback support",
   "scripts": {
     "build": "NODE_ENV=production rollup -c && for i in cjs esm umd; do cp src/*test.js $i; done; && npm run build:types",
-    "build:types": "npx tsc --declarationDir . --emitDeclarationOnly --declaration"
+    "build:types": "npx tsc --declarationDir . --emitDeclarationOnly --declaration",
     "codecov": "codecov",
     "dev": "webpack-dev-server",
     "pretty": "prettier *.js src/**/*.js --write",
