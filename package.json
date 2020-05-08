@@ -9,7 +9,7 @@
     "dev": "webpack-dev-server",
     "pretty": "prettier *.js src/**/*.js --write",
     "shouldPublish": "semver `npm -s view $npm_package_name version` --range \"<$npm_package_version\"",
-    "test": "jest --projects jest*.json"
+    "test": "jest --projects jest*.js"
   },
   "repository": {
     "type": "git",
