@@ -12,3 +12,4 @@ esm/
 package-lock.json
 dist/
 tags
+*.d.ts
