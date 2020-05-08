@@ -9,7 +9,6 @@ coverage/
 umd/
 cjs/
 esm/
-package-lock.json
 dist/
 tags
 *.d.ts
