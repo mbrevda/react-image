@@ -10,13 +10,9 @@
 
 **React Image** is an `<img>` tag replacement for [React.js](https://facebook.github.io/react/), featuring preloader and multiple image fallback support.
 
-With **React Image** you can specify multiple images to be used as fallbacks in the event that the browser couldn't load the previous image. Additionally, you can specify any React element to be used before an image is loaded (i.e. a spinner) and in the event than the specified image(s) could not be loaded.
+**React Image** allows one or mote images to be used as fallbacks in the event that the browser couldn't load the previous image. Additionally, you can specify any React element to be used before an image is loaded (i.e. a spinner) and in the event than the specified image(s) could not be loaded.
 
-**React Image** will cleverly hide "broken" images to prevent showing the browsers default "broken image" placeholder. **React Image** caches past attempts to load an image so that the same image won't be attempted to be pulled over the network again, until the next page reload.
-
-On unmount **React Image** will abort any current image downloads potentially saving bandwidth and browser resources should the image no longer be desirable. Note this relies on unstandardised yet common browser behaviour. Some browsers, like Safari, may not support this behaviour ([tracking bug](https://bugs.webkit.org/show_bug.cgi?id=6656))
-
-This package was formerly known as `react-img-multi`. Special thanks to @yuanyan for agreeing to relinquish the name!
+**React Image** uses the useImage hook internally which encapsulates all the image loading logic. This hook wokrs with React Suspense by default and will suspense painting until the image is downloaded and decoded by the browser.
 
 ## Getting started
 
@@ -38,14 +34,39 @@ npm install react-image --save
 
 ## Documentation
 
+You can use the standalone component, documented below, or the `useImage` hook.
+
+### useImage():
+
+The useImage hook allowes for incorperating `react-image`'s logic in any component. Example usage:
+
+```js
+import useImge from 'react-image'
+
+export default function MyComponent() {
+  const {src, isLoading, error} = useImage({
+    srcList: 'https://www.example.com/foo.jpg"',
+  })
+
+  return <img src={src} />
+}
+```
+
+### useImage API:
+
+`srcList`: a string or array of strings. `useImage` will try loading these one at a time and stop after the first one is succesfully loaded
+
+`imgPromise`: a promise that accepts a url and returns a promise which resolves the image is succesfully loaded or is reject if the image doesn't load. You can inject an alternative implementation for advanced custom behaviour such as logging errors or dealing with servers that return an image with a 404 header
+
+`useSuspense`: boolean. By default, `useImage` will tell React to suspend rendering until an image is downloaded. This can be disabled by setting this to false.
+
+### Standalone component
+
 Include `react-image` in your component:
 
 ```js
 // using an ES6 transpiler, like babel
 import Img from 'react-image'
-
-// otherwise
-const Img = require('react-image')
 ```
 
 and set a source for the image:
@@ -54,7 +75,7 @@ and set a source for the image:
 const myComponent = () => <Img src="https://www.example.com/foo.jpg" />
 ```
 
-will generate:
+will resolve to:
 
 ```js
 <img src="https://www.example.com/foo.jpg">
@@ -100,7 +121,7 @@ const myComponent = () => (
 )
 ```
 
-### Decoding before paint
+### Decode before paint
 
 By default and when supported by the browser, `react-image` uses [`img.decode()`](https://html.spec.whatwg.org/multipage/embedded-content.html#dom-img-decode) to decode the image and only render it when it's fully ready to be painted. While this doesn't matter much for vector images (such as svg's) which are rendered immediately, decoding the image before painting prevents the browser from hanging or flashing while the image is decoded. If this behaviour is undesirable, it can be disabled by setting the `decode` prop to `false`:
 
@@ -109,6 +130,8 @@ const myComponent = () => (
   <Img src={'https://www.example.com/foo.jpg'} decode={false} />
 )
 ```
+
+Note: this option only applies to the component, not to the `useImage` hook. When using the hook you can inject a custom image resolver with whatever behaviour is required.
 
 ### Loading images with a CORS policy
 
