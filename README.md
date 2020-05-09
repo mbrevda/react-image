@@ -8,7 +8,7 @@
 
 **React Image** is an `<img>` tag replacement and hook for [React.js](https://facebook.github.io/react/), supporting fallback to alternate sources when loading an image fails.
 
-**React Image** allows one or more images to be used as fallbacks in the event that the browser couldn't load the previous image. When using the componenet, you can specify any React element to be used before an image is loaded (i.e. a spinner) and in the event than the specified image(s) could not be loaded. When using the hook this can be achives by wrapping the compomenet with [`<Suspense>`](https://reactjs.org/docs/react-api.html#reactsuspense) and specifying the `fallback` prop.
+**React Image** allows one or more images to be used as fallback imagess in the event that the browser couldn't load the previous image. When using the componenet, you can specify any React element to be used before an image is loaded (i.e. a spinner) and in the event than the specified image(s) could not be loaded. When using the hook this can be achives by wrapping the compomenet with [`<Suspense>`](https://reactjs.org/docs/react-api.html#reactsuspense) and specifying the `fallback` prop.
 
 **React Image** uses the `useImage` hook internally which encapsulates all the image loading logic. This hook works with React Suspense by default and will suspend painting until the image is downloaded and decoded by the browser.
 
@@ -36,7 +36,7 @@ You can use the standalone component, documented below, or the `useImage` hook.
 
 ### useImage():
 
-The `useImage` hook allowes for incorperating `react-image`'s logic in any component. When using the hook, the component can be wrapped in `<Suspense>` to keep it from rendering until the image is ready. Specify the `fallback` prop to show a spinner or any other component to the user while the browser is loading. The hook the throw an error if it failes to find any images. You can wrap your componenet with an [Error Boundry](https://reactjs.org/docs/code-splitting.html#error-boundaries) to catch this scenario and do/show something.
+The `useImage` hook allows for incorperating `react-image`'s logic in any component. When using the hook, the component can be wrapped in `<Suspense>` to keep it from rendering until the image is ready. Specify the `fallback` prop to show a spinner or any other component to the user while the browser is loading. The hook the throw an error if it failes to find any images. You can wrap your componenet with an [Error Boundry](https://reactjs.org/docs/code-splitting.html#error-boundaries) to catch this scenario and do/show something.
 
 Example usage:
 
@@ -54,9 +54,9 @@ export default function MyComponent() {
 
 ### `useImage` API:
 
-- `srcList`: a string or array of strings. `useImage` will try loading these one at a time and returns after the first one is succesfully loaded
+- `srcList`: a string or array of strings. `useImage` will try loading these one at a time and returns after the first one is successfully loaded
 
-- `imgPromise`: a promise that accepts a url and returns a promise which resolves the image is succesfully loaded or is reject if the image doesn't load. You can inject an alternative implementation for advanced custom behaviour such as logging errors or dealing with servers that return an image with a 404 header
+- `imgPromise`: a promise that accepts a url and returns a promise which resolves the image is successfully loaded or rejects if the image doesn't load. You can inject an alternative implementation for advanced custom behaviour such as logging errors or dealing with servers that return an image with a 404 header
 
 - `useSuspense`: boolean. By default, `useImage` will tell React to suspend rendering until an image is downloaded. This can be disabled by setting this to false.
 
