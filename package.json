@@ -41,7 +41,7 @@
     "es",
     "umd",
     "cjs",
-    "react-image.d.ts"
+    "*.d.ts"
   ],
   "module": "esm/index.js",
   "main": "cjs/index.js",
