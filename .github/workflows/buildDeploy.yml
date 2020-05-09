@@ -62,7 +62,7 @@ jobs:
         id: checkPublish
         run: echo "::set-output name=shouldPublish::`npm run -s isNewerThanPublished`"
 
-      - name: test buid
+      - name: test build
         if: steps.checkPublish.outputs.shouldPublish == 'true'
         run: npm run build
 
