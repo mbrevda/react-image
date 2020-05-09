@@ -8,7 +8,7 @@
 
 **React Image** is an `<img>` tag replacement and hook for [React.js](https://facebook.github.io/react/), supporting fallback to alternate sources when loading an image fails.
 
-**React Image** allows one or more images to be used as fallback imagess in the event that the browser couldn't load the previous image. When using the componenet, you can specify any React element to be used before an image is loaded (i.e. a spinner) and in the event than the specified image(s) could not be loaded. When using the hook this can be achives by wrapping the compomenet with [`<Suspense>`](https://reactjs.org/docs/react-api.html#reactsuspense) and specifying the `fallback` prop.
+**React Image** allows one or more images to be used as fallback images in the event that the browser couldn't load the previous image. When using the component, you can specify any React element to be used before an image is loaded (i.e. a spinner) and in the event that the specified image(s) could not be loaded. When using the hook this can be achieved by wrapping the component with [`<Suspense>`](https://reactjs.org/docs/react-api.html#reactsuspense) and specifying the `fallback` prop.
 
 **React Image** uses the `useImage` hook internally which encapsulates all the image loading logic. This hook works with React Suspense by default and will suspend painting until the image is downloaded and decoded by the browser.
 
