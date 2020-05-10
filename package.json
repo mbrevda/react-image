@@ -99,8 +99,8 @@
     "typescript": "^3.8.3"
   },
   "peerDependencies": {
-    "react": ">=16.6",
-    "react-dom": ">=16.6"
+    "react": ">=16.8",
+    "react-dom": ">=16.8"
   },
   "dependencies": {}
 }
