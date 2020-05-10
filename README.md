@@ -45,7 +45,7 @@ import useImge from 'react-image'
 
 export default function MyComponent() {
   const {src, isLoading, error} = useImage({
-    srcList: 'https://www.example.com/foo.jpg"',
+    srcList: 'https://www.example.com/foo.jpg',
   })
 
   return <img src={src} />
