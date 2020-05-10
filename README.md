@@ -41,7 +41,7 @@ The `useImage` hook allows for incorperating `react-image`'s logic in any compon
 Example usage:
 
 ```js
-import useImge from 'react-image'
+import useImage from 'react-image'
 
 export default function MyComponent() {
   const {src, isLoading, error} = useImage({
