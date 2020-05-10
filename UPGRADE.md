@@ -1,6 +1,6 @@
 # 3.0.0
 
-This version requires a version of react that supports hook (16.6 or greater)
+This version requires a version of react that supports hook (16.8 or greater)
 
 # 1.0.0
 
