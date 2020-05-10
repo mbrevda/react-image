@@ -3,7 +3,7 @@
 - move to typescript
 - add useImage hook
 - allow for an image loader to be injected
-- BREAKING: requires react 16.6 or higher
+- BREAKING: requires react 16.8 or higher
 
 # 2.4.0
 
