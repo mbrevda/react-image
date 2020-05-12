@@ -12,3 +12,4 @@ esm/
 dist/
 tags
 *.d.ts
+*.tgz

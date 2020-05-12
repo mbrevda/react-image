@@ -38,9 +38,10 @@
   ],
   "files": [
     "*.md",
-    "es",
-    "umd",
-    "cjs",
+    "es/*.js",
+    "umd/*.js",
+    "cjs/*.js",
+    "!**/*.test.js",
     "*.d.ts"
   ],
   "module": "esm/index.js",
