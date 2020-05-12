@@ -1,6 +1,7 @@
 import React, {Suspense, useState, useEffect, useRef} from 'react'
 import ReactDOM from 'react-dom'
-import Img from '../src/index.js'
+import Img from '../src'
+import useImage from '../src/useImage'
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -44,6 +45,42 @@ function Timer({until}) {
   return <h3>Elapsed seconds: {Math.trunc(time / 1000)}</h3>
 }
 
+const HooksLegacyExample = ({rand}) => {
+  const {src, isLoading, error} = useImage({
+    srcList: [
+      'https://www.example.com/foo.jpg',
+      `http://deelay.me/${rand * 1000}/https://picsum.photos/200`, // will be loaded
+    ],
+    useSuspense: false,
+  })
+
+  return (
+    <div>
+      <h5>using hooks</h5>
+      {isLoading && <div>Loading... (rand={rand})</div>}
+      {error && <div>Error! {error.msg}</div>}
+      {src && <img src={src} />}
+      {!isLoading && !error && !src && <div>Nothing to show</div>}
+    </div>
+  )
+}
+
+const HooksSuspenseExample = ({rand}) => {
+  const {src, isLoading, error} = useImage({
+    srcList: [
+      'https://www.example.com/foo.jpg',
+      `http://deelay.me/${rand * 1000}/https://picsum.photos/200`, // will be loaded
+    ],
+  })
+
+  return (
+    <div>
+      <h5>using hooks & suspense</h5>
+      <img src={src} />
+    </div>
+  )
+}
+
 function App() {
   const imageOn404 =
     'https://i9.ytimg.com/s_p/OLAK5uy_mwasty2cJpgWIpr61CqWRkHIT7LC62u7s/sddefault.jpg?sqp=CJz5ye8Fir7X7AMGCNKz4dEF&rs=AOn4CLC-JNn9jj-oFw94oM574w36xUL1iQ&v=5a3859d2'
@@ -53,6 +90,8 @@ function App() {
   // http://i.imgur.com/ozEaj1Z.jpg
   const rand1 = randSeconds(1, 8)
   const rand2 = randSeconds(2, 10)
+  const rand3 = randSeconds(2, 10)
+  const rand4 = randSeconds(2, 10)
 
   return (
     <>
@@ -125,6 +164,18 @@ function App() {
             />
           </Suspense>
         </ErrorBoundary>
+      </div>
+
+      <div>
+        <h5>Hooks & Suspense</h5>
+        <ErrorBoundary>
+          <Suspense fallback={<div>Loading... (hooks, rand={rand3})</div>}>
+            <HooksSuspenseExample rand={rand3} />
+          </Suspense>
+        </ErrorBoundary>
+
+        <h5>Hooks Legacy</h5>
+        <HooksLegacyExample rand={rand4} />
       </div>
     </>
   )

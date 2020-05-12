@@ -34,6 +34,14 @@ const opts = {
           cacheCompression: false,
         },
       },
+      {
+        test: /\.tsx?$/,
+        exclude: /node_modules/,
+        loader: 'ts-loader',
+        options: {
+          experimentalWatchApi: true,
+        },
+      },
     ],
   },
   devServer: {
@@ -52,7 +60,7 @@ const opts = {
   plugins: [new HtmlWebpackPlugin({})],
   resolve: {
     modules: [__dirname, 'node_modules'],
-    extensions: ['.js'],
+    extensions: ['.js', '.ts', '.tsx'],
   },
   resolveLoader: {
     modules: ['node_modules'],
