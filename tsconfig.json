@@ -10,6 +10,7 @@
     "allowSyntheticDefaultImports": true,
     // Include typings from built-in lib declarations
     "lib": ["es2019", "dom"],
+    "target": "ESNext",
     "skipLibCheck": true
   },
   "include": ["*/**/*.ts", "*/**/*.tsx"],

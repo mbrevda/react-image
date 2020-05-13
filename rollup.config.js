@@ -64,4 +64,13 @@ export default [
       sourcemap: true,
     },
   },
+  {
+    ...opts,
+    input: 'src/useImage.tsx',
+    output: {
+      dir: dirname(pkg.module),
+      format: 'esm',
+      sourcemap: true,
+    },
+  },
 ]

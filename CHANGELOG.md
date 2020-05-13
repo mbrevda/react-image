@@ -1,3 +1,8 @@
+# 3.0.2
+
+- dont include typescript libs in build modules
+- include esm modules
+
 # 3.0.1
 
 - include missing files
