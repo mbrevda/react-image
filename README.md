@@ -5,18 +5,12 @@
 [![npm](https://img.shields.io/npm/dt/react-image.svg?style=flat-square)](https://www.npmjs.com/package/react-image)
 [![npm](https://img.shields.io/npm/dm/react-image.svg?style=flat-square)](https://www.npmjs.com/package/react-image)
 [![Known Vulnerabilities](https://snyk.io/test/github/mbrevda/react-image/badge.svg)](https://snyk.io/test/github/mbrevda/react-image)
-[![wercker status](https://app.wercker.com/status/51bfd9b8aa6e52acf77310e17f00aff4/s/master 'wercker status')](https://app.wercker.com/project/byKey/51bfd9b8aa6e52acf77310e17f00aff4)
-[![codecov](https://codecov.io/gh/mbrevda/react-image/branch/master/graph/badge.svg)](https://codecov.io/gh/mbrevda/react-image)
 
-**React Image** is an `<img>` tag replacement for [React.js](https://facebook.github.io/react/), featuring preloader and multiple image fallback support.
+**React Image** is an `<img>` tag replacement and hook for [React.js](https://facebook.github.io/react/), supporting fallback to alternate sources when loading an image fails.
 
-With **React Image** you can specify multiple images to be used as fallbacks in the event that the browser couldn't load the previous image. Additionally, you can specify any React element to be used before an image is loaded (i.e. a spinner) and in the event than the specified image(s) could not be loaded.
+**React Image** allows one or more images to be used as fallback images in the event that the browser couldn't load the previous image. When using the component, you can specify any React element to be used before an image is loaded (i.e. a spinner) and in the event that the specified image(s) could not be loaded. When using the hook this can be achieved by wrapping the component with [`<Suspense>`](https://reactjs.org/docs/react-api.html#reactsuspense) and specifying the `fallback` prop.
 
-**React Image** will cleverly hide "broken" images to prevent showing the browsers default "broken image" placeholder. **React Image** caches past attempts to load an image so that the same image won't be attempted to be pulled over the network again, until the next page reload.
-
-On unmount **React Image** will abort any current image downloads potentially saving bandwidth and browser resources should the image no longer be desirable.
-
-This package was formerly known as `react-img-multi`. Special thanks to @yuanyan for agreeing to relinquish the name!
+**React Image** uses the `useImage` hook internally which encapsulates all the image loading logic. This hook works with React Suspense by default and will suspend painting until the image is downloaded and decoded by the browser.
 
 ## Getting started
 
@@ -34,18 +28,53 @@ npm install react-image --save
 
 ## Dependencies
 
-`react-image` has no external dependencies, aside for the usual `react` and `react-dom`.
+`react-image` has no external dependencies, aside for a version of `react` and `react-dom` which support hooks.
 
 ## Documentation
+
+You can use the standalone component, documented below, or the `useImage` hook.
+
+### useImage():
+
+The `useImage` hook allows for incorperating `react-image`'s logic in any component. When using the hook, the component can be wrapped in `<Suspense>` to keep it from rendering until the image is ready. Specify the `fallback` prop to show a spinner or any other component to the user while the browser is loading. The hook the throw an error if it failes to find any images. You can wrap your componenet with an [Error Boundry](https://reactjs.org/docs/code-splitting.html#error-boundaries) to catch this scenario and do/show something.
+
+Example usage:
+
+```js
+import useImage from 'react-image/useImage'
+
+export default function MyComponent() {
+  const {src, isLoading, error} = useImage({
+    srcList: 'https://www.example.com/foo.jpg',
+  })
+
+  return <img src={src} />
+}
+```
+
+### `useImage` API:
+
+- `srcList`: a string or array of strings. `useImage` will try loading these one at a time and returns after the first one is successfully loaded
+
+- `imgPromise`: a promise that accepts a url and returns a promise which resolves the image is successfully loaded or rejects if the image doesn't load. You can inject an alternative implementation for advanced custom behaviour such as logging errors or dealing with servers that return an image with a 404 header
+
+- `useSuspense`: boolean. By default, `useImage` will tell React to suspend rendering until an image is downloaded. This can be disabled by setting this to false.
+
+**returns:**
+
+- `src`: the resolved image address
+- `isLoading`: the currently loading status. Note: this is always false when using Suspense
+- `error`: any errors ecountered, if any
+
+### Standalone component (legacy)
+
+When possible, you should use the `useImage` hook. This provides for greater flexability and support Suspense.
 
 Include `react-image` in your component:
 
 ```js
 // using an ES6 transpiler, like babel
 import Img from 'react-image'
-
-// otherwise
-const Img = require('react-image')
 ```
 
 and set a source for the image:
@@ -54,7 +83,7 @@ and set a source for the image:
 const myComponent = () => <Img src="https://www.example.com/foo.jpg" />
 ```
 
-will generate:
+will resolve to:
 
 ```js
 <img src="https://www.example.com/foo.jpg">
@@ -100,9 +129,13 @@ const myComponent = () => (
 )
 ```
 
-### Decoding before paint
+### NOTE:
 
-By default and when supported by the browser, `react-image` uses [`img.decode()`](https://html.spec.whatwg.org/multipage/embedded-content.html#dom-img-decode) to decode the image and only render it when it's fully ready to be painted. While this doesn't matter much for vector images (such as svg's) which are rendered immediately, decoding the image before painting prevents the browser from hanging or flashing while the image is decoded. If this behaviour is undesirable, it can be disabled by setting the `decode` prop to `false`:
+The following options only apply to the component, not to the `useImage` hook. When using the hook you can inject a custom image resolver with custom behaviour as required.
+
+### Decode before paint
+
+By default and when supported by the browser, `react-image` uses [`Image.decode()`](https://html.spec.whatwg.org/multipage/embedded-content.html#dom-img-decode) to decode the image and only render it when it's fully ready to be painted. While this doesn't matter much for vector images (such as svg's) which are rendered immediately, decoding the image before painting prevents the browser from hanging or flashing while the image is decoded. If this behaviour is undesirable, it can be disabled by setting the `decode` prop to `false`:
 
 ```js
 const myComponent = () => (
@@ -156,6 +189,8 @@ const myComponent = () =>
     <Img src='https://www.example.com/foo.jpg'>
   </VisibilitySensor>
 ```
+
+Note: it is not nesesary to use **React Image** to prevent loading of images past "the fold" (i.e. not currently visable on in the window). Instead use the HTML `<img>` element and the `loading="lazy"` property. See more [here](https://addyosmani.com/blog/lazy-loading/).
 
 ### Animate image loading
 

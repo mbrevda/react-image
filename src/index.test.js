@@ -1,175 +1,129 @@
 import React from 'react'
-import Enzyme, {shallow} from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
-import Img from './index.js'
+import Img from './index'
 import ReactDOMServer from 'react-dom/server'
+import {render, act, cleanup, waitFor} from '@testing-library/react'
 
-Enzyme.configure({adapter: new Adapter()})
+afterEach(cleanup)
 
-// const trigger = (i, e) => i.instance().i.dispatchEvent(new Event(e))
+const imgPromise = (decode) => (src) => {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    images.push(img)
+    img.decode = () => Promise.resolve()
+    img.onload = () => {
+      decode ? img.decode().then(resolve).catch(reject) : resolve()
+    }
+    img.onerror = reject
+    img.src = src
 
-test('render with no opts', () => {
-  expect(shallow(<Img />).html()).toEqual(null)
-})
+    // mock loading
+    src.endsWith('LOAD') ? img.onload() : img.onerror()
+  })
+}
 
 test('render with src string, after load', () => {
-  const i = shallow(<Img src="foo" />)
-  i.setState({isLoaded: true})
-  expect(i.html()).toEqual('<img src="foo"/>')
+  const {getByAltText} = render(
+    <Img src="fooLOAD" imgPromise={imgPromise} alt="" />
+  )
+  waitFor(() => expect(getByAltText('').src).toEqual(location.href + 'foo'))
 })
 
 test('render with src array', () => {
-  const i = shallow(<Img src={['foo']} />)
-  i.setState({isLoaded: true})
-  expect(i.html()).toEqual('<img src="foo"/>')
+  const {getByAltText} = render(
+    <Img src={['fooLOAD']} imgPromise={imgPromise} alt="" />
+  )
+
+  waitFor(() => expect(getByAltText('').src).toEqual(location.href + 'foo'))
 })
 
+// https://github.com/kentcdodds/react-testing-library/issues/281
 test('render with decode=true', () => {
-  const img = new Image()
-  img.decode = () => Promise.resolve()
-  const i = shallow(<Img src="fooDecode" mockImage={img} />)
-
-  // run on next tick
-  return Promise.resolve().then(() => {
-    i.update()
-    setTimeout(() => expect(i.html()).toEqual('<img src="fooDecode"/>'), 100)
-  })
+  const {getByAltText} = render(
+    <Img src="fooDecode" imgPromise={imgPromise} alt="" />
+  )
+  waitFor(() =>
+    expect(getByAltText('').src).toEqual(location.href + 'fooDecode')
+  )
 })
 
 test('fallback to next image', () => {
-  const i = shallow(<Img src={['foo', 'bar']} />)
-  i.setState({currentIndex: i.state('currentIndex') + 1, isLoaded: true})
-  expect(i.html()).toEqual('<img src="bar"/>')
+  const {getByAltText} = render(
+    <Img src={['foo', 'barLOAD']} imgPromise={imgPromise} alt="" />
+  )
+
+  waitFor(() => expect(getByAltText('').src).toEqual(location.href + 'bar'))
 })
 
-test('ensure missing image isnt renderer to browser', () => {
-  const i = shallow(<Img src={['foo', 'bar']} />)
-  i.setState({currentIndex: i.state('currentIndex') + 2})
-  expect(i.html()).toEqual(null)
+test('ensure missing image isnt rendered to browser', () => {
+  const {container} = render(
+    <Img src={['foo', 'bar']} imgPromise={imgPromise} alt="" />
+  )
+
+  expect(container.innerHTML).toEqual('')
 })
 
 test('show loader', () => {
-  const i = shallow(<Img src="foo" loader={<span>Loading...</span>} />)
-  expect(i.html()).toEqual('<span>Loading...</span>')
+  const {container} = render(
+    <Img src="foo" loader={<span>Loading...</span>} alt="" />
+  )
+  waitFor(() => expect(container.innerHTML).toEqual('<span>Loading...</span>'))
 })
 
-test('clear loader after load', () => {
-  const i = shallow(<Img src="foo" loader={<span>Loading...</span>} />)
-  expect(i.html()).toEqual('<span>Loading...</span>')
-  i.setState({isLoading: false, isLoaded: true})
-  expect(i.html()).toEqual('<img src="foo"/>')
+test('clear loader after load', async () => {
+  const {container, getByAltText} = render(
+    <Img
+      src="foo"
+      loader={<span>Loading...</span>}
+      alt=""
+      imgPromise={imgPromise}
+    />
+  )
+  waitFor(() => expect(getByAltText('').src).toEqual(location.href + 'foo'))
 })
 
-test('show unloader', () => {
-  const i = shallow(<Img unloader={<span>Could not load image!</span>} />)
-  i.setState({isLoading: false, isLoaded: false})
-  expect(i.html()).toEqual('<span>Could not load image!</span>')
+test('show unloader', async () => {
+  const {container} = render(
+    <Img
+      unloader={<span>Could not load image!</span>}
+      imgPromise={imgPromise}
+    />
+  )
+
+  waitFor(() =>
+    expect(container.innerHTML).toEqual('<span>Could not load image!</span>')
+  )
 })
 
-test('cache already loaded successfully', () => {
-  const i = new Img({src: 'foo'})
-  i.onLoad()
-  const j = shallow(<Img src="foo" />)
-  expect(j.state()).toEqual({currentIndex: 0, isLoading: false, isLoaded: true})
+test('update image on src prop change', () => {
+  const {rerender, getByAltText} = render(
+    <Img src="fooLOAD" imgPromise={imgPromise} alt="" />
+  )
+  rerender(<Img src="barLOAD" imgPromise={imgPromise} alt="" />)
+  waitFor(() => expect(getByAltText('').src).toEqual(location.href + 'bar'))
 })
 
-test('destroy image on unmount', () => {
-  const i = shallow(<Img src="foo1" />)
-  const inst = i.instance()
-  inst.componentDidMount()
-  i.unmount()
-  expect(inst.i).toEqual(undefined)
+test('start over on src prop change', async () => {
+  const {getByAltText, rerender} = render(
+    <Img src={['foo', 'bar']} imgPromise={imgPromise} alt="" />
+  )
+
+  waitFor(() => expect(getByAltText('').src).toEqual(location.href + 'bar'))
+  rerender(<Img src="bazLOAD" imgPromise={imgPromise} alt="" />)
+  waitFor(() => expect(getByAltText('').src).toEqual(location.href + 'baz'))
 })
 
-test('componentDidMount start loading', () => {
-  const i = shallow(<Img src="foo2" />)
-  const inst = i.instance()
-  inst.componentDidMount()
-  expect(inst.i.src).toEqual('http://localhost/foo2')
+test('updated props no src', async () => {
+  const {container, rerender} = render(
+    <Img src="fooLOAD" imgPromise={imgPromise} />
+  )
+
+  rerender(<Img src="" imgPromise={imgPromise} />)
+  waitFor(() => expect(container.innerHTML).toEqual(''))
 })
 
-test('componentWillReceiveProps', () => {
-  const i = shallow(<Img src="foo" />)
-  i.setProps({src: 'bar'})
-  expect(i.state()).toEqual({currentIndex: 0, isLoading: true, isLoaded: false})
-})
+test('onError does nothing if unmounted', async () => {
+  const {unmount} = render(<Img src="foo5" imgPromise={imgPromise} />)
 
-test('componentWillReceiveProps no change', () => {
-  const i = shallow(<Img src="foo" />)
-  i.setProps({src: 'foo'})
-  expect(i.state()).toEqual({currentIndex: 0, isLoading: false, isLoaded: true})
-})
-
-test('componentWillReceiveProps no src', () => {
-  const i = shallow(<Img src="foo" />)
-  i.setProps({src: ''})
-  expect(i.state()).toEqual({
-    currentIndex: 0,
-    isLoading: false,
-    isLoaded: false,
-  })
-})
-
-test('onLoad sets state to loaded', () => {
-  const i = shallow(<Img src="foo4" />)
-  const inst = i.instance()
-  inst.componentDidMount()
-  inst.i.onload()
-  expect(i.state('isLoaded')).toEqual(true)
-})
-
-test('onError does nothing if unmounted', () => {
-  const i = shallow(<Img src="foo5" />)
-  const inst = i.instance()
-  inst.componentDidMount()
-  const img = inst.i
-  expect(img.onerror).not.toBe(null)
-  i.unmount()
-  expect(img.onerror).toBe(null)
-})
-
-test('onError if there are no more sources, we are done', () => {
-  const i = shallow(<Img src="foo7" />)
-  const inst = i.instance()
-  inst.componentDidMount()
-  inst.i.onerror()
-  expect(i.state()).toEqual({
-    currentIndex: 0,
-    isLoading: false,
-    isLoaded: false,
-  })
-})
-
-test('onError try the next image', () => {
-  const i = shallow(<Img src={['foo6', 'bar6']} />)
-  const inst = i.instance()
-  inst.componentDidMount()
-  inst.i.onerror()
-  expect(i.state()).toEqual({currentIndex: 1, isLoading: true, isLoaded: false})
-})
-
-test('onError try the next image. If its cached successfully, skip loading', () => {
-  const j = shallow(<Img src="bar8" />)
-  j.instance().onLoad()
-
-  const i = shallow(<Img src={['foo8', 'bar8']} />)
-  const inst = i.instance()
-  inst.componentDidMount()
-  inst.i.onerror()
-  expect(i.state()).toEqual({currentIndex: 1, isLoading: false, isLoaded: true})
-})
-
-test('onError try the next image. If its cached as error, skip it', () => {
-  const j = shallow(<Img src="bar9" />)
-  j.instance().onError()
-
-  const i = shallow(<Img src={['foo9', 'bar9']} />)
-  const inst = i.instance()
-  inst.componentDidMount()
-  inst.i.onerror()
-  expect(i.state()).toEqual({
-    currentIndex: 0,
-    isLoading: false,
-    isLoaded: false,
-  })
+  //unmount()
+  setTimeout(() => unmount(), 1)
 })
