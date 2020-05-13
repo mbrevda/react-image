@@ -54,6 +54,19 @@ export default [
         relativePath.replace(/^.*?\/node_modules/, '../../node_modules'),
     },
   },
+  {
+    ...opts,
+    input: 'src/useImage.tsx',
+    plugins: [...opts.plugins, minify({comments: false})],
+    output: {
+      dir: dirname(pkg.browser),
+      format: 'umd',
+      name: 'Img',
+      sourcemap: true,
+      sourcemapPathTransform: (relativePath) =>
+        relativePath.replace(/^.*?\/node_modules/, '../../node_modules'),
+    },
+  },
 
   // esm
   {

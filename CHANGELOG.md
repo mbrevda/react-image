@@ -1,3 +1,7 @@
+# 3.0.3
+
+- build hooks for umd
+
 # 3.0.2
 
 - dont include typescript libs in build modules
