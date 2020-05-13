@@ -58,6 +58,11 @@ jobs:
 
       - uses: bahmutov/npm-install@v1
 
+      - name: setup .npmrc
+        run: npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+
       - name: check if package is newer than the published version
         id: checkPublish
         run: echo "::set-output name=shouldPublish::`npm run -s isNewerThanPublished`"
@@ -69,5 +74,3 @@ jobs:
       - name: publish package if needed
         if: steps.checkPublish.outputs.shouldPublish == 'true'
         run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
