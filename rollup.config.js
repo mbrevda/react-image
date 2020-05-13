@@ -31,6 +31,16 @@ export default [
     },
   },
 
+  {
+    ...opts,
+    input: 'src/useImage.tsx',
+    output: {
+      dir: dirname(pkg.main),
+      format: 'cjs',
+      sourcemap: true,
+    },
+  },
+
   // umd
   {
     ...opts,

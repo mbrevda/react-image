@@ -1,3 +1,7 @@
+# 3.0.1
+
+- include missing files
+
 # 3.0.0
 
 - move to typescript
