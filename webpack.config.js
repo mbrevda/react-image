@@ -20,7 +20,7 @@ const opts = {
     // show relative paths in sourcemaps
     devtoolModuleFilenameTemplate: '[resource-path]',
     devtoolFallbackModuleFilenameTemplate: '[resource-path]',
-    pathinfo: false
+    pathinfo: false,
   },
   mode,
   module: {
@@ -31,32 +31,40 @@ const opts = {
         loader: 'babel-loader',
         options: {
           cacheDirectory: true,
-          cacheCompression: false
-        }
-      }
-    ]
+          cacheCompression: false,
+        },
+      },
+      {
+        test: /\.tsx?$/,
+        exclude: /node_modules/,
+        loader: 'ts-loader',
+        options: {
+          experimentalWatchApi: true,
+        },
+      },
+    ],
   },
   devServer: {
     contentBase: outputdir,
     open: true,
     overlay: {
-      errors: true
+      errors: true,
     },
-    historyApiFallback: true
+    historyApiFallback: true,
     // host: '0.0.0.0'
   },
   devtool: mode === 'production' ? 'source-map' : 'source-map',
   optimization: {
-    runtimeChunk: 'single'
+    runtimeChunk: 'single',
   },
   plugins: [new HtmlWebpackPlugin({})],
   resolve: {
     modules: [__dirname, 'node_modules'],
-    extensions: ['.js']
+    extensions: ['.js', '.ts', '.tsx'],
   },
   resolveLoader: {
-    modules: ['node_modules']
-  }
+    modules: ['node_modules'],
+  },
 }
 
 if (cmd.debug) console.log(opts) // eslint-disable-line no-console

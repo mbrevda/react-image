@@ -3,12 +3,13 @@
   "version": "2.4.0",
   "description": "React Image is an <img> tag replacement for react, featuring preloader and multiple image fallback support",
   "scripts": {
-    "build": "NODE_ENV=production rollup -c && for i in cjs esm umd; do cp src/*test.js $i; done",
+    "build": "NODE_ENV=production rollup -c && for i in cjs esm umd; do cp src/*test.js $i; done && npm run build:types",
+    "build:types": "npx tsc --declarationDir . --emitDeclarationOnly --declaration",
     "codecov": "codecov",
     "dev": "webpack-dev-server",
     "pretty": "prettier *.js src/**/*.js --write",
     "shouldPublish": "semver `npm -s view $npm_package_name version` --range \"<$npm_package_version\"",
-    "test": "jest --projects jest*.json"
+    "test": "jest --projects jest*.js"
   },
   "repository": {
     "type": "git",
@@ -37,10 +38,11 @@
   ],
   "files": [
     "*.md",
-    "es",
-    "umd",
-    "cjs",
-    "react-image.d.ts"
+    "es/*.js",
+    "umd/*.js",
+    "cjs/*.js",
+    "!**/*.test.js",
+    "*.d.ts"
   ],
   "module": "esm/index.js",
   "main": "cjs/index.js",
@@ -60,7 +62,13 @@
     "@babel/plugin-transform-runtime": "7.9.6",
     "@babel/preset-env": "7.9.6",
     "@babel/preset-react": "7.9.4",
+    "@babel/preset-typescript": "^7.9.0",
     "@babel/runtime": "7.9.6",
+    "@rollup/plugin-typescript": "^4.1.1",
+    "@testing-library/react": "^10.0.2",
+    "@types/jest": "^25.2.1",
+    "@types/react": "^16.9.34",
+    "@types/react-dom": "^16.9.7",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "26.0.1",
     "babel-loader": "8.1.0",
@@ -84,16 +92,17 @@
     "rollup-plugin-node-resolve": "5.2.0",
     "semver": "7.3.2",
     "serve-static": "1.14.1",
+    "ts-jest": "^25.5.0",
+    "ts-loader": "^7.0.4",
+    "typescript": "^3.8.3",
     "uglifyjs-webpack-plugin": "2.2.0",
     "webpack": "4.43.0",
     "webpack-cli": "3.3.11",
     "webpack-dev-server": "3.11.0"
   },
   "peerDependencies": {
-    "react": "15 || 16",
-    "react-dom": "15 || 16"
+    "react": ">=16.8",
+    "react-dom": ">=16.8"
   },
-  "dependencies": {
-    "prop-types": "15.7.2"
-  }
+  "dependencies": {}
 }

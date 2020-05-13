@@ -1,5 +1,0 @@
-{
-  "testMatch": ["**/src/**/*.ssr-test.js"],
-  "testURL": "http://localhost",
-  "testEnvironment": "node"
-}
