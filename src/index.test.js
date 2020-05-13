@@ -106,7 +106,7 @@ test('componentWillReceiveProps no src', () => {
   expect(i.state()).toEqual({
     currentIndex: 0,
     isLoading: false,
-    isLoaded: false
+    isLoaded: false,
   })
 })
 
@@ -136,7 +136,7 @@ test('onError if there are no more sources, we are done', () => {
   expect(i.state()).toEqual({
     currentIndex: 0,
     isLoading: false,
-    isLoaded: false
+    isLoaded: false,
   })
 })
 
@@ -170,6 +170,6 @@ test('onError try the next image. If its cached as error, skip it', () => {
   expect(i.state()).toEqual({
     currentIndex: 0,
     isLoading: false,
-    isLoaded: false
+    isLoaded: false,
   })
 })

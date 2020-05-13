@@ -79,14 +79,12 @@ If an image has previously been attempted unsuccessfully, `react-image` will not
 ### Show a "spinner" or other element before the image is loaded:
 
 ```js
-const myComponent = () =>
+const myComponent = () => (
   <Img
-    src={[
-      'https://www.example.com/foo.jpg',
-      'https://www.example.com/bar.jpg'
-    ]}
+    src={['https://www.example.com/foo.jpg', 'https://www.example.com/bar.jpg']}
     loader={/*any valid react element */}
   />
+)
 ```
 
 If an image was previously loaded successfully (since the last time this page was loaded), the loader will not be shown and the image will be rendered directly instead.
@@ -94,14 +92,12 @@ If an image was previously loaded successfully (since the last time this page wa
 ### Show a fallback element if none of the images could be loaded:
 
 ```js
-const myComponent = () =>
+const myComponent = () => (
   <Img
-    src={[
-      'https://www.example.com/foo.jpg',
-      'https://www.example.com/bar.jpg'
-    ]}
+    src={['https://www.example.com/foo.jpg', 'https://www.example.com/bar.jpg']}
     unloader={/*any valid react element */}
   />
+)
 ```
 
 ### Decoding before paint
@@ -133,7 +129,7 @@ For example, to animate the display of the image (and animate out the loader) a 
 ```js
 <Img
   src={'https://www.example.com/foo.jpg'}
-  container={children => {
+  container={(children) => {
     return <div className="foo">{children}</div>
   }}
 />
@@ -176,8 +172,9 @@ see above
 3. Include the following code before including `react-image`:
 
 ```js
-Object.assign = Object.assign ||
-  function(r) {
+Object.assign =
+  Object.assign ||
+  function (r) {
     for (var t = 1; t < arguments.length; t++) {
       var n = arguments[t]
       for (var a in n)

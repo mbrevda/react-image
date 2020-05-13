@@ -6,7 +6,7 @@ import {
   string,
   array,
   bool,
-  instanceOf
+  instanceOf,
 } from 'prop-types'
 
 const cache = {}
@@ -18,7 +18,7 @@ const imgPropTypes = {
   src: oneOfType([string, array]),
   container: func,
   loaderContainer: func,
-  unloaderContainer: func
+  unloaderContainer: func,
 }
 
 if (process.env.NODE_ENV != 'production' && process.env.NODE_ENV != 'test') {
@@ -35,7 +35,7 @@ class Img extends Component {
     src: [],
     // by default, just return what gets sent in. Can be used for advanced rendering
     // such as animations
-    container: x => x
+    container: (x) => x,
   }
 
   constructor(props) {
@@ -70,7 +70,7 @@ class Img extends Component {
         {isLoading: false, isLoaded: false}
   }
 
-  srcToArray = src => (Array.isArray(src) ? src : [src]).filter(x => x)
+  srcToArray = (src) => (Array.isArray(src) ? src : [src]).filter((x) => x)
 
   onLoad = () => {
     cache[this.sourceList[this.state.currentIndex]] = true
@@ -105,7 +105,7 @@ class Img extends Component {
         this.setState({
           currentIndex: nextIndex,
           isLoading: false,
-          isLoaded: true
+          isLoaded: true,
         })
         return true
       }
@@ -137,10 +137,7 @@ class Img extends Component {
     }
 
     if (this.props.decode && this.i.decode) {
-      this.i
-        .decode()
-        .then(this.onLoad)
-        .catch(this.onError)
+      this.i.decode().then(this.onLoad).catch(this.onError)
     } else {
       this.i.onload = this.onLoad
       this.i.onerror = this.onError
@@ -182,8 +179,8 @@ class Img extends Component {
 
     let src = this.srcToArray(nextProps.src)
 
-    let srcAdded = src.filter(s => this.sourceList.indexOf(s) === -1)
-    let srcRemoved = this.sourceList.filter(s => src.indexOf(s) === -1)
+    let srcAdded = src.filter((s) => this.sourceList.indexOf(s) === -1)
+    let srcRemoved = this.sourceList.filter((s) => src.indexOf(s) === -1)
 
     // if src prop changed, restart the loading process
     if (srcAdded.length || srcRemoved.length) {
@@ -219,7 +216,7 @@ class Img extends Component {
     if (this.state.isLoaded) {
       const imgProps = {
         ...{src: this.sourceList[this.state.currentIndex]},
-        ...rest
+        ...rest,
       }
 
       return container(<img {...imgProps} />)

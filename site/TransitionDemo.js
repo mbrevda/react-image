@@ -44,7 +44,7 @@ export default () => (
         width="320"
         height="240"
         key={rand}
-        container={children => {
+        container={(children) => {
           return (
             <ReactCSSTransitionReplace
               transitionEnterTimeout={fadeIn * 10}
