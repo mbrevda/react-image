@@ -1,3 +1,10 @@
+# 3.0.0
+
+- move to typescript
+- add useImage hook
+- allow for an image loader to be injected
+- BREAKING: requires react 16.8 or higher
+
 # 2.4.0
 
 - fix: TS Interface Error for 'src' attribute. Related to issue: #260

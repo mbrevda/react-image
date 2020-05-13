@@ -1,3 +1,7 @@
+# 3.0.0
+
+This version requires a version of react that supports hook (16.8 or greater)
+
 # 1.0.0
 
 For users of the original `react-image` only: please note props and behaviors changes for this release:
