@@ -8,7 +8,7 @@
     "codecov": "codecov",
     "dev": "webpack-dev-server",
     "pretty": "prettier *.js src/**/*.js --write",
-    "shouldPublish": "semver `npm -s view $npm_package_name version` --range \"<$npm_package_version\"",
+    "isNewerThanPublished": "semver `npm -s view $npm_package_name dist-tags.${TAG:-latest}` --range \"<$npm_package_version\" > /dev/null && echo true || echo false",
     "test": "jest --projects jest*.js"
   },
   "repository": {
