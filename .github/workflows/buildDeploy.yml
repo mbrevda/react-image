@@ -71,6 +71,9 @@ jobs:
         if: steps.checkPublish.outputs.shouldPublish == 'true'
         run: npm run build
 
-      - name: publish package if needed
+      - name: publish release package if needed
         if: steps.checkPublish.outputs.shouldPublish == 'true'
         run: npm publish
+
+      - name: publish canary release
+        run: npm version 0.0.0-${{ github.sha }} && npm publish --tag canary
