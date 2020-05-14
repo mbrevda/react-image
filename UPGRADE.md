@@ -1,3 +1,17 @@
+# 4.0.0
+
+All upgrade are now named exports, so:
+
+```js
+import Img from 'react-image'
+```
+
+needs to be changed to:
+
+```js
+import {Img} from 'react-image'
+```
+
 # 3.0.0
 
 This version requires a version of react that supports hook (16.8 or greater)

@@ -41,7 +41,7 @@ The `useImage` hook allows for incorperating `react-image`'s logic in any compon
 Example usage:
 
 ```js
-import useImage from 'react-image/useImage'
+import {useImage} from 'react-image/useImage'
 
 export default function MyComponent() {
   const {src, isLoading, error} = useImage({
@@ -74,7 +74,7 @@ Include `react-image` in your component:
 
 ```js
 // using an ES6 transpiler, like babel
-import Img from 'react-image'
+import {Img} from 'react-image'
 ```
 
 and set a source for the image:
@@ -181,7 +181,7 @@ By default, the loader and unloader components will also be wrapped by the `cont
 By definition, **React Image** will try loading images as soon as the `<Img>` element is rendered in the DOM. This may be undesirable in some situations, such as when the page has many images. As with any react element, rendering can be delayed until the image is actually visible in the viewport using popular libraries such as [`react-visibility-sensor`](https://www.npmjs.com/package/react-visibility-sensor). Here is a quick sample (untested!):
 
 ```js
-import Img from 'react-image'
+import {Img} from 'react-image'
 import VisibilitySensor from 'react-visibility-sensor'
 
 const myComponent = () =>

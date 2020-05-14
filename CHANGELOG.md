@@ -1,3 +1,7 @@
+# 4.0.0
+
+- BREAKING: all exports are now named exports
+
 # 3.0.3
 
 - build hooks for umd
