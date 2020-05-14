@@ -3,8 +3,8 @@ import imagePromiseFactory from './imagePromiseFactory'
 
 export type useImageProps = {
   srcList: string | string[]
-  imgPromise: (...args: any[]) => Promise<void>
-  useSuspense: boolean
+  imgPromise?: (...args: any[]) => Promise<void>
+  useSuspense?: boolean
 }
 
 const removeBlankArrayElements = (a) => a.filter((x) => x)
