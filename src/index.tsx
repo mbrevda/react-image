@@ -1,3 +1,4 @@
 import Img from './react-image'
+import useImage from './useImage'
 
-export default Img
+export {Img, useImage}

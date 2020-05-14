@@ -1,7 +1,7 @@
 import React, {Suspense, useState, useEffect, useRef} from 'react'
 import ReactDOM from 'react-dom'
-import Img from '../src'
-import useImage from '../src/useImage'
+import {Img, useImage} from '../src'
+//const {Img, useImage} = require('../cjs')
 
 class ErrorBoundary extends React.Component {
   constructor(props) {

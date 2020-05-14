@@ -1,17 +1,18 @@
 {
   "compilerOptions": {
-    // "outDir": "./dest",        // path to output directory
+    "declaration": true, // emit declerations
+    "declarationDir": ".", // to this dir
+    "outDir": "./jsSrc",        // but all other code to this dir
     "sourceMap": true, // allow sourcemap support
     "strictNullChecks": true, // enable strict null checks as a best practice
-    "module": "es6", // specify module code generation
+    // "module": "es6", // specify module code generation
     "jsx": "react", // use typescript to transpile jsx to js
-    "target": "es5", // specify ECMAScript target version
     "allowJs": true, // allow a partial TypeScript and JavaScript codebase
     "allowSyntheticDefaultImports": true,
     // Include typings from built-in lib declarations
-    "lib": ["es2019", "dom"],
-    "target": "ESNext",
-    "skipLibCheck": true
+    "lib": ["es6","es2019", "dom"],
+    "target": "esnext",
+    "skipLibCheck": true,
   },
   "include": ["*/**/*.ts", "*/**/*.tsx"],
   "exclude": ["node_modules", "dist"]

@@ -1,5 +1,5 @@
 {
-  "presets": ["@babel/env", "@babel/preset-react", "@babel/typescript"],
+  "presets": [[ "@babel/env" ,{loose: true}], "@babel/preset-react", "@babel/typescript"],
   "plugins": [
     [
       "@babel/plugin-proposal-object-rest-spread",
@@ -8,14 +8,7 @@
       }
     ],
 
-    [
-      "transform-react-remove-prop-types",
-      {
-        "mode": "wrap"
-      }
-    ],
     "@babel/plugin-proposal-class-properties",
     "transform-inline-environment-variables",
-    "@babel/transform-runtime"
   ]
 }
