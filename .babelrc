@@ -10,5 +10,6 @@
 
     "@babel/plugin-proposal-class-properties",
     "transform-inline-environment-variables",
+    "@babel/plugin-transform-runtime"
   ]
 }

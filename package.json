@@ -102,5 +102,7 @@
     "react": ">=16.8",
     "react-dom": ">=16.8"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@babel/plugin-transform-runtime": "^7.9.6"
+  }
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import Img from './index'
+import {Img} from './index'
 import ReactDOMServer from 'react-dom/server'
 
 test('should ssr a loader', () => {
