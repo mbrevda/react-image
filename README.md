@@ -8,7 +8,7 @@
 
 **React Image** is an `<img>` tag replacement and hook for [React.js](https://facebook.github.io/react/), supporting fallback to alternate sources when loading an image fails.
 
-**React Image** allows one or more images to be used as fallback images in the event that the browser couldn't load the previous image. When using the component, you can specify any React element to be used before an image is loaded (i.e. a spinner) and in the event that the specified image(s) could not be loaded. When using the hook this can be achieved by wrapping the component with [`<Suspense>`](https://reactjs.org/docs/react-api.html#reactsuspense) and specifying the `fallback` prop.
+**React Image** allows one or more images to be used as fallback images in the event that the browser couldn't load the previous image. When using the component, you can specify any React element to be used before an image is loaded (i.e. a spinner) or in the event that the specified image(s) could not be loaded. When using the hook this can be achieved by wrapping the component with [`<Suspense>`](https://reactjs.org/docs/react-api.html#reactsuspense) and specifying the `fallback` prop.
 
 **React Image** uses the `useImage` hook internally which encapsulates all the image loading logic. This hook works with React Suspense by default and will suspend painting until the image is downloaded and decoded by the browser.
 
@@ -36,19 +36,28 @@ You can use the standalone component, documented below, or the `useImage` hook.
 
 ### useImage():
 
-The `useImage` hook allows for incorperating `react-image`'s logic in any component. When using the hook, the component can be wrapped in `<Suspense>` to keep it from rendering until the image is ready. Specify the `fallback` prop to show a spinner or any other component to the user while the browser is loading. The hook the throw an error if it failes to find any images. You can wrap your componenet with an [Error Boundry](https://reactjs.org/docs/code-splitting.html#error-boundaries) to catch this scenario and do/show something.
+The `useImage` hook allows for incorperating `react-image`'s logic in any component. When using the hook, the component can be wrapped in `<Suspense>` to keep it from rendering until the image is ready. Specify the `fallback` prop to show a spinner or any other component to the user while the browser is loading. The hook will throw an error if it failes to find any images. You can wrap your componenet with an [Error Boundry](https://reactjs.org/docs/code-splitting.html#error-boundaries) to catch this scenario and do/show something.
 
 Example usage:
 
 ```js
-import {useImage} from 'react-image/useImage'
+import React, {Suspense} from 'react-image'
+import {useImage} from 'react-image'
 
-export default function MyComponent() {
-  const {src, isLoading, error} = useImage({
+function MyImageComponent() {
+  const {src} = useImage({
     srcList: 'https://www.example.com/foo.jpg',
   })
 
   return <img src={src} />
+}
+
+export default function MyComponenet() {
+  return (
+    <Suspsense>
+      <MyImageComponent />
+    </Suspsense>
+  )
 }
 ```
 
@@ -56,24 +65,23 @@ export default function MyComponent() {
 
 - `srcList`: a string or array of strings. `useImage` will try loading these one at a time and returns after the first one is successfully loaded
 
-- `imgPromise`: a promise that accepts a url and returns a promise which resolves the image is successfully loaded or rejects if the image doesn't load. You can inject an alternative implementation for advanced custom behaviour such as logging errors or dealing with servers that return an image with a 404 header
+- `imgPromise`: a promise that accepts a url and returns a promise which resolves if the image is successfully loaded or rejects if the image doesn't load. You can inject an alternative implementation for advanced custom behaviour such as logging errors or dealing with servers that return an image with a 404 header
 
-- `useSuspense`: boolean. By default, `useImage` will tell React to suspend rendering until an image is downloaded. This can be disabled by setting this to false.
+- `useSuspense`: boolean. By default, `useImage` will tell React to suspend rendering until an image is downloaded. Suspense can be disabled by setting this to false.
 
 **returns:**
 
 - `src`: the resolved image address
-- `isLoading`: the currently loading status. Note: this is always false when using Suspense
+- `isLoading`: the currently loading status. Note: this is never true when using Suspense
 - `error`: any errors ecountered, if any
 
 ### Standalone component (legacy)
 
-When possible, you should use the `useImage` hook. This provides for greater flexability and support Suspense.
+When possible, you should use the `useImage` hook. This provides for greater flexability and provides support for React Suspense.
 
 Include `react-image` in your component:
 
 ```js
-// using an ES6 transpiler, like babel
 import {Img} from 'react-image'
 ```
 
@@ -116,7 +124,7 @@ const myComponent = () => (
 )
 ```
 
-If an image was previously loaded successfully (since the last time this page was loaded), the loader will not be shown and the image will be rendered directly instead.
+If an image was previously loaded successfully (since the last time the page was loaded), the loader will not be shown and the image will be rendered immediately instead.
 
 ### Show a fallback element if none of the images could be loaded:
 
@@ -131,7 +139,7 @@ const myComponent = () => (
 
 ### NOTE:
 
-The following options only apply to the component, not to the `useImage` hook. When using the hook you can inject a custom image resolver with custom behaviour as required.
+The following options only apply to the `<Img>` component, not to the `useImage` hook. When using the hook you can inject a custom image resolver with custom behaviour as required.
 
 ### Decode before paint
 
@@ -178,7 +186,7 @@ By default, the loader and unloader components will also be wrapped by the `cont
 
 ### Delay rendering until element is visible (lazy rendering)
 
-By definition, **React Image** will try loading images as soon as the `<Img>` element is rendered in the DOM. This may be undesirable in some situations, such as when the page has many images. As with any react element, rendering can be delayed until the image is actually visible in the viewport using popular libraries such as [`react-visibility-sensor`](https://www.npmjs.com/package/react-visibility-sensor). Here is a quick sample (untested!):
+By definition, **React Image** will try loading images right away. This may be undesirable in some situations, such as when the page has many images. As with any react element, rendering can be delayed until the image is actually visible in the viewport using popular libraries such as [`react-visibility-sensor`](https://www.npmjs.com/package/react-visibility-sensor). Here is a quick sample (psudocode/untested!):
 
 ```js
 import {Img} from 'react-image'
@@ -190,34 +198,11 @@ const myComponent = () =>
   </VisibilitySensor>
 ```
 
-Note: it is not nesesary to use **React Image** to prevent loading of images past "the fold" (i.e. not currently visable on in the window). Instead use the HTML `<img>` element and the `loading="lazy"` property. See more [here](https://addyosmani.com/blog/lazy-loading/).
+Note: it is not nesesary to use **React Image** to prevent loading of images past "the fold" (i.e. not currently visable on in the window). Instead just use the native HTML `<img>` element and the `loading="lazy"` prop. See more [here](https://addyosmani.com/blog/lazy-loading/).
 
 ### Animate image loading
 
 see above
-
-## Browser Support
-
-`react-image` does not include an `Object.assign` polyfill, that may be needed [depending on your targeted browsers](http://kangax.github.io/compat-table/es6/#test-Object_static_methods_Object.assign). You can add it in one of the following ways:
-
-1. include it in your package: `https://www.npmjs.com/package/es6-object-assign`
-
-2. Use Mozilla's polyfill: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Object/assign#Polyfill
-
-3. Include the following code before including `react-image`:
-
-```js
-Object.assign =
-  Object.assign ||
-  function (r) {
-    for (var t = 1; t < arguments.length; t++) {
-      var n = arguments[t]
-      for (var a in n)
-        Object.prototype.hasOwnProperty.call(n, a) && (r[a] = n[a])
-    }
-    return r
-  }
-```
 
 ## License
 
