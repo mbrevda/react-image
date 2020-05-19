@@ -12,7 +12,7 @@ cmd
 const mode = cmd.mode
 
 const opts = {
-  entry: {app: './src/app.js'},
+  entry: {app: './src/app.tsx'},
   output: {
     filename: '[name]-[chunkhash].js',
     path: outputdir,
