@@ -1,8 +1,12 @@
 import babel from 'rollup-plugin-babel'
 import nodeResolve from 'rollup-plugin-node-resolve'
 import minify from 'rollup-plugin-babel-minify'
+import {dirname} from 'path'
 import pkg from './package.json'
-const input = ['./jsSrc/index.js']
+const input = {
+  Img: 'jsSrc/Img.js',
+  useImage: 'jsSrc/useImage.js',
+}
 const external = (id) => !id.startsWith('.') && !id.startsWith('/')
 
 const opts = {
@@ -20,7 +24,7 @@ export default [
   {
     ...opts,
     output: {
-      file: pkg.main,
+      dir: dirname(pkg.main),
       format: 'cjs',
       sourcemap: true,
     },
@@ -29,6 +33,7 @@ export default [
   // umd
   {
     ...opts,
+    input: 'jsSrc/index.js',
     plugins: [...opts.plugins, minify({comments: false})],
     output: {
       file: pkg.browser,
@@ -44,7 +49,7 @@ export default [
   {
     ...opts,
     output: {
-      file: pkg.module,
+      dir: dirname(pkg.module),
       format: 'esm',
       sourcemap: true,
     },
