@@ -1,5 +1,14 @@
 {
-  "presets": [[ "@babel/env" ,{loose: true}], "@babel/preset-react", "@babel/typescript"],
+  "presets": [
+    [
+      "@babel/env",
+      {
+        "loose": true
+      }
+    ],
+    "@babel/preset-react",
+    "@babel/typescript"
+  ],
   "plugins": [
     [
       "@babel/plugin-proposal-object-rest-spread",

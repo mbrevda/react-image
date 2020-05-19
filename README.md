@@ -28,7 +28,7 @@ npm install react-image --save
 
 ## Dependencies
 
-`react-image` has no external dependencies, aside for a version of `react` and `react-dom` which support hooks.
+`react-image` has no external dependencies, aside for a version of `react` and `react-dom` which support hooks and `@babel/runtime`.
 
 ## Documentation
 
