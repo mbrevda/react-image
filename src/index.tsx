@@ -1,2 +1,3 @@
-export {default as Img} from './Img'
-export {default as useImage} from './useImage'
+import Img from './Img'
+import useImage from './useImage'
+export {Img, useImage}
