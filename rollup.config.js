@@ -4,6 +4,7 @@ import minify from 'rollup-plugin-babel-minify'
 import {dirname} from 'path'
 import pkg from './package.json'
 const input = {
+  index: 'jsSrc/index.js',
   Img: 'jsSrc/Img.js',
   useImage: 'jsSrc/useImage.js',
 }
