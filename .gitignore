@@ -13,3 +13,4 @@ dist/
 tags
 *.d.ts
 *.tgz
+jsSrc/
