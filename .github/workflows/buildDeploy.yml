@@ -66,9 +66,6 @@ jobs:
       - name: build
         run: npm run build
 
-      - name: publish canary release
-        run: npm version --no-git-tag-version 0.0.0-${{ github.sha }} && npm publish --tag canary
-
       - name: check if package is newer than the published version
         id: checkPublish
         run: echo "::set-output name=shouldPublish::`npm run -s isNewerThanPublished`"
@@ -76,3 +73,6 @@ jobs:
       - name: publish release package if needed
         if: steps.checkPublish.outputs.shouldPublish == 'true'
         run: npm publish
+
+      - name: publish canary release
+        run: npm version --no-git-tag-version 0.0.0-${{ github.sha }} && npm publish --tag canary
