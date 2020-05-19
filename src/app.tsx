@@ -1,9 +1,20 @@
 import React, {Suspense, useState, useEffect, useRef} from 'react'
 import ReactDOM from 'react-dom'
-import {Img, useImage} from '../src'
+import {Img, useImage} from './index'
 //const {Img, useImage} = require('../cjs')
 
-class ErrorBoundary extends React.Component {
+interface ErrorBoundary {
+  props: {
+    children: React.ReactNode
+    onError?: React.ReactNode
+  }
+}
+class ErrorBoundary extends React.Component implements ErrorBoundary {
+  state: {
+    hasError: boolean
+  }
+  onError: React.ReactNode
+
   constructor(props) {
     super(props)
     this.state = {hasError: false}

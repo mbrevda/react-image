@@ -37,7 +37,7 @@ export default function useImage({
   srcList,
   imgPromise = imagePromiseFactory({decode: true}),
   useSuspense = true,
-}: useImageProps): {src: string | null; isLoading: boolean; error: any} {
+}: useImageProps): {src: string | undefined; isLoading: boolean; error: any} {
   const [, setIsLoading] = useState(true)
   const sourceList = removeBlankArrayElements(stringToArray(srcList))
   const sourceKey = sourceList.join('')
@@ -72,10 +72,10 @@ export default function useImage({
 
   if (cache[sourceKey].cache === 'rejected') {
     if (useSuspense) throw cache[sourceKey].error
-    return {isLoading: false, error: cache[sourceKey].error, src: null}
+    return {isLoading: false, error: cache[sourceKey].error, src: undefined}
   }
 
   // cache[sourceKey].cache === 'pending')
   if (useSuspense) throw cache[sourceKey].promise
-  return {isLoading: true, src: null, error: null}
+  return {isLoading: true, src: undefined, error: null}
 }
