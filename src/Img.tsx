@@ -2,7 +2,7 @@ import React from 'react'
 import useImage, {useImageProps} from './useImage'
 import imagePromiseFactory from './imagePromiseFactory'
 
-type ImgProps = Omit<
+export type ImgProps = Omit<
   React.DetailedHTMLProps<
     React.ImgHTMLAttributes<HTMLImageElement>,
     HTMLImageElement

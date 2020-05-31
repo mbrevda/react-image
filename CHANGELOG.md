@@ -1,3 +1,7 @@
+# 4.0.1
+
+- export types ImgProps/useImageProps
+
 # 4.0.0
 
 - BREAKING: all exports are now named exports
