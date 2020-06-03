@@ -41,7 +41,7 @@ The `useImage` hook allows for incorperating `react-image`'s logic in any compon
 Example usage:
 
 ```js
-import React, {Suspense} from 'react-image'
+import React, {Suspense} from 'react'
 import {useImage} from 'react-image'
 
 function MyImageComponent() {
@@ -52,11 +52,11 @@ function MyImageComponent() {
   return <img src={src} />
 }
 
-export default function MyComponenet() {
+export default function MyComponent() {
   return (
-    <Suspsense>
+    <Suspense>
       <MyImageComponent />
-    </Suspsense>
+    </Suspense>
   )
 }
 ```
