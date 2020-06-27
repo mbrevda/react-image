@@ -4,7 +4,7 @@ export default ({decode = true, crossOrigin = ''}) => (src): Promise<void> => {
     const i = new Image()
     if (crossOrigin) i.crossOrigin = crossOrigin
     i.onload = () => {
-      decode ? i.decode().then(resolve).catch(reject) : resolve()
+      decode && i.decode ? i.decode().then(resolve).catch(reject) : resolve()
     }
     i.onerror = reject
     i.src = src
