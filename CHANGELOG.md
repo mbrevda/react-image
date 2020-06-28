@@ -1,3 +1,7 @@
+# 4.0.2
+
+- add IE support
+
 # 4.0.1
 
 - export types ImgProps/useImageProps
