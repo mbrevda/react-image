@@ -102,7 +102,7 @@
   "peerDependencies": {
     "react": ">=16.8",
     "react-dom": ">=16.8",
-    "@babel/runtime": "7"
+    "@babel/runtime": ">=7"
   },
   "dependencies": {}
 }
