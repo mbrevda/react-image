@@ -1,3 +1,7 @@
+# 4.0.3
+
+- Update peerDependencies in package.json
+
 # 4.0.2
 
 - add IE support
