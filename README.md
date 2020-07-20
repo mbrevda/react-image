@@ -69,6 +69,8 @@ export default function MyComponent() {
 
 - `useSuspense`: boolean. By default, `useImage` will tell React to suspend rendering until an image is downloaded. Suspense can be disabled by setting this to false.
 
+- `invalidateCache`: boolean. `false` by default. `useImage` will cache the image response in a cache object unless the page is reloaded. Invalidate cache by setting this to `true`.
+
 **returns:**
 
 - `src`: the resolved image address
@@ -111,7 +113,13 @@ const myComponent = () => (
 )
 ```
 
-If an image has previously been attempted unsuccessfully, `react-image` will not retry loading it again until the page is reloaded.
+### Cache:
+
+Image response is stored in a cache object with the `src` as the key. If an image has previously been attempted unsuccessfully, `react-image` will not retry loading it again until the page is reloaded. You can invalidate the cache per image by setting `invalidateCache` to `true`.
+
+```js
+<img src="https://www.example.com/foo.jpg" invalidateCache>
+```
 
 ### Show a "spinner" or other element before the image is loaded:
 

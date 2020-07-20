@@ -17,7 +17,11 @@ const imgPromise = (decode) => (src) => {
     img.src = src
 
     // mock loading
-    src.endsWith('LOAD') ? img.onload() : img.onerror()
+    if (src.endsWith('CACHE')) {
+      img.onload();
+    } else {
+      src.endsWith('LOAD') ? img.onload() : img.onerror()
+    }
   })
 }
 
@@ -126,4 +130,14 @@ test('onError does nothing if unmounted', async () => {
 
   //unmount()
   setTimeout(() => unmount(), 1)
+})
+
+test('invalidate cache', async () => {
+  // sets the cache
+  const {rerender} = render(<Img src="fooCACHE" imgPromise={imgPromise} />)
+
+  waitFor(() => expect(getByAltText('').src).toEqual(location.href + 'foo'))
+  // invalidates the cache. imgPromise will treat both src as the same cache key
+  rerender(<Img src="bazCACHE" imgPromise={imgPromise} invalidateCache />)
+  waitFor(() => expect(getByAltText('').src).toEqual(location.href + 'bar'))
 })

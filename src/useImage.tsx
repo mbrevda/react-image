@@ -5,6 +5,7 @@ export type useImageProps = {
   srcList: string | string[]
   imgPromise?: (...args: any[]) => Promise<void>
   useSuspense?: boolean
+  invalidateCache?: boolean
 }
 
 const removeBlankArrayElements = (a) => a.filter((x) => x)
@@ -37,13 +38,14 @@ export default function useImage({
   srcList,
   imgPromise = imagePromiseFactory({decode: true}),
   useSuspense = true,
+  invalidateCache = false,
 }: useImageProps): {src: string | undefined; isLoading: boolean; error: any} {
   const [, setIsLoading] = useState(true)
   const sourceList = removeBlankArrayElements(stringToArray(srcList))
   const sourceKey = sourceList.join('')
 
-  if (!cache[sourceKey]) {
-    // create promise to loop through sources and try to load one
+  if (!cache[sourceKey] || invalidateCache) {
+    // create or reset the promise to loop through sources and try to load one
     cache[sourceKey] = {
       promise: promiseFind(sourceList, imgPromise),
       cache: 'pending',
