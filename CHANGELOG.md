@@ -1,6 +1,6 @@
 # 4.0.4
 
-- Add cache invalidation. So we can invalidate cache on a per image basis.
+- Add cache invalidation. We can invalidate the cache on a per image basis.
 
 # 4.0.3
 

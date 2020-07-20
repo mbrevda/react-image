@@ -69,7 +69,7 @@ export default function MyComponent() {
 
 - `useSuspense`: boolean. By default, `useImage` will tell React to suspend rendering until an image is downloaded. Suspense can be disabled by setting this to false.
 
-- `invalidateCache`: boolean. `false` by default. `useImage` will cache the image response in a cache object unless the page is reloaded. Invalidate cache by setting this to `true`.
+- `invalidateCache`: boolean. `false` by default. `useImage` will cache the image response in a cache object unless the page is reloaded. Invalidate an image component's cache by setting this to `true`.
 
 **returns:**
 
