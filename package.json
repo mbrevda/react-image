@@ -76,7 +76,7 @@
     "codecov": "3.7.2",
     "commander": "6.1.0",
     "enzyme": "3.11.0",
-    "enzyme-adapter-react-16": "1.15.3",
+    "enzyme-adapter-react-16": "1.15.4",
     "express": "4.17.1",
     "html-webpack-plugin": "4.4.1",
     "jest": "26.4.2",
