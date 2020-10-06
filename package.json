@@ -73,7 +73,7 @@
     "babel-jest": "26.3.0",
     "babel-loader": "8.1.0",
     "babel-plugin-transform-inline-environment-variables": "0.4.3",
-    "codecov": "3.7.2",
+    "codecov": "3.8.0",
     "commander": "6.1.0",
     "enzyme": "3.11.0",
     "enzyme-adapter-react-16": "1.15.5",
