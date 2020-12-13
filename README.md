@@ -28,7 +28,7 @@ npm install react-image --save
 
 ## Dependencies
 
-`react-image` has no external dependencies, aside for a version of `react` and `react-dom` which support hooks and `@babel/runtime`.
+`react-image` has no external dependencies, aside from a version of `react` and `react-dom` which support hooks and `@babel/runtime`.
 
 ## Documentation
 
@@ -36,7 +36,7 @@ You can use the standalone component, documented below, or the `useImage` hook.
 
 ### useImage():
 
-The `useImage` hook allows for incorperating `react-image`'s logic in any component. When using the hook, the component can be wrapped in `<Suspense>` to keep it from rendering until the image is ready. Specify the `fallback` prop to show a spinner or any other component to the user while the browser is loading. The hook will throw an error if it failes to find any images. You can wrap your componenet with an [Error Boundry](https://reactjs.org/docs/code-splitting.html#error-boundaries) to catch this scenario and do/show something.
+The `useImage` hook allows for incorporating `react-image`'s logic in any component. When using the hook, the component can be wrapped in `<Suspense>` to keep it from rendering until the image is ready. Specify the `fallback` prop to show a spinner or any other component to the user while the browser is loading. The hook will throw an error if it fails to find any images. You can wrap your component with an [Error Boundary](https://reactjs.org/docs/code-splitting.html#error-boundaries) to catch this scenario and do/show something.
 
 Example usage:
 
@@ -77,7 +77,7 @@ export default function MyComponent() {
 
 ### Standalone component (legacy)
 
-When possible, you should use the `useImage` hook. This provides for greater flexability and provides support for React Suspense.
+When possible, you should use the `useImage` hook. This provides for greater flexibility and provides support for React Suspense.
 
 Include `react-image` in your component:
 
@@ -198,7 +198,7 @@ const myComponent = () =>
   </VisibilitySensor>
 ```
 
-Note: it is not nesesary to use **React Image** to prevent loading of images past "the fold" (i.e. not currently visable on in the window). Instead just use the native HTML `<img>` element and the `loading="lazy"` prop. See more [here](https://addyosmani.com/blog/lazy-loading/).
+Note: it is not necessary to use **React Image** to prevent loading of images past "the fold" (i.e. not currently visible in the window). Instead just use the native HTML `<img>` element and the `loading="lazy"` prop. See more [here](https://addyosmani.com/blog/lazy-loading/).
 
 ### Animate image loading
 
