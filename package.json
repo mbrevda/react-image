@@ -91,7 +91,7 @@
     "rollup-plugin-node-resolve": "5.2.0",
     "semver": "7.3.4",
     "serve-static": "1.14.1",
-    "ts-jest": "26.5.3",
+    "ts-jest": "26.5.4",
     "ts-loader": "8.0.18",
     "typescript": "4.2.3",
     "uglifyjs-webpack-plugin": "2.2.0",
