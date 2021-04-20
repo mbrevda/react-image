@@ -100,9 +100,8 @@
     "webpack-dev-server": "3.11.2"
   },
   "peerDependencies": {
+    "@babel/runtime": ">=7",
     "react": ">=16.8",
-    "react-dom": ">=16.8",
-    "@babel/runtime": ">=7"
-  },
-  "dependencies": {}
+    "react-dom": ">=16.8"
+  }
 }

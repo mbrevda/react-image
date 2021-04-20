@@ -1,7 +1,7 @@
 import React from 'react'
+import {render, cleanup, waitFor, getByLabelText} from '@testing-library/react'
+
 import {Img} from './index'
-import ReactDOMServer from 'react-dom/server'
-import {render, act, cleanup, waitFor} from '@testing-library/react'
 
 afterEach(cleanup)
 
@@ -44,6 +44,28 @@ test('render with decode=true', () => {
   waitFor(() =>
     expect(getByAltText('').src).toEqual(location.href + 'fooDecode')
   )
+})
+
+test('render with referrerPolicy', () => {
+  const {getByAltText} = render(
+    <Img
+      src="foo"
+      imgPromise={imgPromise}
+      alt=""
+      referrerPolicy="no-referrer"
+    />
+  )
+  waitFor(() => expect(getByAltText('').referrerPolicy).toEqual('no-referrer'))
+})
+
+test('render without referrerPolicy', () => {
+  const {getByAltText, container} = render(
+    <Img src="foo" imgPromise={imgPromise} alt="" />
+  )
+
+  waitFor(() => {
+    expect(getByAltText('').referrerPolicy).not.toBe()
+  })
 })
 
 test('fallback to next image', () => {

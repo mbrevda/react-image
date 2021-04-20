@@ -15,6 +15,7 @@ export type ImgProps = Omit<
     unloader?: JSX.Element | null
     decode?: boolean
     crossorigin?: string
+    referrerPolicy?: string
     container?: (children: React.ReactNode) => JSX.Element
     loaderContainer?: (children: React.ReactNode) => JSX.Element
     unloaderContainer?: (children: React.ReactNode) => JSX.Element
@@ -32,6 +33,7 @@ export default function Img({
   unloaderContainer = passthroughContainer,
   imgPromise,
   crossorigin,
+  referrerPolicy,
   useSuspense = false,
   ...imgProps // anything else will be passed to the <img> element
 }: ImgProps): JSX.Element | null {
@@ -43,11 +45,12 @@ export default function Img({
     useSuspense,
   })
 
-  // console.log({src, isLoading, resolvedSrc, useSuspense})
-
   // show img if loaded
-  if (src) return container(<img src={src} {...imgProps} />)
-
+  if (src) {
+    return container(
+      <img referrerPolicy={referrerPolicy} src={src} {...imgProps} />
+    )
+  }
   // show loader if we have one and were still trying to load image
   if (!useSuspense && isLoading) return loaderContainer(loader)
 
