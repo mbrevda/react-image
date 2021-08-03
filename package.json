@@ -92,7 +92,7 @@
     "semver": "7.3.5",
     "serve-static": "1.14.1",
     "ts-jest": "27.0.4",
-    "ts-loader": "9.2.4",
+    "ts-loader": "9.2.5",
     "typescript": "4.3.5",
     "uglifyjs-webpack-plugin": "2.2.0",
     "webpack": "5.19.0",
