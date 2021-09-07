@@ -97,7 +97,7 @@
     "uglifyjs-webpack-plugin": "2.2.0",
     "webpack": "5.19.0",
     "webpack-cli": "4.8.0",
-    "webpack-dev-server": "4.1.0"
+    "webpack-dev-server": "4.1.1"
   },
   "peerDependencies": {
     "react": ">=16.8",
