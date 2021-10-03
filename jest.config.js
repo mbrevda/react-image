@@ -4,6 +4,7 @@ module.exports = {
   coverageReporters: ['json', 'lcov', 'text-summary', 'html'],
   preset: 'ts-jest/presets/js-with-babel',
   testURL: 'http://localhost',
+  testEnvironment: 'jsdom',
   globals: {
     'ts-jest': {
       babelConfig: true,
