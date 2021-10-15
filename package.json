@@ -67,7 +67,7 @@
     "@babel/runtime": "7.15.4",
     "@testing-library/react": "12.1.2",
     "@types/jest": "27.0.2",
-    "@types/react": "17.0.29",
+    "@types/react": "17.0.30",
     "@types/react-dom": "17.0.9",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "27.2.5",
