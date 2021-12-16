@@ -87,7 +87,7 @@
     "rollup-plugin-babel-minify": "10.0.0",
     "rollup-plugin-node-resolve": "5.2.0",
     "semver": "7.3.5",
-    "serve-static": "1.14.1",
+    "serve-static": "1.14.2",
     "ts-jest": "27.1.1",
     "ts-loader": "9.2.6",
     "typescript": "4.5.4",
