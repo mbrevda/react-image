@@ -75,7 +75,7 @@
     "babel-plugin-transform-inline-environment-variables": "0.4.3",
     "codecov": "3.8.3",
     "commander": "8.3.0",
-    "express": "4.17.1",
+    "express": "4.17.2",
     "html-webpack-plugin": "5.5.0",
     "jest": "27.4.5",
     "prettier": "2.5.1",
