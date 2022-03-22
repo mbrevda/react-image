@@ -71,7 +71,7 @@
     "@types/react-dom": "17.0.14",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "27.5.1",
-    "babel-loader": "8.2.3",
+    "babel-loader": "8.2.4",
     "babel-plugin-transform-inline-environment-variables": "0.4.3",
     "codecov": "3.8.3",
     "commander": "9.1.0",
