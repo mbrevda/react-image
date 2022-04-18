@@ -27,7 +27,7 @@ export default [
     output: {
       dir: dirname(pkg.main),
       format: 'cjs',
-      sourcemap: true,
+      sourcemap: false,
     },
   },
 
@@ -40,7 +40,7 @@ export default [
       file: pkg.browser,
       format: 'umd',
       name: 'Img',
-      sourcemap: true,
+      sourcemap: false,
       sourcemapPathTransform: (relativePath) =>
         relativePath.replace(/^.*?\/node_modules/, '../../node_modules'),
     },
@@ -52,7 +52,7 @@ export default [
     output: {
       dir: dirname(pkg.module),
       format: 'esm',
-      sourcemap: true,
+      sourcemap: false,
     },
   },
 ]
