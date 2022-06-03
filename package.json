@@ -82,7 +82,7 @@
     "react": "17.0.2",
     "react-css-transition-replace": "4.0.5",
     "react-dom": "17.0.2",
-    "rollup": "2.75.3",
+    "rollup": "2.75.5",
     "rollup-plugin-babel": "4.4.0",
     "rollup-plugin-babel-minify": "10.0.0",
     "rollup-plugin-node-resolve": "5.2.0",
