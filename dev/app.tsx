@@ -56,13 +56,15 @@ function Timer({until}) {
 
   return (
     <div style={style}>
-      <h3>
-        {time < 30000 && `Elapsed seconds: ${Math.trunc(time / 1000)}`}
-        <br />
-        {maxTImeReached && 'Max time elapsed!'}
-      </h3>
-      note: if devtools is open, disable "Disable cache" or images will load
-      twice
+      <h3>React Image visual tests</h3>
+      Test will load on page load. For a test to pass, one or more images should
+      show in a green box or the text "✅ test passed" should show. Note that
+      test are delayed by a random amount of time.
+      {time < 15000 && <h3>Elapsed seconds: {Math.trunc(time / 1000)}</h3>}
+      <br />
+      {maxTImeReached && <h3>'Max time elapsed!'</h3>}
+      note: if devtools is open, disable "Disable cache" or artificial delay may
+      trigger twice twice
     </div>
   )
 }
@@ -78,7 +80,7 @@ const HooksLegacyExample = ({rand}) => {
 
   return (
     <div>
-      <h5>using hooks</h5>
+      <h3>Using hooks Legacy</h3>
       {isLoading && <div>Loading... (rand={rand})</div>}
       {error && <div>Error! {error.msg}</div>}
       {src && <img src={src} />}
@@ -99,7 +101,7 @@ const HooksSuspenseExample = ({rand}) => {
 
   return (
     <div>
-      <h5>using hooks & suspense</h5>
+      <h3>using hooks & suspense</h3>
       <img src={src} />
     </div>
   )
@@ -119,9 +121,20 @@ function App() {
 
   return (
     <>
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `img { border: 5px solid green;}
+           h3 {padding-top: 20px;}
+           body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+          }
+          `,
+        }}
+      ></style>
+
       <Timer until={Math.max(rand1, rand2)} />
       {/* <div>
-        <h5>Should show (delayed {rand1} seconds)</h5>
+        <h3>Should show (delayed {rand1} seconds)</h3>
         <Img
           style={{width: 100}}
           src={`/delay/${rand1 * 1000}/https://picsum.photos/200`}
@@ -131,22 +144,20 @@ function App() {
       </div>
 
       {/* <div>
-        <h5>Should not show anything</h5>
+        <h3>Should not show anything</h3>
         <Img style={{width: 100}} src={[imageOn404]} />
       </div>   */}
-
       <div>
-        <h5>Should show unloader</h5>
+        <h3>Should show unloader</h3>
         <Img
           style={{width: 100}}
           src="http://127.0.0.1/non-existant-image.jpg"
           loader={<div>Loading...</div>}
-          unloader={<div>this is the unloader</div>}
+          unloader={<div>✅ test passed</div>}
         />
       </div>
-
       <div>
-        <h5>Suspense (delayed {rand2} seconds)</h5>
+        <h3>Suspense (delayed {rand2} seconds)</h3>
         <ErrorBoundary>
           <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
             <Img
@@ -157,10 +168,9 @@ function App() {
           </Suspense>
         </ErrorBoundary>
       </div>
-
       <div>
-        <h5>Suspense wont load</h5>
-        <ErrorBoundary onError={<div>no image should be loaded here</div>}>
+        <h3>Suspense wont load</h3>
+        <ErrorBoundary onError={<div>✅ test passed</div>}>
           <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
             <Img
               style={{width: 100}}
@@ -170,9 +180,8 @@ function App() {
           </Suspense>
         </ErrorBoundary>
       </div>
-
       <div>
-        <h5>Suspense should reuse cache (only one network call)</h5>
+        <h3>Suspense should reuse cache (only one network call)</h3>
         <ErrorBoundary>
           <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
             <Img
@@ -189,23 +198,18 @@ function App() {
           </Suspense>
         </ErrorBoundary>
       </div>
-
       <div>
-        <h5>Hooks & Suspense</h5>
         <ErrorBoundary>
           <Suspense fallback={<div>Loading... (hooks, rand={rand3})</div>}>
             <HooksSuspenseExample rand={rand3} />
           </Suspense>
         </ErrorBoundary>
       </div>
-
       <div>
-        <h5>Hooks Legacy</h5>
         <ErrorBoundary>
           <HooksLegacyExample rand={rand4} />
         </ErrorBoundary>
       </div>
-
       <br />
       <br />
       <br />
