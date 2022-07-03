@@ -1,6 +1,6 @@
 import React, {Suspense, useState, useEffect, useRef} from 'react'
-import ReactDOM from 'react-dom'
-import {Img, useImage} from './index'
+import {createRoot} from 'react-dom/client'
+import {Img, useImage} from '../src/index'
 //const {Img, useImage} = require('../cjs')
 
 interface ErrorBoundary {
@@ -43,6 +43,8 @@ const randSeconds = (min, max) =>
 function Timer({until}) {
   const startTimeRef = useRef(Date.now())
   const [time, setTime] = useState(Date.now() - startTimeRef.current)
+  const style = {position: 'fixed', right: '40px', width: '250px'}
+  const maxTImeReached = time / 1000 - 5 > until
 
   useEffect(() => {
     const timer = setTimeout(
@@ -52,15 +54,24 @@ function Timer({until}) {
     return () => clearTimeout(timer)
   }, [time])
 
-  if (time / 1000 - 5 > until) return <h3>Max time elapsed!</h3>
-  return <h3>Elapsed seconds: {Math.trunc(time / 1000)}</h3>
+  return (
+    <div style={style}>
+      <h3>
+        {time < 30000 && `Elapsed seconds: ${Math.trunc(time / 1000)}`}
+        <br />
+        {maxTImeReached && 'Max time elapsed!'}
+      </h3>
+      note: if devtools is open, disable "Disable cache" or images will load
+      twice
+    </div>
+  )
 }
 
 const HooksLegacyExample = ({rand}) => {
   const {src, isLoading, error} = useImage({
     srcList: [
-      'https://www.example.com/foo.jpg',
-      `https://app.requestly.io/delay/${rand * 1000}/https://picsum.photos/200`, // will be loaded
+      'https://www.example.com/non-existant-image.jpg',
+      `/delay/${rand * 1000}/https://picsum.photos/200`, // will be loaded
     ],
     useSuspense: false,
   })
@@ -71,7 +82,9 @@ const HooksLegacyExample = ({rand}) => {
       {isLoading && <div>Loading... (rand={rand})</div>}
       {error && <div>Error! {error.msg}</div>}
       {src && <img src={src} />}
-      {!isLoading && !error && !src && <div>Nothing to show</div>}
+      {!isLoading && !error && !src && (
+        <div>Nothing to show - thats not good!</div>
+      )}
     </div>
   )
 }
@@ -79,8 +92,8 @@ const HooksLegacyExample = ({rand}) => {
 const HooksSuspenseExample = ({rand}) => {
   const {src, isLoading, error} = useImage({
     srcList: [
-      'https://www.example.com/foo.jpg',
-      `https://app.requestly.io/delay/${rand * 1000}/https://picsum.photos/200`, // will be loaded
+      'https://www.example.com/foo.png',
+      `/delay/${rand * 1000}/https://picsum.photos/200`, // will be loaded
     ],
   })
 
@@ -107,15 +120,13 @@ function App() {
   return (
     <>
       <Timer until={Math.max(rand1, rand2)} />
-      <div>
+      {/* <div>
         <h5>Should show (delayed {rand1} seconds)</h5>
         <Img
           style={{width: 100}}
-          src={`https://app.requestly.io/delay/${
-            rand1 * 1000
-          }/https://picsum.photos/200`}
+          src={`/delay/${rand1 * 1000}/https://picsum.photos/200`}
           loader={<div>Loading...</div>}
-          unloader={<div>wont load!</div>}
+          unloader={<div>this is the unloader</div>}
         />
       </div>
 
@@ -128,9 +139,9 @@ function App() {
         <h5>Should show unloader</h5>
         <Img
           style={{width: 100}}
-          src="http://127.0.0.1/foo_bar_baz_foo_bar.jpg"
+          src="http://127.0.0.1/non-existant-image.jpg"
           loader={<div>Loading...</div>}
-          unloader={<div>wont load!</div>}
+          unloader={<div>this is the unloader</div>}
         />
       </div>
 
@@ -140,9 +151,7 @@ function App() {
           <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
             <Img
               style={{width: 100}}
-              src={`https://app.requestly.io/delay/${
-                rand2 * 1000
-              }/https://picsum.photos/200`}
+              src={`/delay/${rand2 * 1000}/https://picsum.photos/200`}
               useSuspense={true}
             />
           </Suspense>
@@ -151,11 +160,11 @@ function App() {
 
       <div>
         <h5>Suspense wont load</h5>
-        <ErrorBoundary onError={<div>Suspense... wont load</div>}>
+        <ErrorBoundary onError={<div>no image should be loaded here</div>}>
           <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
             <Img
               style={{width: 100}}
-              src="http://127.0.0.1/foo_bar_baz_foo_bar.jpg"
+              src="http://127.0.0.1/non-existant-image.jpg"
               useSuspense={true}
             />
           </Suspense>
@@ -163,7 +172,7 @@ function App() {
       </div>
 
       <div>
-        <h5>Suspense should reuse cache (only one netowork call)</h5>
+        <h5>Suspense should reuse cache (only one network call)</h5>
         <ErrorBoundary>
           <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
             <Img
@@ -188,10 +197,22 @@ function App() {
             <HooksSuspenseExample rand={rand3} />
           </Suspense>
         </ErrorBoundary>
-
-        <h5>Hooks Legacy</h5>
-        <HooksLegacyExample rand={rand4} />
       </div>
+
+      <div>
+        <h5>Hooks Legacy</h5>
+        <ErrorBoundary>
+          <HooksLegacyExample rand={rand4} />
+        </ErrorBoundary>
+      </div>
+
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
     </>
   )
 }
@@ -200,4 +221,4 @@ const node = document.createElement('div')
 node.id = 'root'
 document.body.appendChild(node)
 const rootElement = document.getElementById('root')
-ReactDOM.render(<App />, rootElement)
+createRoot(rootElement!).render(<App />)
