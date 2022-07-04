@@ -44,7 +44,7 @@ function Timer({until}) {
   const startTimeRef = useRef(Date.now())
   const [time, setTime] = useState(Date.now() - startTimeRef.current)
   const style = {position: 'fixed', right: '40px', width: '250px'}
-  const maxTImeReached = time / 1000 - 5 > until
+  const maxTimeReached = time / 1000 - 5 > until
 
   useEffect(() => {
     const timer = setTimeout(
@@ -60,9 +60,11 @@ function Timer({until}) {
       Test will load on page load. For a test to pass, one or more images should
       show in a green box or the text "✅ test passed" should show. Note that
       test are delayed by a random amount of time.
-      {time < 15000 && <h3>Elapsed seconds: {Math.trunc(time / 1000)}</h3>}
-      <br />
-      {maxTImeReached && <h3>'Max time elapsed!'</h3>}
+      {!maxTimeReached ? (
+        <h3>Elapsed seconds: {Math.trunc(time / 1000)}</h3>
+      ) : (
+        <h3>Max time elapsed!</h3>
+      )}
       note: if devtools is open, disable "Disable cache" or artificial delay may
       trigger twice twice
     </div>
@@ -182,17 +184,21 @@ function App() {
       </div>
       <div>
         <h3>Suspense should reuse cache (only one network call)</h3>
+        Check the Network Tab in DevTools to ensure the url
+        <code> https://picsum.photos/200?only=once </code> was only called once
+        <br />
+        <br />
         <ErrorBoundary>
           <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
             <Img
               style={{width: 100}}
-              src={`https://picsum.photos/200`}
+              src={`https://picsum.photos/200?only=once`}
               useSuspense={true}
             />
             <div style={{width: '50px'}} />
             <Img
               style={{width: 100}}
-              src={`https://picsum.photos/200`}
+              src={`https://picsum.photos/200?only=once`}
               useSuspense={true}
             />
           </Suspense>
