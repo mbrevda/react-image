@@ -1,4 +1,4 @@
-import React, {Suspense, useState, useEffect, useRef} from 'react'
+import React, {Suspense, useState, useEffect, useRef, useCallback} from 'react'
 import {createRoot} from 'react-dom/client'
 import {Img, useImage} from '../src/index'
 //const {Img, useImage} = require('../cjs')
@@ -40,33 +40,55 @@ class ErrorBoundary extends React.Component implements ErrorBoundary {
 const randSeconds = (min, max) =>
   Math.floor(Math.random() * (max - min + 1) + min)
 
-function Timer({until}) {
-  const startTimeRef = useRef(Date.now())
-  const [time, setTime] = useState(Date.now() - startTimeRef.current)
-  const style = {position: 'fixed', right: '40px', width: '250px'}
-  const maxTimeReached = time / 1000 - 5 > until
+function Timer({delay}) {
+  const [startTime] = useState(Date.now())
+  const [elapsedTime, setElapsedTime] = useState(0)
+  const maxTimeReached = elapsedTime / 1000 > delay
+  const remainingTime = delay - Math.trunc(elapsedTime / 1000)
 
   useEffect(() => {
-    const timer = setTimeout(
-      () => setTime(Date.now() - startTimeRef.current),
-      1000
-    )
+    if (maxTimeReached) return
+    const timer = setTimeout(() => setElapsedTime(Date.now() - startTime), 1000)
     return () => clearTimeout(timer)
-  }, [time])
+  }, [elapsedTime])
 
   return (
-    <div style={style}>
+    <div>
+      Delayed: {delay} seconds
+      {!maxTimeReached && <>, image should show in: {remainingTime}s</>}
+      <br />
+      <br />
+    </div>
+  )
+}
+
+function GlobalTimer({until}) {
+  const [startTime] = useState(Date.now())
+  const [elapsedTime, setElapsedTime] = useState(0)
+  const maxTimeReached = elapsedTime / 1000 - 2 > until
+
+  useEffect(() => {
+    if (maxTimeReached) return
+    const timer = setTimeout(() => setElapsedTime(Date.now() - startTime), 1000)
+    return () => clearTimeout(timer)
+  }, [elapsedTime])
+
+  return (
+    <div>
       <h3>React Image visual tests</h3>
       Test will load on page load. For a test to pass, one or more images should
       show in a green box or the text "✅ test passed" should show. Note that
       test are delayed by a random amount of time.
       {!maxTimeReached ? (
-        <h3>Elapsed seconds: {Math.trunc(time / 1000)}</h3>
+        <h3>Elapsed seconds: {Math.trunc(elapsedTime / 1000)}</h3>
       ) : (
-        <h3>Max time elapsed!</h3>
+        <>
+          <h3>Max time elapsed!</h3>
+          All images should be loaded at this point
+          <br />
+        </>
       )}
-      note: if devtools is open, disable "Disable cache" or artificial delay may
-      trigger twice twice
+      <br />
     </div>
   )
 }
@@ -83,7 +105,8 @@ const HooksLegacyExample = ({rand}) => {
   return (
     <div>
       <h3>Using hooks Legacy</h3>
-      {isLoading && <div>Loading... (rand={rand})</div>}
+      <Timer delay={rand} />
+      {isLoading && <div>Loading...</div>}
       {error && <div>Error! {error.msg}</div>}
       {src && <img src={src} />}
       {!isLoading && !error && !src && (
@@ -103,8 +126,47 @@ const HooksSuspenseExample = ({rand}) => {
 
   return (
     <div>
-      <h3>using hooks & suspense</h3>
       <img src={src} />
+    </div>
+  )
+}
+
+const ReuseCache = ({renderId}) => {
+  const src = `https://picsum.photos/200?rand=${renderId}`
+  const [networkCalls, setNetworkCalls] = useState(0)
+
+  useEffect(() => {
+    setTimeout(() => {
+      const entires = performance.getEntriesByName(src)
+      setNetworkCalls(entires.length)
+    }, 1000)
+  })
+
+  return (
+    <div>
+      <h3>Suspense should reuse cache and only make one network call</h3>
+      <div>
+        {networkCalls < 1 && <span>❓ test pending</span>}
+        {networkCalls === 1 && <span>✅ test passed</span>}
+        {networkCalls > 1 && (
+          <span>
+            ❌ test failed. If DevTools is open, ensure "Disable Cache" in the
+            network tab is disabled
+          </span>
+        )}
+      </div>
+      <div>Network Calls detected: {networkCalls}</div>
+      To check manually, check the Network Tab in DevTools to ensure the url
+      <code> {src} </code> was only called once
+      <br />
+      <br />
+      <ErrorBoundary>
+        <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
+          <Img style={{width: 100}} src={src} useSuspense={true} />
+          <div style={{width: '50px'}} />
+          <Img style={{width: 100}} src={src} useSuspense={true} />
+        </Suspense>
+      </ErrorBoundary>
     </div>
   )
 }
@@ -120,6 +182,7 @@ function App() {
   const rand2 = randSeconds(2, 10)
   const rand3 = randSeconds(2, 10)
   const rand4 = randSeconds(2, 10)
+  const [renderId, setRenderId] = useState(Math.random())
 
   return (
     <>
@@ -134,9 +197,13 @@ function App() {
         }}
       ></style>
 
-      <Timer until={Math.max(rand1, rand2)} />
-      {/* <div>
-        <h3>Should show (delayed {rand1} seconds)</h3>
+      <div style={{position: 'fixed', right: '40px', width: '250px'}}>
+        <GlobalTimer until={Math.max(rand1, rand2, rand3, rand4)} />
+        <button onClick={() => setRenderId(Math.random())}>rerender</button>
+      </div>
+      <div>
+        <h3>Should show</h3>
+        <Timer delay={rand1} />
         <Img
           style={{width: 100}}
           src={`/delay/${rand1 * 1000}/https://picsum.photos/200`}
@@ -145,10 +212,14 @@ function App() {
         />
       </div>
 
-      {/* <div>
+      <div>
         <h3>Should not show anything</h3>
-        <Img style={{width: 100}} src={[imageOn404]} />
-      </div>   */}
+        <Img
+          style={{width: 100}}
+          src={[]}
+          unloader={<div>✅ test passed</div>}
+        />
+      </div>
       <div>
         <h3>Should show unloader</h3>
         <Img
@@ -159,7 +230,8 @@ function App() {
         />
       </div>
       <div>
-        <h3>Suspense (delayed {rand2} seconds)</h3>
+        <h3>Suspense</h3>
+        <Timer delay={rand2} />
         <ErrorBoundary>
           <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
             <Img
@@ -182,31 +254,12 @@ function App() {
           </Suspense>
         </ErrorBoundary>
       </div>
-      <div>
-        <h3>Suspense should reuse cache (only one network call)</h3>
-        Check the Network Tab in DevTools to ensure the url
-        <code> https://picsum.photos/200?only=once </code> was only called once
-        <br />
-        <br />
-        <ErrorBoundary>
-          <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
-            <Img
-              style={{width: 100}}
-              src={`https://picsum.photos/200?only=once`}
-              useSuspense={true}
-            />
-            <div style={{width: '50px'}} />
-            <Img
-              style={{width: 100}}
-              src={`https://picsum.photos/200?only=once`}
-              useSuspense={true}
-            />
-          </Suspense>
-        </ErrorBoundary>
-      </div>
+      <ReuseCache renderId={renderId} />
       <div>
         <ErrorBoundary>
-          <Suspense fallback={<div>Loading... (hooks, rand={rand3})</div>}>
+          <h3>using hooks & suspense</h3>
+          <Timer delay={rand3} />
+          <Suspense fallback={<div>Loading...</div>}>
             <HooksSuspenseExample rand={rand3} />
           </Suspense>
         </ErrorBoundary>
