@@ -30,7 +30,6 @@ export default function Img({
   loaderContainer = passthroughContainer,
   unloaderContainer = passthroughContainer,
   imgPromise,
-  crossorigin,
   useSuspense = false,
   ...imgProps // anything else will be passed to the <img> element
 }: ImgProps): JSX.Element | null {
