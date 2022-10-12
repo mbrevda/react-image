@@ -13,8 +13,7 @@ export type ImgProps = Omit<
     src: useImageProps['srcList'] // same types, different name
     loader?: JSX.Element | null
     unloader?: JSX.Element | null
-    decode?: boolean
-    crossorigin?: string
+    decode?: boolean,
     container?: (children: React.ReactNode) => JSX.Element
     loaderContainer?: (children: React.ReactNode) => JSX.Element
     unloaderContainer?: (children: React.ReactNode) => JSX.Element
