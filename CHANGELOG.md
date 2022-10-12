@@ -1,3 +1,6 @@
+# 4.0.4
+
+- adds support for crossOrigin prop. If both crossorigin and crossOrigin present, uses the one defined last
 # 4.0.3
 
 - Update peerDependencies in package.json
