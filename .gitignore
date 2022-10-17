@@ -5,10 +5,6 @@ build/
 .wercker/
 npm-debug.log
 coverage/
-umd/
-cjs/
-esm/
-dist/
 tags
 *.d.ts
 *.tgz
