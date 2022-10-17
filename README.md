@@ -153,11 +153,11 @@ const myComponent = () => (
 
 ### Loading images with a CORS policy
 
-When loading images from another domain with a [CORS policy](https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_settings_attributes), you may find you need to use the `crossorigin` attribute. For example:
+When loading images from another domain with a [CORS policy](https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_settings_attributes), you may find you need to use the `crossOrigin` attribute. For example:
 
 ```js
 const myComponent = () => (
-  <Img src={'https://www.example.com/foo.jpg'} crossorigin="anonymous" />
+  <Img src={'https://www.example.com/foo.jpg'} crossOrigin="anonymous" />
 )
 ```
 

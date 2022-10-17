@@ -13,8 +13,7 @@ export type ImgProps = Omit<
     src: useImageProps['srcList'] // same types, different name
     loader?: JSX.Element | null
     unloader?: JSX.Element | null
-    decode?: boolean
-    crossorigin?: string
+    decode?: boolean,
     container?: (children: React.ReactNode) => JSX.Element
     loaderContainer?: (children: React.ReactNode) => JSX.Element
     unloaderContainer?: (children: React.ReactNode) => JSX.Element
@@ -31,12 +30,24 @@ export default function Img({
   loaderContainer = passthroughContainer,
   unloaderContainer = passthroughContainer,
   imgPromise,
-  crossorigin,
   useSuspense = false,
   ...imgProps // anything else will be passed to the <img> element
 }: ImgProps): JSX.Element | null {
+  const { crossorigin, crossOrigin } = imgProps ?? {}
+
+  const crossOriginToUse = (() => {
+    if (crossorigin !== undefined && crossOrigin !== undefined) {
+      const imgPropsKeys = Object.keys(imgProps)
+      const crossoriginIndex = imgPropsKeys.findIndex((x) => x === 'crossorigin')
+      const crossOriginIndex = imgPropsKeys.findIndex((x) => x === 'crossOrigin')
+      return crossOriginIndex > crossoriginIndex ? crossOrigin : crossorigin
+    }
+    return crossOrigin ?? crossorigin
+  })()
+
   imgPromise =
-    imgPromise || imagePromiseFactory({decode, crossOrigin: crossorigin})
+    imgPromise || imagePromiseFactory({decode, crossOrigin: crossOriginToUse})
+
   const {src, isLoading} = useImage({
     srcList,
     imgPromise,
