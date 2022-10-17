@@ -4,6 +4,13 @@ node_modules
 build/
 .wercker/
 npm-debug.log
+disc/
 coverage/
+umd/
+cjs/
+esm/
+dist/
 tags
+*.d.ts
+*.tgz
 jsSrc/
