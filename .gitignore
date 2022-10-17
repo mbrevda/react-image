@@ -6,6 +6,4 @@ build/
 npm-debug.log
 coverage/
 tags
-*.d.ts
-*.tgz
 jsSrc/
