@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import imagePromiseFactory from './imagePromiseFactory'
 
 export type useImageProps = {
@@ -24,7 +24,7 @@ const promiseFind = (arr, promiseFactory) => {
 
     arr
       .reduce((p, src) => {
-        // ensure we aren't done before enquing the next source
+        // ensure we aren't done before enqueuing the next source
         return p.catch(() => {
           if (!done) return queueNext(src)
         })
@@ -38,7 +38,7 @@ export default function useImage({
   imgPromise = imagePromiseFactory({decode: true}),
   useSuspense = true,
 }: useImageProps): {src: string | undefined; isLoading: boolean; error: any} {
-  const [, setIsLoading] = useState(true)
+  const [, setIsSettled] = useState(false)
   const sourceList = removeBlankArrayElements(stringToArray(srcList))
   const sourceKey = sourceList.join('')
 
@@ -52,21 +52,6 @@ export default function useImage({
   }
 
   // when promise resolves/reject, update cache & state
-  cache[sourceKey].promise
-    // if a source was found, update cache
-    // when not using suspense, update state to force a rerender
-    .then((src) => {
-      cache[sourceKey] = {...cache[sourceKey], cache: 'resolved', src}
-      if (!useSuspense) setIsLoading(false)
-    })
-
-    // if no source was found, or if another error occured, update cache
-    // when not using suspense, update state to force a rerender
-    .catch((error) => {
-      cache[sourceKey] = {...cache[sourceKey], cache: 'rejected', error}
-      if (!useSuspense) setIsLoading(false)
-    })
-
   if (cache[sourceKey].cache === 'resolved') {
     return {src: cache[sourceKey].src, isLoading: false, error: null}
   }
@@ -75,6 +60,21 @@ export default function useImage({
     if (useSuspense) throw cache[sourceKey].error
     return {isLoading: false, error: cache[sourceKey].error, src: undefined}
   }
+
+  cache[sourceKey].promise
+    // if a source was found, update cache
+    // when not using suspense, update state to force a rerender
+    .then((src) => {
+      cache[sourceKey] = {...cache[sourceKey], cache: 'resolved', src}
+      if (!useSuspense) setIsSettled(sourceKey)
+    })
+
+    // if no source was found, or if another error occurred, update cache
+    // when not using suspense, update state to force a rerender
+    .catch((error) => {
+      cache[sourceKey] = {...cache[sourceKey], cache: 'rejected', error}
+      if (!useSuspense) setIsSettled(sourceKey)
+    })
 
   // cache[sourceKey].cache === 'pending')
   if (useSuspense) throw cache[sourceKey].promise
