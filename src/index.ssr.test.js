@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import React from 'react'
 import {Img} from './index'
 import ReactDOMServer from 'react-dom/server'
