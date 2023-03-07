@@ -66,7 +66,7 @@ jobs:
 
       - name: check if package is newer than the published version
         id: checkPublish
-        run: echo "::set-output name=shouldPublish::`npm run -s isNewerThanPublished`"
+        run: echo "shouldPublish=`npm run -s isNewerThanPublished`" | tee -a $GITHUB_OUTPUT
 
       - name: publish release package if needed
         if: steps.checkPublish.outputs.shouldPublish == 'true'
