@@ -60,7 +60,7 @@ const HooksLegacyExample = ({rand}) => {
   const {src, isLoading, error} = useImage({
     srcList: [
       'https://www.example.com/foo.jpg',
-      `http://deelay.me/${rand * 1000}/https://picsum.photos/200`, // will be loaded
+      `https://app.requestly.io/delay/${rand * 1000}/https://picsum.photos/200`, // will be loaded
     ],
     useSuspense: false,
   })
@@ -80,7 +80,7 @@ const HooksSuspenseExample = ({rand}) => {
   const {src, isLoading, error} = useImage({
     srcList: [
       'https://www.example.com/foo.jpg',
-      `http://deelay.me/${rand * 1000}/https://picsum.photos/200`, // will be loaded
+      `https://app.requestly.io/delay/${rand * 1000}/https://picsum.photos/200`, // will be loaded
     ],
   })
 
@@ -111,7 +111,9 @@ function App() {
         <h5>Should show (delayed {rand1} seconds)</h5>
         <Img
           style={{width: 100}}
-          src={`http://deelay.me/${rand1 * 1000}/https://picsum.photos/200`}
+          src={`https://app.requestly.io/delay/${
+            rand1 * 1000
+          }/https://picsum.photos/200`}
           loader={<div>Loading...</div>}
           unloader={<div>wont load!</div>}
         />
@@ -138,7 +140,9 @@ function App() {
           <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
             <Img
               style={{width: 100}}
-              src={`http://deelay.me/${rand2 * 1000}/https://picsum.photos/200`}
+              src={`https://app.requestly.io/delay/${
+                rand2 * 1000
+              }/https://picsum.photos/200`}
               useSuspense={true}
             />
           </Suspense>
