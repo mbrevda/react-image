@@ -45,11 +45,11 @@ const opts = {
     ],
   },
   devServer: {
-    contentBase: outputdir,
+    // contentBase: outputdir,
     open: true,
-    overlay: {
-      errors: true,
-    },
+    // overlay: {
+    //   errors: true,
+    // },
     historyApiFallback: true,
     // host: '0.0.0.0'
   },

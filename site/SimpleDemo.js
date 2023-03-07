@@ -8,7 +8,7 @@ export default () => (
     {({rand}) => (
       <Img
         loader={<Preloader />}
-        src={`http://www.deelay.me/5000/${window.location.href}cat.jpg?rand=${rand}`}
+        src={`https://app.requestly.io/delay/5000/${window.location.href}cat.jpg?rand=${rand}`}
         width="320"
         height="240"
         rand={rand}
