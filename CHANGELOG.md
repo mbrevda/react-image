@@ -1,3 +1,7 @@
+# 4.1.0
+
+- Add support for React 18
+
 # 4.0.3
 
 - Update peerDependencies in package.json

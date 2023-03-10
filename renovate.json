@@ -1,10 +1,12 @@
 {
-  "enabled": true,
-  "timezone": "UTC",
-  "extends": [":base"],
-  "rebaseStalePrs": true,
-  "lockFileMaintenance": {"enabled": false},
   "automerge": true,
   "automergeType": "branch-push",
-  "recreateClosed": true
+  "enabled": true,
+  "extends": [":base"],
+  "platformAutomerge": true,
+  "rebaseStalePrs": true,
+  "recreateClosed": true,
+  "semanticCommits": "enabled",
+  "timezone": "UTC",
+  "transitiveRemediation": true
 }
