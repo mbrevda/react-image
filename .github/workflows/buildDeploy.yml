@@ -46,7 +46,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: [lint, test]
-    # if: ${{ github.ref_name == 'master' }}
+    if: ${{ github.ref_name == 'master' }}
 
     steps:
       - uses: actions/checkout@v3
