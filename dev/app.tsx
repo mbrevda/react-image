@@ -41,7 +41,7 @@ const randSeconds = (min, max) =>
   Math.floor(Math.random() * (max - min + 1) + min)
 
 function Timer({delay}) {
-  const [startTime] = useState(Date.now())
+  const [startTime, setStartTime] = useState(Date.now())
   const [elapsedTime, setElapsedTime] = useState(0)
   const maxTimeReached = elapsedTime / 1000 > delay
   const remainingTime = delay - Math.trunc(elapsedTime / 1000)
@@ -51,6 +51,11 @@ function Timer({delay}) {
     const timer = setTimeout(() => setElapsedTime(Date.now() - startTime), 1000)
     return () => clearTimeout(timer)
   }, [elapsedTime])
+
+  useEffect(() => {
+    setStartTime(Date.now())
+    setElapsedTime(0)
+  }, [delay])
 
   return (
     <div>
@@ -76,9 +81,11 @@ function GlobalTimer({until}) {
   return (
     <div>
       <h3>React Image visual tests</h3>
-      Test will load on page load. For a test to pass, one or more images should
-      show in a green box or the text "✅ test passed" should show. Note that
-      test are delayed by a random amount of time.
+      <div style={{color: 'grey'}}>
+        Test will load on page load. For a test to pass, one or more images
+        should show in a green box or the text "✅ test passed" should show.
+        Note that test are delayed by a random amount of time.
+      </div>
       {!maxTimeReached ? (
         <h3>Elapsed seconds: {Math.trunc(elapsedTime / 1000)}</h3>
       ) : (
@@ -155,9 +162,13 @@ const ReuseCache = ({renderId}) => {
           </span>
         )}
       </div>
-      <div>Network Calls detected: {networkCalls}</div>
-      To check manually, check the Network Tab in DevTools to ensure the url
-      <code> {src} </code> was only called once
+      <div>Network Calls detected: {networkCalls} (expecting just 1)</div>
+      <br />
+      <div style={{color: 'grey'}}>
+        To test this manually, check the Network Tab in DevTools to ensure the
+        url
+        <code> {src} </code> was only called once
+      </div>
       <br />
       <br />
       <ErrorBoundary>
