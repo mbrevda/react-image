@@ -3,13 +3,14 @@
   "version": "4.1.0",
   "description": "React Image is an <img> tag replacement for react, featuring preloader and multiple image fallback support",
   "scripts": {
-    "build": "npm run build:types && NODE_ENV=production rollup -c && for i in cjs esm umd; do cp src/*test.js $i; done && rm -rf jsSrc",
+    "build": "npm run build:types && NODE_ENV=production node build.js",
     "build:types": "tsc -p tsconfig.json",
     "codecov": "codecov",
     "dev": "node dev/index.js",
-    "pretty": "prettier *.js src/**/*.js --write",
+    "pretty": "prettier \"**/*.{?(cj|mj|t|j)s?(on|on5|x),y?(a)ml,graphql,md,css}\"  --write",
     "isNewerThanPublished": "semver `npm -s view $npm_package_name dist-tags.${TAG:-latest}` --range \"<$npm_package_version\" > /dev/null && echo true || echo false",
-    "test": "jest --projects jest*.cjs"
+    "test": "jest --projects jest*.cjs",
+    "test:dist": "for i in cjs esm; do cp src/*test.* dist/$i; done && npm run test"
   },
   "repository": {
     "type": "git",
@@ -38,16 +39,13 @@
   ],
   "files": [
     "*.md",
-    "es/*.js",
     "esm/*.js",
-    "umd/*.js",
     "cjs/*.js",
     "!**/*.test.js",
     "*.d.ts"
   ],
   "module": "esm/index.js",
   "main": "cjs/index.js",
-  "browser": "umd/index.js",
   "types": "react-image.d.ts",
   "type": "module",
   "author": "mbrevda@gmail.com",
@@ -65,8 +63,8 @@
     "@testing-library/react": "14.0.0",
     "esbuild": "0.17.11",
     "esbuild-jest": "0.5.0",
-        "esbuild-jest-transform": "1.1.1",
-
+    "esbuild-jest-transform": "1.1.1",
+    "express": "4.18.1",
     "jest": "29.5.0",
     "jest-environment-jsdom": "29.5.0",
     "prettier": "2.8.4",

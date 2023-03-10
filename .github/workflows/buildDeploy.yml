@@ -37,7 +37,7 @@ jobs:
       - name: test
         run: npm test
 
-      - name: test buid
+      - name: test build
         run: npm run build
 
       - name: test built libs

@@ -1,9 +1,8 @@
 import React from 'react'
-import {Img} from './index'
+import {Img} from './'
 import {render, act, cleanup, waitFor} from '@testing-library/react'
 
 afterEach(cleanup)
-
 const imgPromise = (decode) => (src) => {
   return new Promise((resolve, reject) => {
     const img = new Image()
