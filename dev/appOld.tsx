@@ -2,11 +2,6 @@ import React from 'react'
 import {render} from 'react-dom'
 import SimpleDemo from './SimpleDemo.js'
 import TransitionDemo from './TransitionDemo.js'
-// if (process.env.NODE_ENV === 'production') {
-//   import(/* webpackChunkName: 'reporters' */ './reporters').then(
-//     ({setupReporters}) => setupReporters()
-//   )
-// }
 
 // render(<SimpleDemo />, document.getElementById('body'))
 class ErrorBoundary extends React.Component {
@@ -33,7 +28,7 @@ class ErrorBoundary extends React.Component {
 render(
   <ErrorBoundary>
     <SimpleDemo />
-    <TransitionDemo />
+    {/* <TransitionDemo /> */}
   </ErrorBoundary>,
   document.getElementById('body')
 )

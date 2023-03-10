@@ -16,24 +16,16 @@ const buildOpts = {
   jsx: 'automatic',
 }
 
-const ctx = await context(buildOpts)
+// build esm version
+await build(buildOpts)
 
-if (process.env.NODE_ENV === 'production') {
-  await ctx.rebuild()
-  ctx.dispose()
+// build cjs version
+await build({
+  ...buildOpts,
+  format: 'cjs',
+  outdir: './dist/cjs',
+  splitting: false,
+})
 
-  // build cjs version
-  await build({
-    ...buildOpts,
-    format: 'cjs',
-    outdir: './dist/cjs',
-    splitting: false,
-  })
-} else {
-  await ctx.watch()
-  open(serverUrl)
-}
-
-process.on('exit', () => ctx.dispose())
 process.on('unhandledRejection', console.error)
 process.on('uncaughtException', console.error)
