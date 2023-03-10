@@ -4,7 +4,7 @@ on: push
 
 env:
   CI: true
-  NODE_VER: 14
+  NODE_VER: 18
 
 jobs:
   lint:
@@ -69,7 +69,7 @@ jobs:
         run: echo "::set-output name=shouldPublish::`npm run -s isNewerThanPublished`"
 
       - name: publish release package if needed
-        if: steps.checkPublish.outputs.shouldPublish == 'true'
+        if: steps.checkPublish.outputs.shouldPublish == 'true' && github.ref_name == 'master'
         run: npm publish
 
       - name: publish canary release
