@@ -1,31 +1,29 @@
-import esbuild from 'esbuild'
+import {context} from 'esbuild'
 import {rm} from 'node:fs/promises'
 
 await rm('./dist', {recursive: true, force: true})
 
-const buildOpts = {
+const ctx = await context({
   entryPoints: ['./src/index.tsx', './src/Img.tsx', './src/useImage.tsx'],
   external: ['react', 'react-dom'],
-  minify: false,
   bundle: true,
   splitting: true,
   outdir: './dist/esm',
   format: 'esm',
   sourcemap: true,
   minify: true,
+  jsxDev: false, // MODE === 'dev',
+  jsx: 'automatic',
+})
+
+if (true /* MODE === 'production' */) {
+  await ctx.rebuild()
+  ctx.dispose()
+} else {
+  await ctx.watch()
+  open(serverUrl)
 }
 
-// esbuild.build(buildOpts)
-
-const devBuild = (opts) => {
-  return esbuild.build({
-    ...buildOpts,
-    ...opts,
-    minify: false,
-    sourcemap: false,
-    watch: true,
-    external: [],
-  })
-}
-
-export {devBuild}
+process.on('exit', () => ctx.dispose())
+process.on('unhandledRejection', console.error)
+process.on('uncaughtException', console.error)
