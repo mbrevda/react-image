@@ -65,6 +65,8 @@
     "@testing-library/react": "14.0.0",
     "esbuild": "0.17.11",
     "esbuild-jest": "0.5.0",
+        "esbuild-jest-transform": "1.1.1",
+
     "jest": "29.5.0",
     "jest-environment-jsdom": "29.5.0",
     "prettier": "2.8.4",

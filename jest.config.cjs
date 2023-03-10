@@ -5,6 +5,11 @@ module.exports = {
   testURL: 'http://localhost',
   testEnvironment: 'jsdom',
   transform: {
-    '^.+\\.tsx?$': 'esbuild-jest',
+    '^.+\\.m?(|j|t)sx?$': [
+      'esbuild-jest-transform',
+      {
+        sourcemap: true,
+      },
+    ],
   },
 }
