@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {forwardRef} from 'react'
 import useImage, {useImageProps} from './useImage'
 import imagePromiseFactory from './imagePromiseFactory'
 
@@ -22,19 +22,22 @@ export type ImgProps = Omit<
 
 const passthroughContainer = (x) => x
 
-export default function Img({
-  decode = true,
-  src: srcList = [],
-  loader = null,
-  unloader = null,
-  container = passthroughContainer,
-  loaderContainer = passthroughContainer,
-  unloaderContainer = passthroughContainer,
-  imgPromise,
-  crossorigin,
-  useSuspense = false,
-  ...imgProps // anything else will be passed to the <img> element
-}: ImgProps): JSX.Element | null {
+function Img(
+  {
+    decode = true,
+    src: srcList = [],
+    loader = null,
+    unloader = null,
+    container = passthroughContainer,
+    loaderContainer = passthroughContainer,
+    unloaderContainer = passthroughContainer,
+    imgPromise,
+    crossorigin,
+    useSuspense = false,
+    ...imgProps // anything else will be passed to the <img> element
+  }: ImgProps,
+  ref
+): JSX.Element | null {
   imgPromise =
     imgPromise || imagePromiseFactory({decode, crossOrigin: crossorigin})
   const {src, isLoading} = useImage({
@@ -46,7 +49,7 @@ export default function Img({
   // console.log({src, isLoading, resolvedSrc, useSuspense})
 
   // show img if loaded
-  if (src) return container(<img src={src} {...imgProps} />)
+  if (src) return container(<img src={src} {...imgProps} ref={ref} />)
 
   // show loader if we have one and were still trying to load image
   if (!useSuspense && isLoading) return loaderContainer(loader)
@@ -56,3 +59,5 @@ export default function Img({
 
   return null
 }
+
+export default forwardRef<HTMLImageElement, ImgProps>(Img)

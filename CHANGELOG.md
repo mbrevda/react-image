@@ -1,6 +1,7 @@
 # next
 
 - BREAKING: removed umd build
+- BREAKING: Img can now accept a ref
 
 # 4.1.0
 
