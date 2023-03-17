@@ -176,10 +176,6 @@ For example, to animate the display of the image (and animate out the loader) a 
 />
 ```
 
-The `<img>` will now be contained by the `div` with class `foo` which can be targeted via css.
-A crude example of a transition using [ReactCSSTransitionReplace](https://github.com/marnusw/react-css-transition-replace) can be [found here](https://github.com/mbrevda/react-image/tree/master/site). Error reporting (i.e. logging images that loaded ok or failed to load) can be accomplished with `container`, too.
-A sample implementation can be [found here](https://github.com/mbrevda/react-image/pull/192#issuecomment-384340042).
-
 By default, the loader and unloader components will also be wrapped by the `container` component. These can be set independently by passing a container via `loaderContainer` or `unloaderContainer`. To disable the loader or unloader from being wrapped, pass a noop to `loaderContainer` or `unloaderContainer` (like `unloaderContainer={img => img}`).
 
 ## Recipes
