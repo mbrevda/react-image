@@ -1,3 +1,7 @@
+# next
+
+- BREAKING: removed umd build
+
 # 4.1.0
 
 - Add support for React 18
