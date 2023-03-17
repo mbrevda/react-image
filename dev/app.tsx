@@ -173,12 +173,87 @@ const ReuseCache = ({renderId}) => {
       <br />
       <ErrorBoundary>
         <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
-          <Img style={{width: 100}} src={src} useSuspense={true} />
-          <div style={{width: '50px'}} />
-          <Img style={{width: 100}} src={src} useSuspense={true} />
+          <Img
+            style={{width: 100, margin: '10px'}}
+            src={src}
+            useSuspense={true}
+          />
+          <Img
+            style={{width: 100, margin: '10px'}}
+            src={src}
+            useSuspense={true}
+          />
         </Suspense>
       </ErrorBoundary>
     </div>
+  )
+}
+
+function ChangeSrc({renderId}) {
+  const getSrc = () => {
+    const rand = randSeconds(500, 900)
+    return `https://picsum.photos/200?rand=${rand}`
+  }
+  const [src, setSrc] = useState([getSrc()])
+  const [loadedSecondSource, setLoadedSecondSource] = useState<null | boolean>(
+    null
+  )
+  const imgRef = useRef<HTMLImageElement>(null)
+
+  useEffect(() => {
+    if (src.length < 2) return
+
+    let id = setInterval(
+      () => setLoadedSecondSource(imgRef.current?.src === src[1]),
+      250
+    )
+    return () => clearInterval(id)
+  }, [renderId, src])
+
+  useEffect(() => {
+    // switch sources after 1 second
+    setTimeout(() => setSrc((prev) => [...prev, getSrc()]), 1000)
+  }, [renderId])
+
+  // on rerender, reset the src list
+  useEffect(() => {
+    setSrc(() => [getSrc()])
+    setLoadedSecondSource(null)
+  }, [renderId])
+
+  return (
+    <>
+      <h3>
+        Change <code>src</code>
+      </h3>
+      <div>
+        {loadedSecondSource === null && <span>❓ test pending</span>}
+        {loadedSecondSource === true && <span>✅ test passed</span>}
+        {loadedSecondSource === false && <span>❌ test failed</span>}
+      </div>
+      Src list:
+      {src.map((url, index) => {
+        return (
+          <div>
+            {index + 1}. <code>{url}</code>
+          </div>
+        )
+      })}
+      <br />
+      <div style={{color: 'grey'}}>
+        This test will load an image and then switch sources after 1 second. It
+        should then rerender with the new source. To manually confirm, ensure
+        the loaded image's source is the second item in the Src list
+      </div>
+      <br />
+      <Img
+        ref={imgRef}
+        style={{width: 100}}
+        src={src.at(-1) as string}
+        loader={<div>Loading...</div>}
+        unloader={<div>this is the unloader</div>}
+      />
+    </>
   )
 }
 
@@ -193,6 +268,7 @@ function App() {
   const rand2 = randSeconds(2, 10)
   const rand3 = randSeconds(2, 10)
   const rand4 = randSeconds(2, 10)
+  const rand5 = randSeconds(2, 10)
   const [renderId, setRenderId] = useState(Math.random())
 
   return (
@@ -204,83 +280,118 @@ function App() {
            body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
           }
+          .pageContainer {
+            display: flex;
+            flex-direction: row-reverse;
+          }
+          .testCases {
+              margin: 10px;
+              flex: 0 0 80%;
+              display: grid;
+              grid-template-columns: auto auto auto auto;
+              grid-template-rows: auto auto auto auto;
+          }
+          .testCase {
+            padding: 10px;
+            border: lightgrey solid 1px;
+          }
           `,
         }}
       ></style>
 
-      <div style={{position: 'fixed', right: '40px', width: '250px'}}>
-        <GlobalTimer until={Math.max(rand1, rand2, rand3, rand4)} />
-        <button onClick={() => setRenderId(Math.random())}>rerender</button>
-      </div>
-      <div>
-        <h3>Should show</h3>
-        <Timer delay={rand1} />
-        <Img
-          style={{width: 100}}
-          src={`/delay/${rand1 * 1000}/https://picsum.photos/200`}
-          loader={<div>Loading...</div>}
-          unloader={<div>this is the unloader</div>}
-        />
-      </div>
+      <div className="pageContainer">
+        <div className="rightMenu">
+          <div>
+            <GlobalTimer until={Math.max(rand1, rand2, rand3, rand4)} />
+            <button onClick={() => setRenderId(Math.random())}>rerender</button>
+          </div>
+        </div>
 
-      <div>
-        <h3>Should not show anything</h3>
-        <Img
-          style={{width: 100}}
-          src={[]}
-          unloader={<div>✅ test passed</div>}
-        />
-      </div>
-      <div>
-        <h3>Should show unloader</h3>
-        <Img
-          style={{width: 100}}
-          src="http://127.0.0.1/non-existant-image.jpg"
-          loader={<div>Loading...</div>}
-          unloader={<div>✅ test passed</div>}
-        />
-      </div>
-      <div>
-        <h3>Suspense</h3>
-        <Timer delay={rand2} />
-        <ErrorBoundary>
-          <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
+        <div className="testCases">
+          <div className="testCase">
+            <h3>Should show</h3>
+            <Timer delay={rand1} />
             <Img
               style={{width: 100}}
-              src={`/delay/${rand2 * 1000}/https://picsum.photos/200`}
-              useSuspense={true}
+              src={`/delay/${rand1 * 1000}/https://picsum.photos/200`}
+              loader={<div>Loading...</div>}
+              unloader={<div>this is the unloader</div>}
             />
-          </Suspense>
-        </ErrorBoundary>
-      </div>
-      <div>
-        <h3>Suspense wont load</h3>
-        <ErrorBoundary onError={<div>✅ test passed</div>}>
-          <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
+          </div>
+
+          <div className="testCase">
+            <h3>Should not show anything</h3>
+            <Img
+              style={{width: 100}}
+              src={[]}
+              unloader={<div>✅ test passed</div>}
+            />
+          </div>
+
+          <div className="testCase">
+            <h3>Should show unloader</h3>
             <Img
               style={{width: 100}}
               src="http://127.0.0.1/non-existant-image.jpg"
-              useSuspense={true}
+              loader={<div>Loading...</div>}
+              unloader={<div>✅ test passed</div>}
             />
-          </Suspense>
-        </ErrorBoundary>
-      </div>
-      <ReuseCache renderId={renderId} />
-      <div>
-        <ErrorBoundary>
-          <h3>using hooks & suspense</h3>
-          <Timer delay={rand3} />
-          <Suspense fallback={<div>Loading...</div>}>
-            <HooksSuspenseExample rand={rand3} />
-          </Suspense>
-        </ErrorBoundary>
-      </div>
-      <div>
-        <ErrorBoundary>
-          <HooksLegacyExample rand={rand4} />
-        </ErrorBoundary>
-      </div>
+          </div>
 
+          <div className="testCase">
+            <ChangeSrc renderId={renderId} />
+          </div>
+
+          <div className="testCase">
+            <h3>Suspense</h3>
+            <Timer delay={rand2} />
+            <ErrorBoundary>
+              <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
+                <Img
+                  style={{width: 100}}
+                  src={`/delay/${rand2 * 1000}/https://picsum.photos/200`}
+                  useSuspense={true}
+                />
+              </Suspense>
+            </ErrorBoundary>
+          </div>
+
+          <div className="testCase">
+            <h3>Suspense wont load</h3>
+            <ErrorBoundary onError={<div>✅ test passed</div>}>
+              <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
+                <Img
+                  style={{width: 100}}
+                  src="http://127.0.0.1/non-existant-image.jpg"
+                  useSuspense={true}
+                />
+              </Suspense>
+            </ErrorBoundary>
+          </div>
+
+          <div className="testCase">
+            <ReuseCache renderId={renderId} />
+          </div>
+
+          <div className="testCase">
+            <div>
+              <ErrorBoundary>
+                <h3>using hooks & suspense</h3>
+                <Timer delay={rand3} />
+                <Suspense fallback={<div>Loading...</div>}>
+                  <HooksSuspenseExample rand={rand3} />
+                </Suspense>
+              </ErrorBoundary>
+            </div>
+          </div>
+
+          <div className="testCase">
+            <ErrorBoundary>
+              <HooksLegacyExample rand={rand4} />
+            </ErrorBoundary>
+          </div>
+        </div>
+      </div>
       <br />
       <br />
       <br />
