@@ -60,7 +60,7 @@
     "@types/react": "18.0.29",
     "@types/react-dom": "18.0.11",
     "codecov": "3.8.3",
-    "esbuild": "0.17.13",
+    "esbuild": "0.17.14",
     "esbuild-jest": "0.5.0",
     "esbuild-jest-transform": "1.1.1",
     "express": "4.18.2",
