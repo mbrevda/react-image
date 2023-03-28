@@ -1,41 +1,16 @@
-import React, {Suspense, useState, useEffect, useRef, useCallback} from 'react'
+import React, {
+  Suspense,
+  useState,
+  useEffect,
+  useRef,
+  useLayoutEffect,
+} from 'react'
 import {createRoot} from 'react-dom/client'
 import {Img, useImage} from '../src/index'
-//const {Img, useImage} = require('../cjs')
+import {ErrorBoundary} from './ErrorBoundry'
 
-interface ErrorBoundary {
-  props: {
-    children: React.ReactNode
-    onError?: React.ReactNode
-  }
-}
-class ErrorBoundary extends React.Component implements ErrorBoundary {
-  state: {
-    hasError: boolean
-  }
-  onError: React.ReactNode
-
-  constructor(props) {
-    super(props)
-    this.state = {hasError: false}
-    this.onError = props.onError
-  }
-
-  static getDerivedStateFromError(error) {
-    // Update state so the next render will show the fallback UI.
-    return {hasError: error}
-  }
-
-  render() {
-    if (this.state.hasError) {
-      if (this.onError) return this.onError
-      // You can render any custom fallback UI
-      return <h1>Something went wrong.</h1>
-    }
-
-    return this.props.children
-  }
-}
+navigator.serviceWorker.register('/sw.js', {scope: './'})
+new EventSource('/esbuild').addEventListener('change', () => location.reload())
 
 const randSeconds = (min, max) =>
   Math.floor(Math.random() * (max - min + 1) + min)
@@ -124,7 +99,7 @@ const HooksLegacyExample = ({rand}) => {
 }
 
 const HooksSuspenseExample = ({rand}) => {
-  const {src, isLoading, error} = useImage({
+  const {src} = useImage({
     srcList: [
       'https://www.example.com/foo.png',
       `/delay/${rand * 1000}/https://picsum.photos/200`, // will be loaded
@@ -270,6 +245,15 @@ function App() {
   const rand4 = randSeconds(2, 10)
   const rand5 = randSeconds(2, 10)
   const [renderId, setRenderId] = useState(Math.random())
+  const [swRegistered, setSwRegistered] = useState(false)
+
+  useLayoutEffect(() => {
+    navigator.serviceWorker.ready.then(() => {
+      setSwRegistered(true)
+    })
+  }, [])
+
+  if (!swRegistered) return <div>Waiting for server...</div>
 
   return (
     <>
@@ -315,10 +299,9 @@ function App() {
               style={{width: 100}}
               src={`/delay/${rand1 * 1000}/https://picsum.photos/200`}
               loader={<div>Loading...</div>}
-              unloader={<div>this is the unloader</div>}
+              unloader={<div>❎ test failed</div>}
             />
           </div>
-
           <div className="testCase">
             <h3>Should not show anything</h3>
             <Img
@@ -327,7 +310,6 @@ function App() {
               unloader={<div>✅ test passed</div>}
             />
           </div>
-
           <div className="testCase">
             <h3>Should show unloader</h3>
             <Img
@@ -337,11 +319,9 @@ function App() {
               unloader={<div>✅ test passed</div>}
             />
           </div>
-
           <div className="testCase">
             <ChangeSrc renderId={renderId} />
           </div>
-
           <div className="testCase">
             <h3>Suspense</h3>
             <Timer delay={rand2} />
@@ -355,7 +335,6 @@ function App() {
               </Suspense>
             </ErrorBoundary>
           </div>
-
           <div className="testCase">
             <h3>Suspense wont load</h3>
             <ErrorBoundary onError={<div>✅ test passed</div>}>
@@ -368,11 +347,9 @@ function App() {
               </Suspense>
             </ErrorBoundary>
           </div>
-
           <div className="testCase">
             <ReuseCache renderId={renderId} />
           </div>
-
           <div className="testCase">
             <div>
               <ErrorBoundary>
@@ -384,7 +361,6 @@ function App() {
               </ErrorBoundary>
             </div>
           </div>
-
           <div className="testCase">
             <ErrorBoundary>
               <HooksLegacyExample rand={rand4} />
@@ -406,5 +382,5 @@ function App() {
 const node = document.createElement('div')
 node.id = 'root'
 document.body.appendChild(node)
-const rootElement = document.getElementById('root')
-createRoot(rootElement!).render(<App />)
+const rootElement = document.getElementById('root') as HTMLElement
+createRoot(rootElement).render(<App />)
