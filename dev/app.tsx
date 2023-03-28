@@ -1,7 +1,14 @@
-import React, {Suspense, useState, useEffect, useRef, useCallback} from 'react'
+import React, {
+  Suspense,
+  useState,
+  useEffect,
+  useRef,
+  useLayoutEffect,
+} from 'react'
 import {createRoot} from 'react-dom/client'
 import {Img, useImage} from '../src/index'
-//const {Img, useImage} = require('../cjs')
+
+navigator.serviceWorker.register('/sw.js', {scope: './'})
 
 interface ErrorBoundary {
   props: {
@@ -124,7 +131,7 @@ const HooksLegacyExample = ({rand}) => {
 }
 
 const HooksSuspenseExample = ({rand}) => {
-  const {src, isLoading, error} = useImage({
+  const {src} = useImage({
     srcList: [
       'https://www.example.com/foo.png',
       `/delay/${rand * 1000}/https://picsum.photos/200`, // will be loaded
@@ -270,6 +277,15 @@ function App() {
   const rand4 = randSeconds(2, 10)
   const rand5 = randSeconds(2, 10)
   const [renderId, setRenderId] = useState(Math.random())
+  const [swRegistered, setSwRegistered] = useState(false)
+
+  useLayoutEffect(() => {
+    navigator.serviceWorker.ready.then(() => {
+      setSwRegistered(true)
+    })
+  }, [])
+
+  if (!swRegistered) return <div>Waiting for server...</div>
 
   return (
     <>
@@ -315,7 +331,7 @@ function App() {
               style={{width: 100}}
               src={`/delay/${rand1 * 1000}/https://picsum.photos/200`}
               loader={<div>Loading...</div>}
-              unloader={<div>this is the unloader</div>}
+              unloader={<div>❎ test failed</div>}
             />
           </div>
 

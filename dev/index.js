@@ -1,7 +1,5 @@
 import express from 'express'
 import url from 'node:url'
-import {writeFile} from 'node:fs/promises'
-import {setTimeout} from 'node:timers/promises'
 import {context} from 'esbuild'
 import {rm} from 'node:fs/promises'
 import open from 'open'
@@ -30,10 +28,6 @@ await ctx.watch()
 
 app.use(express.static(outdir, {}))
 app.use(express.static(__dirname, {}))
-app.get('/delay/:delay/:finalDest(*)', async (req, res) => {
-  await setTimeout(req.params.delay)
-  return res.redirect(req.params.finalDest)
-})
 
 app.listen(3888, () => {
   console.log('Dev server listening on http://localhost:3888')
