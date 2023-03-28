@@ -10,6 +10,7 @@ import {Img, useImage} from '../src/index'
 import {ErrorBoundary} from './ErrorBoundry'
 
 navigator.serviceWorker.register('/sw.js', {scope: './'})
+new EventSource('/esbuild').addEventListener('change', () => location.reload())
 
 const randSeconds = (min, max) =>
   Math.floor(Math.random() * (max - min + 1) + min)

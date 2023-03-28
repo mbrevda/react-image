@@ -1,9 +1,8 @@
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-console.log('sw start')
+
 self.addEventListener('install', () => self.skipWaiting())
 self.addEventListener('activate', (e) => {
   e.waitUntil(clients.claim())
-  console.log('sw is now active')
 })
 
 async function delayFetch(url) {
