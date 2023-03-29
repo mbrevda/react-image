@@ -2,13 +2,10 @@ node_modules
 .DS_Store
 .env
 build/
-.wercker/
 npm-debug.log
 disc/
 coverage/
 umd/
-cjs/
-esm/
 dist/
 tags
 *.d.ts
