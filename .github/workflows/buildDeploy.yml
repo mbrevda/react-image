@@ -38,7 +38,7 @@ jobs:
         run: npm run build
 
       - name: build package
-        run: npm version --no-git-tag-version 0.0.0-${{ github.sha }} && npm publish --tag canary
+        run: npm version --no-git-tag-version 0.0.0-${{ github.sha }} && npm pack
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v3
@@ -49,7 +49,7 @@ jobs:
       - name: Upload package
         uses: actions/upload-artifact@v3
         with:
-          name: react-image-0.0.0-${{ github.sha }}
+          name: react-image-0.0.0-${{ github.sha }}.tgz
           path: react-image-0.0.0-${{ github.sha }}.tgz
 
   test:
