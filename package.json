@@ -10,7 +10,7 @@
     "pretty": "prettier \"**/*.{?(cj|mj|t|j)s?(on|on5|x),y?(a)ml,graphql,md,css}\"  --write",
     "isNewerThanPublished": "semver `npm -s view $npm_package_name dist-tags.${TAG:-latest}` --range \"<$npm_package_version\" > /dev/null && echo true || echo false",
     "test": "jest",
-    "test:dist": "for i in cjs esm; do cp src/*test.* dist/$i; done && npm run test -- dist/esm"
+    "test:dist": "for i in cjs esm; do cp src/*test.* dist/$i; done && npm run test -- dist"
   },
   "repository": {
     "type": "git",
