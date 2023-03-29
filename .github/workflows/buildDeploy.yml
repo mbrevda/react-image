@@ -17,13 +17,14 @@ jobs:
           node-version: ${{ env.NODE_VER }}
 
       - uses: bahmutov/npm-install@v1
+
       - name: prettier
         run: npx prettier '**/*.{js?(on|x),ts?(x),y?(a)ml,graphql,md,css}' --check
 
       - name: typescript
         run: npx tsc --noEmit
 
-  test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -31,17 +32,48 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VER }}
+      - uses: bahmutov/npm-install@v1
 
+      - name: build
+        run: npm run build
+
+      - name: build package
+        run: npm version --no-git-tag-version 0.0.0-${{ github.sha }} && npm publish --tag canary
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: dist
+
+      - name: Upload package
+        uses: actions/upload-artifact@v3
+        with:
+          name: react-image-0.0.0-${{ github.sha }}
+          path: react-image-0.0.0-${{ github.sha }}.tgz
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VER }}
       - uses: bahmutov/npm-install@v1
 
       - name: test
         run: npm test
 
-      - name: test build
-        run: npm run build
+      - name: download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+          path: dist
 
       - name: test built libs
-        run: npm test
+        run: npm run test:dist
 
   deploy:
     runs-on: ubuntu-latest
@@ -53,7 +85,6 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VER }}
-
       - uses: bahmutov/npm-install@v1
 
       - name: setup .npmrc
@@ -61,17 +92,16 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
 
-      - name: build
-        run: npm run build
+      - name: download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+          path: dist
 
       - name: check if package is newer than the published version
         id: checkPublish
         run: echo "::set-output name=shouldPublish::`npm run -s isNewerThanPublished`"
 
       - name: publish release package if needed
-        if: steps.checkPublish.outputs.shouldPublish == 'true' && github.ref_name == 'master'
+        if: steps.checkPublish.outputs.shouldPublish == 'true'
         run: npm publish
-
-      - name: publish canary release
-        if: github.ref_name == 'master'
-        run: npm version --no-git-tag-version 0.0.0-${{ github.sha }} && npm publish --tag canary
