@@ -4,7 +4,7 @@ on: push
 
 env:
   CI: true
-  NODE_VER: 18
+  NODE_VER: 19
 
 jobs:
   lint:
