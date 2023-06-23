@@ -57,7 +57,7 @@
   "devDependencies": {
     "@testing-library/react": "14.0.0",
     "@types/jest": "29.5.2",
-    "@types/react": "18.2.13",
+    "@types/react": "18.2.14",
     "@types/react-dom": "18.2.6",
     "codecov": "3.8.3",
     "esbuild": "0.17.19",
