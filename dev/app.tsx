@@ -171,7 +171,7 @@ function ChangeSrc({renderId}) {
   }
   const [src, setSrc] = useState([getSrc()])
   const [loadedSecondSource, setLoadedSecondSource] = useState<null | boolean>(
-    null
+    null,
   )
   const imgRef = useRef<HTMLImageElement>(null)
 
@@ -180,7 +180,7 @@ function ChangeSrc({renderId}) {
 
     let id = setInterval(
       () => setLoadedSecondSource(imgRef.current?.src === src[1]),
-      250
+      250,
     )
     return () => clearInterval(id)
   }, [renderId, src])

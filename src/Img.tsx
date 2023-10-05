@@ -36,7 +36,7 @@ function Img(
     useSuspense = false,
     ...imgProps // anything else will be passed to the <img> element
   }: ImgProps,
-  ref
+  ref,
 ): JSX.Element | null {
   imgPromise =
     imgPromise || imagePromiseFactory({decode, crossOrigin: crossorigin})
