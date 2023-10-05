@@ -75,5 +75,10 @@
   "peerDependencies": {
     "react": ">=16.8",
     "react-dom": ">=16.8"
+  },
+  "overrides": {
+    "esbuild-jest-transform": {
+      "esbuild": "$esbuild"
+    }
   }
 }
