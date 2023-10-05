@@ -65,7 +65,7 @@ export default function MyComponent() {
 
 - `srcList`: a string or array of strings. `useImage` will try loading these one at a time and returns after the first one is successfully loaded
 
-- `imgPromise`: a promise that accepts a url and returns a promise which resolves if the image is successfully loaded or rejects if the image doesn't load. You can inject an alternative implementation for advanced custom behaviour such as logging errors or dealing with servers that return an image with a 404 header
+- `imgPromise`: a function that accepts a url and an object of other options and returns a promise which resolves if the image is successfully loaded or rejects if the image doesn't load. Can be used to inject an alternative implementation for advanced custom behavior such as logging errors or dealing with servers that return an image with a 404 header. The object will contain an abort signal which can be used to cancel the image download or other work on unmount. Please note `imgPromise()` should not reject when the abort signal is triggered.
 
 - `useSuspense`: boolean. By default, `useImage` will tell React to suspend rendering until an image is downloaded. Suspense can be disabled by setting this to false.
 

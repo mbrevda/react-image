@@ -2,6 +2,8 @@
 
 - BREAKING: removed umd build
 - BREAKING: Img can now accept a ref
+- fix: image download is canceled on unmount
+- feat: `imgPromise` can now receive an object as a second argument. An abort controller signal will be passed as `ob.signal`. This can be used to cancel the image download or other work on unmount. Please note `imgPromise()` should not reject when the abort signal is triggered.
 
 # 4.1.0
 
