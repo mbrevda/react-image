@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import {useState, useEffect} from 'react'
 import imagePromiseFactory from './imagePromiseFactory'
 
 export type useImageProps = {
@@ -12,11 +12,11 @@ const stringToArray = (x) => (Array.isArray(x) ? x : [x])
 const cache = {}
 
 // sequential map.find for promises
-const promiseFind = (arr, promiseFactory) => {
+const promiseFind = (arr, promiseFactory, signal) => {
   let done = false
   return new Promise((resolve, reject) => {
     const queueNext = (src) => {
-      return promiseFactory(src).then(() => {
+      return promiseFactory(src, {signal}).then(() => {
         done = true
         resolve(src)
       })
@@ -42,12 +42,20 @@ export default function useImage({
   const sourceList = removeBlankArrayElements(stringToArray(srcList))
   const sourceKey = sourceList.join('')
 
+  // on unmount, cancel any pending requests
+  useEffect(() => () => {
+    cache[sourceKey]?.controller.abort()
+  })
+
   if (!cache[sourceKey]) {
     // create promise to loop through sources and try to load one
+    const controller = new AbortController()
+    const signal = controller.signal
     cache[sourceKey] = {
-      promise: promiseFind(sourceList, imgPromise),
+      promise: promiseFind(sourceList, imgPromise, signal),
       cache: 'pending',
       error: null,
+      controller,
     }
   }
 

@@ -1,6 +1,6 @@
 // returns a Promisized version of Image() api
 export default ({decode = true, crossOrigin = ''}) =>
-  (src): Promise<void> => {
+  (src, {signal}): Promise<void> => {
     return new Promise((resolve, reject) => {
       const i = new Image()
       if (crossOrigin) i.crossOrigin = crossOrigin
@@ -9,5 +9,9 @@ export default ({decode = true, crossOrigin = ''}) =>
       }
       i.onerror = reject
       i.src = src
+      signal.addEventListener('abort', () => {
+        i.src = ''
+        resolve()
+      })
     })
   }
