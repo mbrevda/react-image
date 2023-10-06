@@ -76,6 +76,12 @@ jobs:
       - name: test built libs
         run: npm run test:dist
 
+      - name: Setup env vars
+        run: |
+          printf -v SHORT_COMMIT_MESSAGE '%q ' `git log --oneline -n 1 HEAD --format=%B`
+          echo "GIT_SHORT_COMMIT_MESSAGE=$SHORT_COMMIT_MESSAGE" | tee -a $GITHUB_ENV
+          echo "GIT_SHORT_REVISION=$(echo ${GITHUB_SHA} | cut -c1-7)" | tee -a $GITHUB_ENV
+
       - name: Deploy visual tests to Netlify
         uses: nwtgck/actions-netlify@v2
         id: deploy-to-netlify
