@@ -94,7 +94,7 @@ jobs:
           enable-commit-status: false
           # Use custom alias for non master branch Deploy Previews only
           alias: ${{ github.ref_name != 'master' && env.RUN_NAME || '' }}
-          github-deployment-environment: '[${{ env.GIT_BRANCH }}] visual tests'
+          github-deployment-environment: '[${{ github.ref_name }}] visual tests'
           fails-without-credentials: true
           production-deploy: ${{ github.ref_name == 'master' }}
         env:
