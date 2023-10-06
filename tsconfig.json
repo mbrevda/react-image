@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "declaration": true, // emit declerations
-    "emitDeclarationOnly": true, // emit declerations for all files
     "declarationDir": "./dist", // to this dir
     "outDir": "./dist", // but all other code to this dir
     "sourceMap": true, // allow sourcemap support
