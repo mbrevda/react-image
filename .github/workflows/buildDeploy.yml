@@ -4,7 +4,8 @@ on: push
 
 env:
   CI: true
-  NODE_VER: 19
+  NODE_VER: 20
+  NETLIFY_SITE_ID: 89194942-bd48-4c23-a181-7e489c17eabc
 
 jobs:
   lint:
@@ -74,6 +75,31 @@ jobs:
 
       - name: test built libs
         run: npm run test:dist
+
+      - name: Setup env vars
+        run: |
+          printf -v SHORT_COMMIT_MESSAGE '%q ' `git log --oneline -n 1 HEAD --format=%B`
+          echo "GIT_SHORT_COMMIT_MESSAGE=$SHORT_COMMIT_MESSAGE" | tee -a $GITHUB_ENV
+          echo "GIT_SHORT_REVISION=$(echo ${GITHUB_SHA} | cut -c1-7)" | tee -a $GITHUB_ENV
+
+      - name: Deploy visual tests to Netlify
+        uses: nwtgck/actions-netlify@v2
+        id: deploy-to-netlify
+        with:
+          publish-dir: dist/dev
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: '[${{ github.ref_name }}@${{ env.GIT_SHORT_REVISION }}] ${{ env.GIT_SHORT_COMMIT_MESSAGE }}'
+          enable-pull-request-comment: false
+          enable-commit-comment: false
+          enable-commit-status: false
+          # Use custom alias for non master branch Deploy Previews only
+          alias: ${{ github.ref_name != 'master' && env.RUN_NAME || '' }}
+          github-deployment-environment: '[${{ github.ref_name }}] visual tests'
+          fails-without-credentials: true
+          production-deploy: ${{ github.ref_name == 'master' }}
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ env.NETLIFY_SITE_ID }}
 
   deploy:
     runs-on: ubuntu-latest
