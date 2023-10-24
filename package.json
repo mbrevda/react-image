@@ -62,7 +62,7 @@
     "codecov": "3.8.3",
     "esbuild": "0.19.5",
     "esbuild-jest": "0.5.0",
-    "esbuild-jest-transform": "1.1.1",
+    "esbuild-jest-transform": "2.0.0",
     "jest": "29.7.0",
     "jest-environment-jsdom": "29.7.0",
     "open": "9.1.0",
