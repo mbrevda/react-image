@@ -56,7 +56,7 @@
   "homepage": "https://github.com/mbrevda/react-image#readme",
   "devDependencies": {
     "@testing-library/react": "14.0.0",
-    "@types/jest": "29.5.6",
+    "@types/jest": "29.5.7",
     "@types/react": "18.2.32",
     "@types/react-dom": "18.2.14",
     "codecov": "3.8.3",
