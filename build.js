@@ -15,7 +15,7 @@ const buildOpts = {
   format: 'esm',
   sourcemap: false,
   minify: true,
-  jsxDev: false, // MODE === 'dev',
+  jsxDev: process.env.NODE_ENV === 'development',
   jsx: 'automatic',
 }
 
@@ -55,7 +55,6 @@ if (process.env.NODE_ENV !== 'development') {
   await ctx.watch()
   let {port} = await ctx.serve({servedir: distOutdir})
   open(`http://localhost:${port}`)
-  await ctx.dispose()
 }
 
 process.on('unhandledRejection', console.error)

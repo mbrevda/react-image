@@ -232,11 +232,55 @@ function ChangeSrc({renderId}) {
   )
 }
 
+function TestCheckBox({name, id, checked, onChange}) {
+  return (
+    <li>
+      <label>
+        <input type="checkbox" checked={checked} onChange={onChange} /> {name}
+      </label>
+    </li>
+  )
+}
+
+const getUrlTestCases = () => {
+  const urlParams = new URLSearchParams(window.location.search)
+  if (!urlParams.has('test') || !urlParams.get('test')) return []
+  const uniqueTests = [...new Set(urlParams.get('test')?.split('-'))]
+  return uniqueTests
+    .map((test) => parseInt(test, 10))
+    .filter((test) => !isNaN(test))
+}
+
+const updateUrlState = (activeTests) => {
+  const url = new URL(window.location.href)
+  const urlParams = new URLSearchParams(url.searchParams)
+  const nextState = activeTests.join('-')
+  if (urlParams.get('test') === nextState) return
+  urlParams.set('test', nextState)
+  url.search = urlParams.toString()
+  window.history.pushState({}, '', url.toString())
+}
+
+const pushToUrlState = (id, include) => {
+  const testCases = getUrlTestCases()
+
+  let nextTestCases
+  // console.log('pushToUrlState', id, include, testCases)
+  if (!include) {
+    nextTestCases = testCases.filter((testCase) => testCase !== id)
+  } else {
+    nextTestCases = [...testCases, id].sort()
+  }
+  // console.log('setting test cases', nextTestCases, nextTestCases.join('-'))
+  updateUrlState(nextTestCases)
+}
+
 function App() {
   const imageOn404 =
     'https://i9.ytimg.com/s_p/OLAK5uy_mwasty2cJpgWIpr61CqWRkHIT7LC62u7s/sddefault.jpg?sqp=CJz5ye8Fir7X7AMGCNKz4dEF&rs=AOn4CLC-JNn9jj-oFw94oM574w36xUL1iQ&v=5a3859d2'
   const tmdbImg =
     'https://image.tmdb.org/t/p/w500/kqjL17yufvn9OVLyXYpvtyrFfask.jpg'
+  const locationRef = useRef(window.location.href)
 
   // http://i.imgur.com/ozEaj1Z.jpg
   const rand1 = randSeconds(1, 8)
@@ -246,12 +290,31 @@ function App() {
   const rand5 = randSeconds(2, 10)
   const [renderId, setRenderId] = useState(Math.random())
   const [swRegistered, setSwRegistered] = useState(false)
+  const [testCases, setTestCases] = useState<number[]>(getUrlTestCases())
 
+  console.log('testCases', testCases)
   useLayoutEffect(() => {
-    navigator.serviceWorker.ready.then(() => {
-      setSwRegistered(true)
-    })
+    navigator.serviceWorker.ready.then(() => setSwRegistered(true))
   }, [])
+
+  useEffect(() => {
+    // monkey patch pushState to catch url changes
+    var pushState = history.pushState
+    history.pushState = function () {
+      pushState.apply(history, arguments)
+      setTestCases(getUrlTestCases())
+    }
+
+    // run once on mount
+    console.log('onMount', getUrlTestCases())
+    updateUrlState(getUrlTestCases())
+  }, [])
+
+  const testIsActive = (id) => testCases.includes(id)
+  const testOnClick = (id) => (e) => {
+    e.stopPropagation()
+    pushToUrlState(id, e.target.checked)
+  }
 
   if (!swRegistered) return <div>Waiting for server...</div>
 
@@ -288,6 +351,38 @@ function App() {
           <div>
             <GlobalTimer until={Math.max(rand1, rand2, rand3, rand4)} />
             <button onClick={() => setRenderId(Math.random())}>rerender</button>
+            <br></br>
+            <br></br>
+            <hr />
+            <div>
+              <h3>Tests to run:</h3>
+              <ul>
+                <TestCheckBox
+                  id={1}
+                  name="checkbox 1"
+                  checked={testIsActive(1)}
+                  onChange={testOnClick(1)}
+                />
+                <TestCheckBox
+                  id={2}
+                  name="checkbox 2"
+                  checked={testIsActive(2)}
+                  onChange={testOnClick(2)}
+                />
+                <TestCheckBox
+                  id={3}
+                  name="checkbox 3"
+                  checked={testIsActive(3)}
+                  onChange={testOnClick(3)}
+                />
+                <TestCheckBox
+                  id={4}
+                  name="checkbox 4"
+                  checked={testIsActive(4)}
+                  onChange={testOnClick(4)}
+                />
+              </ul>
+            </div>
           </div>
         </div>
 
@@ -306,7 +401,7 @@ function App() {
             <h3>Should not show anything</h3>
             <Img
               style={{width: 100}}
-              src={[]}
+              src=""
               unloader={<div>✅ test passed</div>}
             />
           </div>
