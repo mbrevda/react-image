@@ -86,7 +86,10 @@ function GlobalTimer({until}) {
         Note that test are delayed by a random amount of time.
       </div>
       {!maxTimeReached ? (
-        <h3>Elapsed seconds: {Math.trunc(elapsedTime / 1000)}</h3>
+        <h3>
+          Elapsed seconds: {Math.trunc(elapsedTime / 1000)} <br />
+          (max time: {until})
+        </h3>
       ) : (
         <>
           <h3>Max time elapsed!</h3>
@@ -162,13 +165,13 @@ const updateTestCases = (id, include, testList) => {
 }
 
 // begin test cases
-function TestShouldShow({rand1}) {
+function TestShouldShow({delay}) {
   return (
     <>
-      <Timer delay={rand1} />
+      <Timer delay={delay} />
       <Img
         style={{width: 100}}
-        src={`/delay/${rand1 * 1000}/https://picsum.photos/200`}
+        src={`/delay/${delay * 1000}/https://picsum.photos/200`}
         loader={<div>Loading...</div>}
         unloader={<div>❎ test failed</div>}
       />
@@ -258,15 +261,15 @@ function TestChangeSrc({renderId}) {
   )
 }
 
-function TestSuspense({rand2}) {
+function TestSuspense({delay}) {
   return (
     <>
-      <Timer delay={rand2} />
+      <Timer delay={delay} />
       <ErrorBoundary>
         <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
           <Img
             style={{width: 100}}
-            src={`/delay/${rand2 * 1000}/https://picsum.photos/200`}
+            src={`/delay/${delay * 1000}/https://picsum.photos/200`}
             useSuspense={true}
           />
         </Suspense>
@@ -339,7 +342,7 @@ const TestReuseCache = ({renderId}) => {
   )
 }
 
-function TestHooksAndSuspense({rand3}) {
+function TestHooksAndSuspense({delay}) {
   const HooksSuspenseExample = ({rand}) => {
     const {src} = useImage({
       srcList: [
@@ -357,15 +360,15 @@ function TestHooksAndSuspense({rand3}) {
 
   return (
     <ErrorBoundary>
-      <Timer delay={rand3} />
+      <Timer delay={delay} />
       <Suspense fallback={<div>Loading...</div>}>
-        <HooksSuspenseExample rand={rand3} />
+        <HooksSuspenseExample rand={delay} />
       </Suspense>
     </ErrorBoundary>
   )
 }
 
-function TestHooksLegacy({rand4}) {
+function TestHooksLegacy({delay}) {
   const HooksLegacyExample = ({rand}) => {
     const {src, isLoading, error} = useImage({
       srcList: [
@@ -391,7 +394,7 @@ function TestHooksLegacy({rand4}) {
 
   return (
     <ErrorBoundary>
-      <HooksLegacyExample rand={rand4} />
+      <HooksLegacyExample rand={delay} />
     </ErrorBoundary>
   )
 }
@@ -402,6 +405,7 @@ function App() {
   const [renderId, setRenderId] = useState(Math.random())
   const [swRegistered, setSwRegistered] = useState(false)
   const [testCases, setTestCases] = useState<number[]>(getUrlTestCases())
+  let delays: number[] = []
 
   useLayoutEffect(() => {
     navigator.serviceWorker.ready.then(() => setSwRegistered(true))
@@ -419,17 +423,22 @@ function App() {
     updateUrlState(getUrlTestCases())
   }, [])
 
-  const rand1 = randSeconds(1, 8)
-  const rand2 = randSeconds(2, 10)
-  const rand3 = randSeconds(2, 10)
-  const rand4 = randSeconds(2, 10)
+  const getDelay = (min = 1, max = 10) => {
+    const rand = randSeconds(1, 8)
+    delays.push(rand)
+    return rand
+  }
+
+  const getMaxDelay = () => {
+    return delays.reduce((acc, curr) => Math.max(acc, curr), 0)
+  }
 
   const testRegistry = [
     {
       name: 'Should Show',
       id: 1,
       Test: TestShouldShow,
-      props: {rand1},
+      props: {delay: getDelay(1, 8)},
     },
     {
       name: 'Should not show anything',
@@ -451,7 +460,7 @@ function App() {
       name: 'Suspense',
       id: 5,
       Test: TestSuspense,
-      props: {rand2},
+      props: {delay: getDelay(2, 10)},
     },
     {
       name: 'Suspense wont load',
@@ -468,13 +477,13 @@ function App() {
       name: 'Hooks and Suspense',
       id: 8,
       Test: TestHooksAndSuspense,
-      props: {rand3},
+      props: {delay: getDelay(2, 10)},
     },
     {
       name: 'Hooks Legacy',
       id: 9,
       Test: TestHooksLegacy,
-      props: {rand4},
+      props: {delay: getDelay(2, 10)},
     },
   ]
 
@@ -493,8 +502,15 @@ function App() {
       <div className="pageContainer">
         <div className="rightMenu">
           <div>
-            <GlobalTimer until={Math.max(rand1, rand2, rand3, rand4)} />
-            <button onClick={() => setRenderId(Math.random())}>rerender</button>
+            <GlobalTimer key={renderId} until={getMaxDelay()} />
+            <button
+              onClick={() => {
+                delays = []
+                setRenderId(Math.random())
+              }}
+            >
+              rerender
+            </button>
             <br></br>
             <br></br>
             <hr />
