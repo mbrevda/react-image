@@ -72,7 +72,7 @@ function Timer({delay}) {
 function GlobalTimer({until, testRegistry, runResults}) {
   const [startTime] = useState(Date.now())
   const [elapsedTime, setElapsedTime] = useState(0)
-  const maxTimeReached = elapsedTime / 1000 - 2 > until
+  const maxTimeReached = elapsedTime / 1000 > until + 3
 
   useEffect(() => {
     if (maxTimeReached) return
@@ -232,7 +232,6 @@ function TestShouldShow({delay, setRunResults}) {
   useEffect(() => {
     setTimeout(
       () => {
-        console.log('finish loading', imgRef.current?.src)
         setRunResults(imgRef.current?.src ? 'pass' : 'fail')
       },
       (delay + 1) * 1000,
@@ -260,14 +259,10 @@ function TestShouldShow({delay, setRunResults}) {
 function TestShouldNotShowAnything({setRunResults}) {
   const imgRef = useRef<HTMLImageElement>(null)
   const unloaderRef = useRef<HTMLDivElement>(null)
-  window.x = unloaderRef
+
   useEffect(() => {
     setTimeout(() => {
-      if (unloaderRef.current?.innerText) {
-        setRunResults('pass')
-      } else {
-        setRunResults('fail')
-      }
+      setRunResults(unloaderRef.current?.innerText ? 'pass' : 'fail')
     }, 100)
   })
 
@@ -282,23 +277,22 @@ function TestShouldNotShowAnything({setRunResults}) {
 }
 
 function ShouldShowUnloader({setRunResults}) {
-  const imgRef = useRef<HTMLImageElement>(null)
+  const unloaderRef = useRef<HTMLImageElement>(null)
 
   useEffect(() => {
-    if (!imgRef.current || !imgRef.current.src) {
-      setRunResults('pass')
-    } else {
-      setRunResults('fail')
-    }
+    setTimeout(() => {
+      setRunResults(
+        unloaderRef.current && unloaderRef.current.innerText ? 'pass' : 'fail',
+      )
+    }, 100)
   })
 
   return (
     <Img
-      ref={imgRef}
       style={{width: 100}}
       src="http://127.0.0.1/non-existant-image.jpg"
       loader={<div>Loading...</div>}
-      unloader={<div>✅ test passed</div>}
+      unloader={<Results status="pass" ref={unloaderRef} />}
     />
   )
 }
@@ -370,13 +364,33 @@ function TestChangeSrc({setRunResults}) {
   )
 }
 
-function TestSuspense({delay}) {
+function TestSuspense({delay, setRunResults}) {
+  const imgRef = useRef<HTMLImageElement>(null)
+
+  useEffect(() => {
+    setTimeout(
+      () => {
+        const onLoad = () => {
+          setRunResults(imgRef.current?.src ? 'pass' : 'fail')
+        }
+
+        if (imgRef.current?.src) {
+          onLoad()
+        } else {
+          imgRef.current?.addEventListener('load', onLoad)
+        }
+      },
+      (delay + 1) * 1000,
+    )
+  })
+
   return (
     <>
       <Timer delay={delay} />
       <ErrorBoundary>
         <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
           <Img
+            ref={imgRef}
             style={{width: 100}}
             src={`/delay/${delay * 1000}/https://picsum.photos/200`}
             useSuspense={true}
@@ -387,9 +401,17 @@ function TestSuspense({delay}) {
   )
 }
 
-function TestSuspenseWontLoad({}) {
+function TestSuspenseWontLoad({setRunResults}) {
+  const resRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    setTimeout(() => {
+      setRunResults(resRef.current?.innerText ? 'pass' : 'fail')
+    }, 100)
+  })
+
   return (
-    <ErrorBoundary onError={<div>✅ test passed</div>}>
+    <ErrorBoundary onError={<Results status="pass" ref={resRef} />}>
       <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
         <Img
           style={{width: 100}}
@@ -400,27 +422,37 @@ function TestSuspenseWontLoad({}) {
     </ErrorBoundary>
   )
 }
-const TestReuseCache = ({renderId}) => {
-  const src = `https://picsum.photos/200?rand=${renderId}`
+
+const TestReuseCache = ({setRunResults}) => {
+  const imgRef = useRef<HTMLImageElement>(null)
+  const src = `https://picsum.photos/200?rand=${randSeconds(500, 900)}`
   const [networkCalls, setNetworkCalls] = useState(0)
 
   useEffect(() => {
     setTimeout(() => {
       const entires = performance.getEntriesByName(src)
       setNetworkCalls(entires.length)
+
+      if (imgRef.current?.src === src) {
+        setRunResults('pass')
+      }
     }, 1000)
   })
+
+  let testResults
+  if (networkCalls === 0) testResults = 'pending'
+  if (networkCalls === 1) testResults = 'pass'
+  if (networkCalls > 1) testResults = 'fail'
 
   return (
     <div>
       <>Suspense should reuse cache and only make one network call</>
       <div>
-        {networkCalls < 1 && <span>❓ test pending</span>}
-        {networkCalls === 1 && <span>✅ test passed</span>}
-        {networkCalls > 1 && (
+        <Results status={testResults} />
+        {testResults === 'fail' && (
           <span>
-            ❌ test failed. If DevTools is open, ensure "Disable Cache" in the
-            network tab is disabled
+            If DevTools is open, ensure "Disable Cache" in the network tab is
+            disabled
           </span>
         )}
       </div>
@@ -441,6 +473,7 @@ const TestReuseCache = ({renderId}) => {
             useSuspense={true}
           />
           <Img
+            ref={imgRef}
             style={{width: 100, margin: '10px'}}
             src={src}
             useSuspense={true}
@@ -451,8 +484,26 @@ const TestReuseCache = ({renderId}) => {
   )
 }
 
-function TestHooksAndSuspense({delay}) {
+function TestHooksAndSuspense({delay, setRunResults}) {
+  const imgRef = useRef<HTMLImageElement>(null)
+
   const HooksSuspenseExample = ({rand}) => {
+    useEffect(() => {
+      setTimeout(
+        () => {
+          const onLoad = () => {
+            setRunResults(imgRef.current?.src ? 'pass' : 'fail')
+          }
+          if (imgRef.current?.src) {
+            onLoad()
+          } else {
+            imgRef.current?.addEventListener('load', onLoad)
+          }
+        },
+        (delay + 1) * 1000,
+      )
+    })
+
     const {src} = useImage({
       srcList: [
         'https://www.example.com/foo.png',
@@ -462,7 +513,7 @@ function TestHooksAndSuspense({delay}) {
 
     return (
       <div>
-        <img src={src} />
+        <img src={src} ref={imgRef} />
       </div>
     )
   }
@@ -477,23 +528,35 @@ function TestHooksAndSuspense({delay}) {
   )
 }
 
-function TestHooksLegacy({delay}) {
+function TestHooksLegacy({delay, setRunResults}) {
+  const imgRef = useRef<HTMLImageElement>(null)
+
+  const {src, isLoading, error} = useImage({
+    srcList: [
+      'https://www.example.com/non-existant-image.jpg',
+      `/delay/${delay * 1000}/https://picsum.photos/200`, // will be loaded
+    ],
+    useSuspense: false,
+  })
+
   const HooksLegacyExample = ({rand}) => {
-    const {src, isLoading, error} = useImage({
-      srcList: [
-        'https://www.example.com/non-existant-image.jpg',
-        `/delay/${rand * 1000}/https://picsum.photos/200`, // will be loaded
-      ],
-      useSuspense: false,
-    })
+    useEffect(() => {
+      const onLoad = () => {
+        setRunResults(imgRef.current?.src ? 'pass' : 'fail')
+      }
+      if (imgRef.current?.src) {
+        onLoad()
+      } else {
+        imgRef.current?.addEventListener('load', onLoad)
+      }
+    }, [src])
 
     return (
       <div>
-        <h3>Using hooks Legacy</h3>
         <Timer delay={rand} />
         {isLoading && <div>Loading...</div>}
         {error && <div>Error! {error.msg}</div>}
-        {src && <img src={src} />}
+        {src && <img src={src} ref={imgRef} />}
         {!isLoading && !error && !src && (
           <div>Nothing to show - thats not good!</div>
         )}
