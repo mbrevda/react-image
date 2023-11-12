@@ -161,7 +161,7 @@ function TestContainer({
   isActive,
   id,
   Test,
-  props,
+  props = {},
   runResults,
   setRunResults,
 }) {
