@@ -4,6 +4,9 @@ import React, {
   useEffect,
   useRef,
   useLayoutEffect,
+  useMemo,
+  memo,
+  forwardRef,
 } from 'react'
 import {createRoot} from 'react-dom/client'
 import {Img, useImage} from '../src/index'
@@ -66,7 +69,7 @@ function Timer({delay}) {
   )
 }
 
-function GlobalTimer({until}) {
+function GlobalTimer({until, testRegistry, runResults}) {
   const [startTime] = useState(Date.now())
   const [elapsedTime, setElapsedTime] = useState(0)
   const maxTimeReached = elapsedTime / 1000 - 2 > until
@@ -77,13 +80,29 @@ function GlobalTimer({until}) {
     return () => clearTimeout(timer)
   }, [elapsedTime])
 
+  const totalTests = testRegistry.length
+  const passedTests = Object.values(runResults).filter(
+    (status) => status === 'pass',
+  ).length
+  const failedTests = Object.values(runResults).filter(
+    (status) => status === 'fail',
+  ).length
+  let testsStatus
+  if (passedTests + failedTests !== totalTests) {
+    testsStatus = 'pending'
+  } else if (failedTests > 0) {
+    testsStatus = 'fail'
+  } else {
+    testsStatus = 'pass'
+  }
+
   return (
     <div>
       <h3>React Image visual tests</h3>
       <div style={{color: 'grey'}}>
         Test will load on page load. For a test to pass, one or more images
-        should show in a green box or the text "✅ test passed" should show.
-        Note that test are delayed by a random amount of time.
+        should show in a green box or the text "{<Results status="pass" />}"
+        should show. Note that test are delayed by a random amount of time.
       </div>
       {!maxTimeReached ? (
         <h3>
@@ -97,6 +116,31 @@ function GlobalTimer({until}) {
           <br />
         </>
       )}
+      <b>
+        All Tests: <Results status={testsStatus} />
+      </b>
+      {failedTests > 0 && (
+        <>
+          <br />
+          <span style={{color: 'red'}}>Failed Tests: {failedTests}!</span>
+          <br />
+        </>
+      )}
+      <br />
+      <br />
+      {testRegistry.map((test) => {
+        return (
+          <span key={test.id}>
+            {test.name}:{' '}
+            {runResults[test.id] ? (
+              <Results status={runResults[test.id]} />
+            ) : (
+              <span>❓ pending</span>
+            )}
+            <br />
+          </span>
+        )
+      })}
       <br />
     </div>
   )
@@ -112,12 +156,21 @@ function SelectorCheckBox({name, id, checked, onChange}) {
   )
 }
 
-function TestContainer({name, isActive, id, Test, props}) {
+function TestContainer({
+  name,
+  isActive,
+  id,
+  Test,
+  props,
+  runResults,
+  setRunResults,
+}) {
   if (!isActive) return null
   return (
     <div className="testCase">
       <h3>{name}</h3>
-      <Test {...props} />
+      {/* <Results status={runResults} /> */}
+      <Test {...props} setRunResults={setRunResults} />
     </div>
   )
 }
@@ -164,30 +217,84 @@ const updateTestCases = (id, include, testList) => {
   updateUrlState(nextTestCases)
 }
 
+function ResultView({status}, ref) {
+  if (status === 'pending' || !status) return <span ref={ref}>❓ pending</span>
+  if (status === 'pass') return <span ref={ref}>✅ passed</span>
+  if (status === 'fail') return <span ref={ref}>❌ failed</span>
+  return null
+}
+const Results = forwardRef<HTMLSpanElement, {status: string}>(ResultView)
+
 // begin test cases
-function TestShouldShow({delay}) {
+function TestShouldShow({delay, setRunResults}) {
+  const imgRef = useRef<HTMLImageElement>(null)
+
+  useEffect(() => {
+    setTimeout(
+      () => {
+        console.log('finish loading', imgRef.current?.src)
+        setRunResults(imgRef.current?.src ? 'pass' : 'fail')
+      },
+      (delay + 1) * 1000,
+    )
+  })
+
   return (
     <>
       <Timer delay={delay} />
       <Img
+        ref={imgRef}
         style={{width: 100}}
         src={`/delay/${delay * 1000}/https://picsum.photos/200`}
-        loader={<div>Loading...</div>}
-        unloader={<div>❎ test failed</div>}
+        loader={<Results status="pending" />}
+        unloader={
+          <div>
+            <Results status="fail" />
+          </div>
+        }
       />
     </>
   )
 }
 
-function TestShouldNotShowAnything({}) {
+function TestShouldNotShowAnything({setRunResults}) {
+  const imgRef = useRef<HTMLImageElement>(null)
+  const unloaderRef = useRef<HTMLDivElement>(null)
+  window.x = unloaderRef
+  useEffect(() => {
+    setTimeout(() => {
+      if (unloaderRef.current?.innerText) {
+        setRunResults('pass')
+      } else {
+        setRunResults('fail')
+      }
+    }, 100)
+  })
+
   return (
-    <Img style={{width: 100}} src="" unloader={<div>✅ test passed</div>} />
+    <Img
+      ref={imgRef}
+      style={{width: 100}}
+      src=""
+      unloader={<Results ref={unloaderRef} status="pass" />}
+    />
   )
 }
 
-function ShouldShowUnloader({}) {
+function ShouldShowUnloader({setRunResults}) {
+  const imgRef = useRef<HTMLImageElement>(null)
+
+  useEffect(() => {
+    if (!imgRef.current || !imgRef.current.src) {
+      setRunResults('pass')
+    } else {
+      setRunResults('fail')
+    }
+  })
+
   return (
     <Img
+      ref={imgRef}
       style={{width: 100}}
       src="http://127.0.0.1/non-existant-image.jpg"
       loader={<div>Loading...</div>}
@@ -196,58 +303,60 @@ function ShouldShowUnloader({}) {
   )
 }
 
-function TestChangeSrc({renderId}) {
+function TestChangeSrc({setRunResults}) {
   const getSrc = () => {
     const rand = randSeconds(500, 900)
-    return `https://picsum.photos/200?rand=${rand}`
+    return `https://picsum.photos/200?test=TestChangeSrc&rand=${rand}`
   }
   const [src, setSrc] = useState([getSrc()])
-  const [loadedSecondSource, setLoadedSecondSource] = useState<null | boolean>(
-    null,
-  )
+  const [loaded, setLoaded] = useState<boolean | null>(null)
   const imgRef = useRef<HTMLImageElement>(null)
 
   useEffect(() => {
-    if (src.length < 2) return
+    const onFirstLoad = () => setSrc((prev) => [...prev, getSrc()])
+    const onSecondLoad = () => {
+      setLoaded(true)
+      setRunResults('pass')
+    }
 
-    let id = setInterval(
-      () => setLoadedSecondSource(imgRef.current?.src === src[1]),
-      250,
-    )
-    return () => clearInterval(id)
-  }, [renderId, src])
+    if (src.length === 1) {
+      if (imgRef.current?.src === src[1]) {
+        onFirstLoad()
+      } else {
+        imgRef.current?.addEventListener('load', onFirstLoad)
+      }
+    } else {
+      if (imgRef.current?.src === src[2]) {
+        onSecondLoad()
+      } else {
+        imgRef.current?.addEventListener('load', onSecondLoad)
+      }
+    }
+  }, [src])
 
-  useEffect(() => {
-    // switch sources after 1 second
-    setTimeout(() => setSrc((prev) => [...prev, getSrc()]), 1000)
-  }, [renderId])
-
-  // on rerender, reset the src list
-  useEffect(() => {
-    setSrc(() => [getSrc()])
-    setLoadedSecondSource(null)
-  }, [renderId])
+  let testResults
+  if (loaded === null) testResults = 'pending'
+  if (loaded === true) testResults = 'pass'
+  if (loaded === false) testResults = 'fail'
 
   return (
     <>
-      <div>
-        {loadedSecondSource === null && <span>❓ test pending</span>}
-        {loadedSecondSource === true && <span>✅ test passed</span>}
-        {loadedSecondSource === false && <span>❌ test failed</span>}
-      </div>
+      <Results status={testResults} />
+      <br />
       Src list:
       {src.map((url, index) => {
         return (
-          <div>
+          <div key={index}>
             {index + 1}. <code>{url}</code>
           </div>
         )
       })}
       <br />
       <div style={{color: 'grey'}}>
-        This test will load an image and then switch sources after 1 second. It
+        This test will load an image and then switch to a different sources. It
         should then rerender with the new source. To manually confirm, ensure
-        the loaded image's source is the second item in the Src list
+        the loaded image's source is the second item in the <code>src</code>{' '}
+        list
       </div>
       <br />
       <Img
@@ -405,7 +514,9 @@ function App() {
   const [renderId, setRenderId] = useState(Math.random())
   const [swRegistered, setSwRegistered] = useState(false)
   const [testCases, setTestCases] = useState<number[]>(getUrlTestCases())
+  // const [runResults, setRunResults] = useState({})
   let delays: number[] = []
+  let runResults = {}
 
   useLayoutEffect(() => {
     navigator.serviceWorker.ready.then(() => setSwRegistered(true))
@@ -431,6 +542,12 @@ function App() {
 
   const getMaxDelay = () => {
     return delays.reduce((acc, curr) => Math.max(acc, curr), 0)
+  }
+
+  const resetTests = () => {
+    delays = []
+    runResults = []
+    setRenderId(Math.random())
   }
 
   const testRegistry = [
@@ -491,6 +608,7 @@ function App() {
   const testOnClick = (id) => (e) => {
     e.stopPropagation()
     updateTestCases(id, e.target.checked, testRegistry)
+    resetTests()
   }
 
   if (!swRegistered) return <div>Waiting for server...</div>
@@ -502,15 +620,15 @@ function App() {
       <div className="pageContainer">
         <div className="rightMenu">
           <div>
-            <GlobalTimer key={renderId} until={getMaxDelay()} />
-            <button
-              onClick={() => {
-                delays = []
-                setRenderId(Math.random())
-              }}
-            >
-              rerender
-            </button>
+            <GlobalTimer
+              key={renderId}
+              until={getMaxDelay()}
+              testRegistry={testRegistry.filter((test) =>
+                testIsActive(test.id),
+              )}
+              runResults={runResults}
+            />
+            <button onClick={resetTests}>rerender</button>
             <br></br>
             <br></br>
             <hr />
@@ -536,6 +654,8 @@ function App() {
             <TestContainer
               key={test.id}
               isActive={testIsActive(test.id)}
+              runResults={runResults[test.id]}
+              setRunResults={(status) => (runResults[test.id] = status)}
               {...test}
             />
           ))}
