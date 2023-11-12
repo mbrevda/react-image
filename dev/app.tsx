@@ -9,6 +9,30 @@ import {createRoot} from 'react-dom/client'
 import {Img, useImage} from '../src/index'
 import {ErrorBoundary} from './ErrorBoundry'
 
+const pageStyles = {
+  __html: `img { border: 5px solid green;}
+           h3 {padding-top: 20px;}
+           body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+          }
+          .pageContainer {
+            display: flex;
+            flex-direction: row-reverse;
+          }
+          .testCases {
+              margin: 10px;
+              flex: 0 0 80%;
+              display: grid;
+              grid-template-columns: auto auto auto auto;
+              grid-template-rows: auto auto auto auto;
+          }
+          .testCase {
+            padding: 10px;
+            border: lightgrey solid 1px;
+          }
+          `,
+}
+
 navigator.serviceWorker.register('/sw.js', {scope: './'})
 new EventSource('/esbuild').addEventListener('change', () => location.reload())
 
@@ -75,45 +99,196 @@ function GlobalTimer({until}) {
   )
 }
 
-const HooksLegacyExample = ({rand}) => {
-  const {src, isLoading, error} = useImage({
-    srcList: [
-      'https://www.example.com/non-existant-image.jpg',
-      `/delay/${rand * 1000}/https://picsum.photos/200`, // will be loaded
-    ],
-    useSuspense: false,
-  })
-
+function SelectorCheckBox({name, id, checked, onChange}) {
   return (
-    <div>
-      <h3>Using hooks Legacy</h3>
-      <Timer delay={rand} />
-      {isLoading && <div>Loading...</div>}
-      {error && <div>Error! {error.msg}</div>}
-      {src && <img src={src} />}
-      {!isLoading && !error && !src && (
-        <div>Nothing to show - thats not good!</div>
-      )}
+    <li style={{cursor: 'pointer'}}>
+      <label style={{cursor: 'pointer'}}>
+        <input type="checkbox" checked={checked} onChange={onChange} /> {name}
+      </label>
+    </li>
+  )
+}
+
+function TestContainer({name, isActive, id, Test, props}) {
+  if (!isActive) return null
+  return (
+    <div className="testCase">
+      <h3>{name}</h3>
+      <Test {...props} />
     </div>
   )
 }
 
-const HooksSuspenseExample = ({rand}) => {
-  const {src} = useImage({
-    srcList: [
-      'https://www.example.com/foo.png',
-      `/delay/${rand * 1000}/https://picsum.photos/200`, // will be loaded
-    ],
-  })
+const getUrlTestCases = () => {
+  const urlParams = new URLSearchParams(window.location.search)
+  if (!urlParams.has('test') || !urlParams.get('test')) return []
+  const uniqueTests = [...new Set(urlParams.get('test')?.split('-'))]
+  return uniqueTests
+    .map((test) => parseInt(test, 10))
+    .filter((test) => !isNaN(test))
+}
 
+const updateUrlState = (activeTests) => {
+  const url = new URL(window.location.href)
+  const urlParams = new URLSearchParams(url.searchParams)
+  const nextState = activeTests.join('-')
+  if (activeTests.length === 0) {
+    urlParams.delete('test')
+  } else {
+    urlParams.set('test', nextState)
+  }
+  // if (urlParams.get('test') === nextState) return
+  url.search = urlParams.toString()
+  window.history.pushState({}, '', url.toString())
+}
+
+const updateTestCases = (id, include, testList) => {
+  let activeCases = getUrlTestCases()
+
+  // tests aren't run if they arent in the list. However we need to have a list
+  // otherwise we'll run _all_ tests. Here, we set the list to all tests if
+  // there are no active tests
+  if (!activeCases.length) activeCases = testList.map((test) => test.id)
+
+  let nextTestCases
+  // console.log('pushToUrlState', id, include, testCases)
+  if (!include) {
+    nextTestCases = activeCases.filter((testCase) => testCase !== id)
+  } else {
+    nextTestCases = [...activeCases, id].sort()
+  }
+  // console.log('setting test cases', nextTestCases, nextTestCases.join('-'))
+  updateUrlState(nextTestCases)
+}
+
+// begin test cases
+function TestShouldShow({rand1}) {
   return (
-    <div>
-      <img src={src} />
-    </div>
+    <>
+      <Timer delay={rand1} />
+      <Img
+        style={{width: 100}}
+        src={`/delay/${rand1 * 1000}/https://picsum.photos/200`}
+        loader={<div>Loading...</div>}
+        unloader={<div>❎ test failed</div>}
+      />
+    </>
   )
 }
 
-const ReuseCache = ({renderId}) => {
+function TestShouldNotShowAnything({}) {
+  return (
+    <Img style={{width: 100}} src="" unloader={<div>✅ test passed</div>} />
+  )
+}
+
+function ShouldShowUnloader({}) {
+  return (
+    <Img
+      style={{width: 100}}
+      src="http://127.0.0.1/non-existant-image.jpg"
+      loader={<div>Loading...</div>}
+      unloader={<div>✅ test passed</div>}
+    />
+  )
+}
+
+function TestChangeSrc({renderId}) {
+  const getSrc = () => {
+    const rand = randSeconds(500, 900)
+    return `https://picsum.photos/200?rand=${rand}`
+  }
+  const [src, setSrc] = useState([getSrc()])
+  const [loadedSecondSource, setLoadedSecondSource] = useState<null | boolean>(
+    null,
+  )
+  const imgRef = useRef<HTMLImageElement>(null)
+
+  useEffect(() => {
+    if (src.length < 2) return
+
+    let id = setInterval(
+      () => setLoadedSecondSource(imgRef.current?.src === src[1]),
+      250,
+    )
+    return () => clearInterval(id)
+  }, [renderId, src])
+
+  useEffect(() => {
+    // switch sources after 1 second
+    setTimeout(() => setSrc((prev) => [...prev, getSrc()]), 1000)
+  }, [renderId])
+
+  // on rerender, reset the src list
+  useEffect(() => {
+    setSrc(() => [getSrc()])
+    setLoadedSecondSource(null)
+  }, [renderId])
+
+  return (
+    <>
+      <div>
+        {loadedSecondSource === null && <span>❓ test pending</span>}
+        {loadedSecondSource === true && <span>✅ test passed</span>}
+        {loadedSecondSource === false && <span>❌ test failed</span>}
+      </div>
+      Src list:
+      {src.map((url, index) => {
+        return (
+          <div>
+            {index + 1}. <code>{url}</code>
+          </div>
+        )
+      })}
+      <br />
+      <div style={{color: 'grey'}}>
+        This test will load an image and then switch sources after 1 second. It
+        should then rerender with the new source. To manually confirm, ensure
+        the loaded image's source is the second item in the Src list
+      </div>
+      <br />
+      <Img
+        ref={imgRef}
+        style={{width: 100}}
+        src={src.at(-1) as string}
+        loader={<div>Loading...</div>}
+        unloader={<div>this is the unloader</div>}
+      />
+    </>
+  )
+}
+
+function TestSuspense({rand2}) {
+  return (
+    <>
+      <Timer delay={rand2} />
+      <ErrorBoundary>
+        <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
+          <Img
+            style={{width: 100}}
+            src={`/delay/${rand2 * 1000}/https://picsum.photos/200`}
+            useSuspense={true}
+          />
+        </Suspense>
+      </ErrorBoundary>
+    </>
+  )
+}
+
+function TestSuspenseWontLoad({}) {
+  return (
+    <ErrorBoundary onError={<div>✅ test passed</div>}>
+      <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
+        <Img
+          style={{width: 100}}
+          src="http://127.0.0.1/non-existant-image.jpg"
+          useSuspense={true}
+        />
+      </Suspense>
+    </ErrorBoundary>
+  )
+}
+const TestReuseCache = ({renderId}) => {
   const src = `https://picsum.photos/200?rand=${renderId}`
   const [networkCalls, setNetworkCalls] = useState(0)
 
@@ -126,7 +301,7 @@ const ReuseCache = ({renderId}) => {
 
   return (
     <div>
-      <h3>Suspense should reuse cache and only make one network call</h3>
+      <>Suspense should reuse cache and only make one network call</>
       <div>
         {networkCalls < 1 && <span>❓ test pending</span>}
         {networkCalls === 1 && <span>✅ test passed</span>}
@@ -164,135 +339,70 @@ const ReuseCache = ({renderId}) => {
   )
 }
 
-function ChangeSrc({renderId}) {
-  const getSrc = () => {
-    const rand = randSeconds(500, 900)
-    return `https://picsum.photos/200?rand=${rand}`
-  }
-  const [src, setSrc] = useState([getSrc()])
-  const [loadedSecondSource, setLoadedSecondSource] = useState<null | boolean>(
-    null,
-  )
-  const imgRef = useRef<HTMLImageElement>(null)
+function TestHooksAndSuspense({rand3}) {
+  const HooksSuspenseExample = ({rand}) => {
+    const {src} = useImage({
+      srcList: [
+        'https://www.example.com/foo.png',
+        `/delay/${rand * 1000}/https://picsum.photos/200`, // will be loaded
+      ],
+    })
 
-  useEffect(() => {
-    if (src.length < 2) return
-
-    let id = setInterval(
-      () => setLoadedSecondSource(imgRef.current?.src === src[1]),
-      250,
-    )
-    return () => clearInterval(id)
-  }, [renderId, src])
-
-  useEffect(() => {
-    // switch sources after 1 second
-    setTimeout(() => setSrc((prev) => [...prev, getSrc()]), 1000)
-  }, [renderId])
-
-  // on rerender, reset the src list
-  useEffect(() => {
-    setSrc(() => [getSrc()])
-    setLoadedSecondSource(null)
-  }, [renderId])
-
-  return (
-    <>
-      <h3>
-        Change <code>src</code>
-      </h3>
+    return (
       <div>
-        {loadedSecondSource === null && <span>❓ test pending</span>}
-        {loadedSecondSource === true && <span>✅ test passed</span>}
-        {loadedSecondSource === false && <span>❌ test failed</span>}
+        <img src={src} />
       </div>
-      Src list:
-      {src.map((url, index) => {
-        return (
-          <div>
-            {index + 1}. <code>{url}</code>
-          </div>
-        )
-      })}
-      <br />
-      <div style={{color: 'grey'}}>
-        This test will load an image and then switch sources after 1 second. It
-        should then rerender with the new source. To manually confirm, ensure
-        the loaded image's source is the second item in the Src list
-      </div>
-      <br />
-      <Img
-        ref={imgRef}
-        style={{width: 100}}
-        src={src.at(-1) as string}
-        loader={<div>Loading...</div>}
-        unloader={<div>this is the unloader</div>}
-      />
-    </>
-  )
-}
-
-function TestCheckBox({name, id, checked, onChange}) {
-  return (
-    <li>
-      <label>
-        <input type="checkbox" checked={checked} onChange={onChange} /> {name}
-      </label>
-    </li>
-  )
-}
-
-const getUrlTestCases = () => {
-  const urlParams = new URLSearchParams(window.location.search)
-  if (!urlParams.has('test') || !urlParams.get('test')) return []
-  const uniqueTests = [...new Set(urlParams.get('test')?.split('-'))]
-  return uniqueTests
-    .map((test) => parseInt(test, 10))
-    .filter((test) => !isNaN(test))
-}
-
-const updateUrlState = (activeTests) => {
-  const url = new URL(window.location.href)
-  const urlParams = new URLSearchParams(url.searchParams)
-  const nextState = activeTests.join('-')
-  if (urlParams.get('test') === nextState) return
-  urlParams.set('test', nextState)
-  url.search = urlParams.toString()
-  window.history.pushState({}, '', url.toString())
-}
-
-const pushToUrlState = (id, include) => {
-  const testCases = getUrlTestCases()
-
-  let nextTestCases
-  // console.log('pushToUrlState', id, include, testCases)
-  if (!include) {
-    nextTestCases = testCases.filter((testCase) => testCase !== id)
-  } else {
-    nextTestCases = [...testCases, id].sort()
+    )
   }
-  // console.log('setting test cases', nextTestCases, nextTestCases.join('-'))
-  updateUrlState(nextTestCases)
+
+  return (
+    <ErrorBoundary>
+      <Timer delay={rand3} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <HooksSuspenseExample rand={rand3} />
+      </Suspense>
+    </ErrorBoundary>
+  )
 }
+
+function TestHooksLegacy({rand4}) {
+  const HooksLegacyExample = ({rand}) => {
+    const {src, isLoading, error} = useImage({
+      srcList: [
+        'https://www.example.com/non-existant-image.jpg',
+        `/delay/${rand * 1000}/https://picsum.photos/200`, // will be loaded
+      ],
+      useSuspense: false,
+    })
+
+    return (
+      <div>
+        <h3>Using hooks Legacy</h3>
+        <Timer delay={rand} />
+        {isLoading && <div>Loading...</div>}
+        {error && <div>Error! {error.msg}</div>}
+        {src && <img src={src} />}
+        {!isLoading && !error && !src && (
+          <div>Nothing to show - thats not good!</div>
+        )}
+      </div>
+    )
+  }
+
+  return (
+    <ErrorBoundary>
+      <HooksLegacyExample rand={rand4} />
+    </ErrorBoundary>
+  )
+}
+
+// end test cases
 
 function App() {
-  const imageOn404 =
-    'https://i9.ytimg.com/s_p/OLAK5uy_mwasty2cJpgWIpr61CqWRkHIT7LC62u7s/sddefault.jpg?sqp=CJz5ye8Fir7X7AMGCNKz4dEF&rs=AOn4CLC-JNn9jj-oFw94oM574w36xUL1iQ&v=5a3859d2'
-  const tmdbImg =
-    'https://image.tmdb.org/t/p/w500/kqjL17yufvn9OVLyXYpvtyrFfask.jpg'
-  const locationRef = useRef(window.location.href)
-
-  // http://i.imgur.com/ozEaj1Z.jpg
-  const rand1 = randSeconds(1, 8)
-  const rand2 = randSeconds(2, 10)
-  const rand3 = randSeconds(2, 10)
-  const rand4 = randSeconds(2, 10)
-  const rand5 = randSeconds(2, 10)
   const [renderId, setRenderId] = useState(Math.random())
   const [swRegistered, setSwRegistered] = useState(false)
   const [testCases, setTestCases] = useState<number[]>(getUrlTestCases())
 
-  console.log('testCases', testCases)
   useLayoutEffect(() => {
     navigator.serviceWorker.ready.then(() => setSwRegistered(true))
   }, [])
@@ -306,45 +416,79 @@ function App() {
     }
 
     // run once on mount
-    console.log('onMount', getUrlTestCases())
     updateUrlState(getUrlTestCases())
   }, [])
 
-  const testIsActive = (id) => testCases.includes(id)
+  const rand1 = randSeconds(1, 8)
+  const rand2 = randSeconds(2, 10)
+  const rand3 = randSeconds(2, 10)
+  const rand4 = randSeconds(2, 10)
+
+  const testRegistry = [
+    {
+      name: 'Should Show',
+      id: 1,
+      Test: TestShouldShow,
+      props: {rand1},
+    },
+    {
+      name: 'Should not show anything',
+      id: 2,
+      Test: TestShouldNotShowAnything,
+    },
+    {
+      name: 'Should show unloader',
+      id: 3,
+      Test: ShouldShowUnloader,
+    },
+    {
+      name: 'Change src',
+      id: 4,
+      Test: TestChangeSrc,
+      props: {renderId},
+    },
+    {
+      name: 'Suspense',
+      id: 5,
+      Test: TestSuspense,
+      props: {rand2},
+    },
+    {
+      name: 'Suspense wont load',
+      id: 6,
+      Test: TestSuspenseWontLoad,
+    },
+    {
+      name: 'Suspense - reuse cache',
+      id: 7,
+      Test: TestReuseCache,
+      props: {renderId},
+    },
+    {
+      name: 'Hooks and Suspense',
+      id: 8,
+      Test: TestHooksAndSuspense,
+      props: {rand3},
+    },
+    {
+      name: 'Hooks Legacy',
+      id: 9,
+      Test: TestHooksLegacy,
+      props: {rand4},
+    },
+  ]
+
+  const testIsActive = (id) => testCases.includes(id) || testCases.length === 0
   const testOnClick = (id) => (e) => {
     e.stopPropagation()
-    pushToUrlState(id, e.target.checked)
+    updateTestCases(id, e.target.checked, testRegistry)
   }
 
   if (!swRegistered) return <div>Waiting for server...</div>
 
   return (
     <>
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `img { border: 5px solid green;}
-           h3 {padding-top: 20px;}
-           body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-          }
-          .pageContainer {
-            display: flex;
-            flex-direction: row-reverse;
-          }
-          .testCases {
-              margin: 10px;
-              flex: 0 0 80%;
-              display: grid;
-              grid-template-columns: auto auto auto auto;
-              grid-template-rows: auto auto auto auto;
-          }
-          .testCase {
-            padding: 10px;
-            border: lightgrey solid 1px;
-          }
-          `,
-        }}
-      ></style>
+      <style dangerouslySetInnerHTML={pageStyles}></style>
 
       <div className="pageContainer">
         <div className="rightMenu">
@@ -357,110 +501,28 @@ function App() {
             <div>
               <h3>Tests to run:</h3>
               <ul>
-                <TestCheckBox
-                  id={1}
-                  name="checkbox 1"
-                  checked={testIsActive(1)}
-                  onChange={testOnClick(1)}
-                />
-                <TestCheckBox
-                  id={2}
-                  name="checkbox 2"
-                  checked={testIsActive(2)}
-                  onChange={testOnClick(2)}
-                />
-                <TestCheckBox
-                  id={3}
-                  name="checkbox 3"
-                  checked={testIsActive(3)}
-                  onChange={testOnClick(3)}
-                />
-                <TestCheckBox
-                  id={4}
-                  name="checkbox 4"
-                  checked={testIsActive(4)}
-                  onChange={testOnClick(4)}
-                />
+                {testRegistry.map((test) => (
+                  <SelectorCheckBox
+                    key={test.id}
+                    id={test.id}
+                    name={test.name}
+                    checked={testIsActive(test.id)}
+                    onChange={testOnClick(test.id)}
+                  />
+                ))}
               </ul>
             </div>
           </div>
         </div>
 
         <div className="testCases">
-          <div className="testCase">
-            <h3>Should show</h3>
-            <Timer delay={rand1} />
-            <Img
-              style={{width: 100}}
-              src={`/delay/${rand1 * 1000}/https://picsum.photos/200`}
-              loader={<div>Loading...</div>}
-              unloader={<div>❎ test failed</div>}
+          {testRegistry.map((test) => (
+            <TestContainer
+              key={test.id}
+              isActive={testIsActive(test.id)}
+              {...test}
             />
-          </div>
-          <div className="testCase">
-            <h3>Should not show anything</h3>
-            <Img
-              style={{width: 100}}
-              src=""
-              unloader={<div>✅ test passed</div>}
-            />
-          </div>
-          <div className="testCase">
-            <h3>Should show unloader</h3>
-            <Img
-              style={{width: 100}}
-              src="http://127.0.0.1/non-existant-image.jpg"
-              loader={<div>Loading...</div>}
-              unloader={<div>✅ test passed</div>}
-            />
-          </div>
-          <div className="testCase">
-            <ChangeSrc renderId={renderId} />
-          </div>
-          <div className="testCase">
-            <h3>Suspense</h3>
-            <Timer delay={rand2} />
-            <ErrorBoundary>
-              <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
-                <Img
-                  style={{width: 100}}
-                  src={`/delay/${rand2 * 1000}/https://picsum.photos/200`}
-                  useSuspense={true}
-                />
-              </Suspense>
-            </ErrorBoundary>
-          </div>
-          <div className="testCase">
-            <h3>Suspense wont load</h3>
-            <ErrorBoundary onError={<div>✅ test passed</div>}>
-              <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
-                <Img
-                  style={{width: 100}}
-                  src="http://127.0.0.1/non-existant-image.jpg"
-                  useSuspense={true}
-                />
-              </Suspense>
-            </ErrorBoundary>
-          </div>
-          <div className="testCase">
-            <ReuseCache renderId={renderId} />
-          </div>
-          <div className="testCase">
-            <div>
-              <ErrorBoundary>
-                <h3>using hooks & suspense</h3>
-                <Timer delay={rand3} />
-                <Suspense fallback={<div>Loading...</div>}>
-                  <HooksSuspenseExample rand={rand3} />
-                </Suspense>
-              </ErrorBoundary>
-            </div>
-          </div>
-          <div className="testCase">
-            <ErrorBoundary>
-              <HooksLegacyExample rand={rand4} />
-            </ErrorBoundary>
-          </div>
+          ))}
         </div>
       </div>
       <br />
