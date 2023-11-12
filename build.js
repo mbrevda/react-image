@@ -15,7 +15,7 @@ const buildOpts = {
   format: 'esm',
   sourcemap: false,
   minify: true,
-  jsxDev: process.env.NODE_ENV === 'development',
+  jsxDev: false,
   jsx: 'automatic',
 }
 
@@ -26,7 +26,7 @@ const devBuildOpts = {
   outdir: distOutdir,
   format: 'esm',
   sourcemap: true,
-  minify: process.env.NODE_ENV !== 'development',
+  minify: true,
   jsxDev: true,
   jsx: 'automatic',
   loader: {'.html': 'copy'},

@@ -290,7 +290,7 @@ function ShouldShowUnloader({setRunResults}) {
   return (
     <Img
       style={{width: 100}}
-      src="http://127.0.0.1/non-existant-image.jpg"
+      src="//127.0.0.1/non-existant-image.jpg"
       loader={<div>Loading...</div>}
       unloader={<Results status="pass" ref={unloaderRef} />}
     />
@@ -415,7 +415,7 @@ function TestSuspenseWontLoad({setRunResults}) {
       <Suspense fallback={<div>Loading... (Suspense fallback)</div>}>
         <Img
           style={{width: 100}}
-          src="http://127.0.0.1/non-existant-image.jpg"
+          src="//127.0.0.1/non-existant-image.jpg"
           useSuspense={true}
         />
       </Suspense>
