@@ -42,13 +42,13 @@ jobs:
         run: npm version --no-git-tag-version 0.0.0-${{ github.sha }} && npm pack
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build
           path: dist
 
       - name: Upload package
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: react-image-0.0.0-${{ github.sha }}.tgz
           path: react-image-0.0.0-${{ github.sha }}.tgz
