@@ -83,7 +83,7 @@ jobs:
           echo "GIT_SHORT_REVISION=$(echo ${GITHUB_SHA} | cut -c1-7)" | tee -a $GITHUB_ENV
 
       - name: Deploy visual tests to Netlify
-        uses: nwtgck/actions-netlify@v2
+        uses: nwtgck/actions-netlify@v3
         id: deploy-to-netlify
         with:
           publish-dir: dist/dev
