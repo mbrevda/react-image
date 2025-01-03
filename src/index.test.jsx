@@ -1,7 +1,7 @@
 import React from 'react'
 import {Img} from './'
 import {render, act, cleanup, waitFor} from '@testing-library/react'
-import ReactDOMServer from 'react-dom/server'
+import ReactDOMServer from 'react-dom/server.node'
 
 afterEach(cleanup)
 const imgPromise = (decode) => (src) => {
