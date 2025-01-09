@@ -1,4 +1,4 @@
-import React, {forwardRef} from 'react'
+import React, {forwardRef, JSX} from 'react'
 import useImage, {useImageProps} from './useImage'
 import imagePromiseFactory from './imagePromiseFactory'
 
