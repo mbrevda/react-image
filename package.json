@@ -55,22 +55,22 @@
   },
   "homepage": "https://github.com/mbrevda/react-image#readme",
   "devDependencies": {
-    "@testing-library/react": "16.1.0",
+    "@testing-library/react": "16.2.0",
     "@types/jest": "29.5.14",
     "@types/react": "19.0.2",
     "@types/react-dom": "19.0.2",
     "codecov": "3.8.3",
-    "esbuild": "0.24.2",
+    "esbuild": "0.25.0",
     "esbuild-jest": "0.5.0",
     "esbuild-jest-transform": "2.0.0",
     "jest": "29.7.0",
     "jest-environment-jsdom": "29.7.0",
     "open": "10.1.0",
-    "prettier": "3.4.2",
+    "prettier": "3.5.2",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "semver": "7.6.3",
-    "typescript": "5.7.2"
+    "semver": "7.7.1",
+    "typescript": "5.7.3"
   },
   "peerDependencies": {
     "react": ">=16.8",
