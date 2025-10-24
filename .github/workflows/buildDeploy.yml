@@ -42,13 +42,13 @@ jobs:
         run: npm version --no-git-tag-version 0.0.0-${{ github.sha }} && npm pack
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: build
           path: dist
 
       - name: Upload package
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: react-image-0.0.0-${{ github.sha }}.tgz
           path: react-image-0.0.0-${{ github.sha }}.tgz
@@ -68,7 +68,7 @@ jobs:
         run: npm test
 
       - name: download build artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: build
           path: dist
@@ -119,7 +119,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
 
       - name: download build artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: build
           path: dist
