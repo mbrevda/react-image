@@ -164,6 +164,48 @@ const ReuseCache = ({renderId}) => {
   )
 }
 
+const CancelOnUnmount = () => {
+  const [src] = useState(
+    `/delay/2000/https://picsum.photos/200?rand=${Math.random()}`,
+  )
+  const [networkCalls, setNetworkCalls] = useState(-1)
+  const [shouldShow, setShouldShow] = useState(true)
+
+  useEffect(() => {
+    setTimeout(() => {
+      const entires = performance.getEntriesByName(src)
+      setNetworkCalls(entires.length)
+      setShouldShow(false)
+    }, 500)
+  })
+
+  return (
+    <div>
+      <h3>Unmounted component should cancel download</h3>
+      <div>
+        {networkCalls < 0 && <span>❓ test pending</span>}
+        {networkCalls === 0 && <span>✅ test passed</span>}
+        {networkCalls > 0 && <span>❌ test failed.</span>}
+      </div>
+      <div>Network Calls detected: {networkCalls} (expecting 0)</div>
+      <br />
+      <div style={{color: 'grey'}}>
+        To test this manually, check the Network Tab in DevTools to ensure the
+        url
+        <code> {src} </code> is marked as canceled
+      </div>
+      <br />
+      <br />
+
+      {shouldShow ? (
+        <Img style={{width: 100, margin: '10px'}} src={src} />
+      ) : (
+        <></>
+      )}
+    </div>
+  )
+}
+
 function ChangeSrc({renderId}) {
   const getSrc = () => {
     const rand = randSeconds(500, 900)
@@ -209,7 +251,7 @@ function ChangeSrc({renderId}) {
       Src list:
       {src.map((url, index) => {
         return (
-          <div>
+          <div key={Math.random()}>
             {index + 1}. <code>{url}</code>
           </div>
         )
@@ -223,6 +265,7 @@ function ChangeSrc({renderId}) {
       <br />
       <Img
         ref={imgRef}
+        decode={true}
         style={{width: 100}}
         src={src.at(-1) as string}
         loader={<div>Loading...</div>}
@@ -290,7 +333,6 @@ function App() {
             <button onClick={() => setRenderId(Math.random())}>rerender</button>
           </div>
         </div>
-
         <div className="testCases">
           <div className="testCase">
             <h3>Should show</h3>
@@ -365,6 +407,9 @@ function App() {
             <ErrorBoundary>
               <HooksLegacyExample rand={rand4} />
             </ErrorBoundary>
+          </div>
+          <div className="testCase">
+            <CancelOnUnmount key={renderId} />
           </div>
         </div>
       </div>
