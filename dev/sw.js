@@ -16,7 +16,6 @@ self.addEventListener('fetch', async (event) => {
   const url = new URL(event.request.url)
 
   if (!event.request.url.startsWith(url.origin + '/delay/')) {
-    console.log('not delaying', event.request.url)
     return fetch(event.request)
   }
 
