@@ -15,7 +15,7 @@ const buildOpts = {
   format: 'esm',
   sourcemap: false,
   minify: true,
-  jsxDev: false, // MODE === 'dev',
+  jsxDev: false,
   jsx: 'automatic',
 }
 
@@ -26,7 +26,7 @@ const devBuildOpts = {
   outdir: distOutdir,
   format: 'esm',
   sourcemap: true,
-  minify: process.env.NODE_ENV !== 'development',
+  minify: true,
   jsxDev: true,
   jsx: 'automatic',
   loader: {'.html': 'copy'},
@@ -55,7 +55,6 @@ if (process.env.NODE_ENV !== 'development') {
   await ctx.watch()
   let {port} = await ctx.serve({servedir: distOutdir})
   open(`http://localhost:${port}`)
-  await ctx.dispose()
 }
 
 process.on('unhandledRejection', console.error)
