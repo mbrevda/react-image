@@ -203,3 +203,7 @@ see above
 ## License
 
 `react-image` is available under the MIT License
+
+## BrowserStack
+
+This project is tested with BrowserStack.
